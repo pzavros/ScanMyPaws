@@ -1,0 +1,59 @@
+/* index.css
+:root {
+  --primary-color: #646cff;
+  --secondary-color: #535bf2;
+  --background-color: #ffffff;
+  --text-color: #213547;
+  --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --spacing-unit: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--secondary-color);
+}
+
+button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  padding: calc(var(--spacing-unit) / 2) var(--spacing-unit);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+} */
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
