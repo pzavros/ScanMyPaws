@@ -2,7 +2,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-const Row = ({ children, gap = 2, alignItems = 'center', justifyContent = 'flex-start', ...props }) => {
+const Row = ({ children, gap = 2, alignItems = 'center', justifyContent = 'space-between', ...props }) => {
   return (
     <Box
       sx={{
@@ -12,6 +12,7 @@ const Row = ({ children, gap = 2, alignItems = 'center', justifyContent = 'flex-
         alignItems,
         justifyContent,
         flexWrap: 'wrap',
+        width: '100%',
         ...props.sx,
       }}
       {...props}

@@ -56,4 +56,54 @@ body, #root {
   margin: 0;
   padding: 0;
   width: 100%;
+  --primary-color: #646cff;
+  --secondary-color: #535bf2;
+  --background-color: #ffffff;
+  --text-color: #213547;
+  --font-family: 'Roboto', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --spacing-unit: 16px;
 }
+
+
+/* Scroll Bar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+/* End of Scroll Bar */
+
+
+/* Light Mode */
+:root {
+  --color-primary: #646cff;
+  --color-secondary: #535bf2;
+  --color-bg: #ffffff;
+  --color-text: #213547;
+  --color-card-bg: #f9f9f9;
+  --color-button: #646cff;
+  --color-button-hover: #535bf2;
+  --color-input-bg: #ffffff;
+  --color-input-border: #e0e0e0;
+}
+
+[data-theme='dark'] {
+  --color-primary: #bb86fc;
+  --color-secondary: #3700b3;
+  --color-bg: #121212;
+  --color-text: #e0e0e0;
+  --color-card-bg: #1e1e1e;
+  --color-button: #bb86fc;
+  --color-button-hover: #3700b3;
+  --color-input-bg: #2c2c2c;
+  --color-input-border: #444444;
+}
+/* End of Theme Variables */

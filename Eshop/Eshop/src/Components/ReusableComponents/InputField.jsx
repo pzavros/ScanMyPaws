@@ -10,6 +10,21 @@ const InputField = ({ label, variant = 'outlined', fullWidth = true, ...props })
       fullWidth={fullWidth}
       sx={{
         marginBottom: { xs: 2, sm: 3 },
+        backgroundColor: 'var(--color-input-bg)',
+        input: {
+          color: 'var(--color-text)',
+        },
+        '& .MuiOutlinedInput-root': {
+          '& fieldset': {
+            borderColor: 'var(--color-input-border)',
+          },
+          '&:hover fieldset': {
+            borderColor: 'var(--color-primary)',
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: 'var(--color-primary)',
+          },
+        },
         ...props.sx,
       }}
       {...props}

@@ -1,19 +1,19 @@
 // src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './Pages/HomePage';
-import { Box, AppBar, Toolbar, Typography } from '@mui/material';
+import Header from './Components/ReusableComponents/Header';
 
-function App() {
+const App = () => {
   return (
     <Router>
-      <Box>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-        </Routes>
-      </Box>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        {/* Add other routes here */}
+      </Routes>
     </Router>
   );
-}
+};
 
 export default App;

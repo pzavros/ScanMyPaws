@@ -8,7 +8,7 @@ const Container = ({ children, marginBottom = '32px', ...props }) => {
             sx={{
                 width: '100%',
                 mb: marginBottom,
-                px: { xs: 2, sm: 3, md: 4 }, 
+                px: { xs: 2, sm: 3, md: 4 },
                 ...props.sx,
             }}
             {...props}
