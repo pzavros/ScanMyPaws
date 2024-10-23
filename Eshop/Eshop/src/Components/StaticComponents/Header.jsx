@@ -1,6 +1,6 @@
 // src/Components/ReusableComponents/Header.jsx
 import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Box, Button, Typography, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Box, Button, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -39,8 +39,12 @@ const Header = () => {
       position="static"
       sx={{
         backgroundColor: 'var(--color-bg)',
-        boxShadow: 'none',
-        borderBottom: '1px solid var(--color-input-border)',
+        boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.15)',
+        borderBottomLeftRadius: '24px',
+        borderBottomRightRadius: '24px',
+        mt: 2,
+        transform: 'translateY(-10px)',
+        zIndex: 1100,
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between', maxWidth: '1200px', mx: 'auto', width: '100%' }}>
@@ -53,11 +57,23 @@ const Header = () => {
             </IconButton>
           </Box>
 
-          {/* Logo */}
-          <Box component="img" src="/path/to/logo.png" alt="Logo" sx={{ height: 32, mr: 1 }} />
-          <Typography variant="h6" component={Link} to="/" sx={{ textDecoration: 'none', color: 'var(--color-text)' }}>
-            Scan My Paws
-          </Typography>
+          {/* Clickable Logo */}
+          <Box
+            component={Link}
+            to="/"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+            }}
+          >
+            <Box
+              component="img"
+              src="/media/ScanMyPaws.png"
+              alt="Logo"
+              sx={{ height: 100, width: 100}}
+            />
+          </Box>
         </Box>
 
         {/* Desktop Navigation Links */}
@@ -71,9 +87,6 @@ const Header = () => {
         {/* Icon Buttons */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <IconButton sx={{ color: 'var(--color-text)' }}>
-            <SearchIcon />
-          </IconButton>
-          <IconButton sx={{ color: 'var(--color-text)' }}>
             <AccountCircleIcon />
           </IconButton>
           <IconButton sx={{ color: 'var(--color-text)' }}>
@@ -86,19 +99,71 @@ const Header = () => {
       </Toolbar>
 
       {/* Mobile Drawer */}
-      <Drawer
-        anchor="left"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        sx={{
-          '& .MuiDrawer-paper': {
-            boxSizing: 'border-box',
-            width: 250,
-          },
-        }}
-      >
-        {drawer}
-      </Drawer>
+      // Enhanced Mobile Drawer
+<Drawer
+  anchor="left"
+  open={mobileOpen}
+  onClose={handleDrawerToggle}
+  sx={{
+    '& .MuiDrawer-paper': {
+      boxSizing: 'border-box',
+      width: 250,
+      borderTopRightRadius: '24px',
+      borderBottomRightRadius: '24px',
+      backgroundColor: 'var(--color-bg)',
+      color: 'var(--color-text)',
+      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+      padding: 2,
+    },
+  }}
+>
+<Box
+  sx={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '16px 8px',
+    borderBottom: '1px solid var(--color-input-border)',
+  }}
+>
+  {/* Centered Drawer Logo */}
+  <Box
+    component="img"
+    src="/media/ScanMyPaws.png"
+    alt="Logo"
+    sx={{ height: 100, width: 100 }}
+  />
+</Box>
+
+  {/* Drawer List */}
+  <List>
+    {['Home', 'Shop', 'Profile', 'Help'].map((text) => (
+      <ListItem key={text} disablePadding>
+        <ListItemButton
+          component={Link}
+          to={`/${text.toLowerCase()}`}
+          sx={{
+            borderRadius: '8px',
+            margin: '4px 8px',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.04)',
+              boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)'
+            },
+          }}
+        >
+          <ListItemText
+            primary={text}
+            sx={{
+              color: 'var(--color-text)',
+              textAlign: 'center',
+            }}
+          />
+        </ListItemButton>
+      </ListItem>
+    ))}
+  </List>
+</Drawer>
+
     </AppBar>
   );
 };
