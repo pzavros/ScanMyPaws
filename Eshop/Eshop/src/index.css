@@ -64,10 +64,22 @@ body, #root {
   --spacing-unit: 16px;
 }
 
+/* index.css */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  font-family: 'Roboto', sans-serif; /* Or your preferred font */
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+
 
 /* Scroll Bar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -75,7 +87,8 @@ body, #root {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--primary-color);
+  /* background-color: var(--primary-color); */
+  background-color: grey;
   border-radius: 10px;
   border: 3px solid #f1f1f1;
 }

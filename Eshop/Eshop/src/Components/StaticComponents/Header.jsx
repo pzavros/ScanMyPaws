@@ -1,15 +1,29 @@
 // src/Components/ReusableComponents/Header.jsx
 import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Box, Button, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Box,
+  Button,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Select,
+  MenuItem,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link } from 'react-router-dom';
+import Translate from '../ReusableComponents/Translate'; // Import the Translate hook
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t, changeLanguage, currentLanguage } = Translate();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -23,10 +37,10 @@ const Header = () => {
       onKeyDown={handleDrawerToggle}
     >
       <List>
-        {['Home', 'Shop', 'Profile', 'Help'].map((text) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton component={Link} to={`/${text.toLowerCase()}`}>
-              <ListItemText primary={text} sx={{ color: 'var(--color-text)' }} />
+        {['home', 'shop', 'profile', 'help'].map((key) => (
+          <ListItem key={key} disablePadding>
+            <ListItemButton component={Link} to={`/${key}`}>
+              <ListItemText primary={t(`menu.${key}`)} sx={{ color: 'var(--color-text)' }} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -71,17 +85,25 @@ const Header = () => {
               component="img"
               src="/media/ScanMyPaws.png"
               alt="Logo"
-              sx={{ height: 100, width: 100}}
+              sx={{ height: 100, width: 100 }}
             />
           </Box>
         </Box>
 
         {/* Desktop Navigation Links */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3 }}>
-          <Button component={Link} to="/" sx={{ color: 'var(--color-text)' }}>Home</Button>
-          <Button component={Link} to="/shop" sx={{ color: 'var(--color-text)' }}>Shop</Button>
-          <Button component={Link} to="/profile" sx={{ color: 'var(--color-text)' }}>Profile</Button>
-          <Button component={Link} to="/help" sx={{ color: 'var(--color-text)' }}>Help</Button>
+          <Button component={Link} to="/" sx={{ color: 'var(--color-text)' }}>
+            {t('menu.home')}
+          </Button>
+          <Button component={Link} to="/shop" sx={{ color: 'var(--color-text)' }}>
+            {t('menu.shop')}
+          </Button>
+          <Button component={Link} to="/profile" sx={{ color: 'var(--color-text)' }}>
+            {t('menu.profile')}
+          </Button>
+          <Button component={Link} to="/help" sx={{ color: 'var(--color-text)' }}>
+            {t('menu.help')}
+          </Button>
         </Box>
 
         {/* Icon Buttons */}
@@ -95,75 +117,61 @@ const Header = () => {
           <IconButton sx={{ color: 'var(--color-text)' }}>
             <ShoppingCartIcon />
           </IconButton>
+
+          {/* Language Selection Dropdown */}
+          <Select
+            value={currentLanguage}
+            onChange={(e) => changeLanguage(e.target.value)}
+            sx={{
+              ml: 2,
+              backgroundColor: 'var(--color-bg)',
+              color: 'var(--color-text)',
+              borderRadius: '8px',
+              '& .MuiSelect-icon': { color: 'var(--color-text)' },
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
+            }}
+          >
+            <MenuItem value="en">
+              <Box
+                component="img"
+                src="/media/Header/en.png"
+                alt="English"
+                sx={{ height: 24, width: 24, marginRight: 1 }}
+              />
+            </MenuItem>
+            <MenuItem value="gr">
+              <Box
+                component="img"
+                src="/media/Header/gr.png"
+                alt="Greek"
+                sx={{ height: 24, width: 24, marginRight: 1 }}
+              />
+            </MenuItem>
+          </Select>
         </Box>
       </Toolbar>
 
       {/* Mobile Drawer */}
-      // Enhanced Mobile Drawer
-<Drawer
-  anchor="left"
-  open={mobileOpen}
-  onClose={handleDrawerToggle}
-  sx={{
-    '& .MuiDrawer-paper': {
-      boxSizing: 'border-box',
-      width: 250,
-      borderTopRightRadius: '24px',
-      borderBottomRightRadius: '24px',
-      backgroundColor: 'var(--color-bg)',
-      color: 'var(--color-text)',
-      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-      padding: 2,
-    },
-  }}
->
-<Box
-  sx={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '16px 8px',
-    borderBottom: '1px solid var(--color-input-border)',
-  }}
->
-  {/* Centered Drawer Logo */}
-  <Box
-    component="img"
-    src="/media/ScanMyPaws.png"
-    alt="Logo"
-    sx={{ height: 100, width: 100 }}
-  />
-</Box>
-
-  {/* Drawer List */}
-  <List>
-    {['Home', 'Shop', 'Profile', 'Help'].map((text) => (
-      <ListItem key={text} disablePadding>
-        <ListItemButton
-          component={Link}
-          to={`/${text.toLowerCase()}`}
-          sx={{
-            borderRadius: '8px',
-            margin: '4px 8px',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.04)',
-              boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)'
-            },
-          }}
-        >
-          <ListItemText
-            primary={text}
-            sx={{
-              color: 'var(--color-text)',
-              textAlign: 'center',
-            }}
-          />
-        </ListItemButton>
-      </ListItem>
-    ))}
-  </List>
-</Drawer>
-
+      <Drawer
+        anchor="left"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        sx={{
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: 250,
+            borderTopRightRadius: '24px',
+            borderBottomRightRadius: '24px',
+            backgroundColor: 'var(--color-bg)',
+            color: 'var(--color-text)',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+            padding: 2,
+          },
+        }}
+      >
+        {/* Drawer Content */}
+        {drawer}
+      </Drawer>
     </AppBar>
   );
 };

@@ -7,6 +7,8 @@ const Page = ({ children, ...props }) => {
     <Box
       sx={{
         width: '100%',
+        maxWidth: '100vw',
+        overflowX: 'hidden', 
         ...props.sx,
       }}
       {...props}

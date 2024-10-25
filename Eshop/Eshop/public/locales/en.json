@@ -1,0 +1,14 @@
+{
+    "menu": {
+      "home": "Home",
+      "shop": "Shop",
+      "profile": "Profile",
+      "help": "Help"
+    },
+    "b": {
+    "title": "The pet tag that does more.",
+    "description": "Scan My Paws tags are the only pet tags that provide instant access to your pet's medical records, contact information, and more. All you need is a smartphone!",
+    "button": "Learn More"
+  }
+}
+  

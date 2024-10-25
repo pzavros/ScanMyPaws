@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 
 const Section = ({
   children,
-  backgroundColor = 'var(--color-bg)',
+  backgroundColor = 'transparent',
   padding = '32px 16px',
   ...props
 }) => {
@@ -21,7 +21,7 @@ const Section = ({
       <Box
         sx={{
           maxWidth: '1200px',
-          margin: '0 auto',
+          mx: 'auto',
           px: { xs: 2, sm: 4, md: 6 },
         }}
       >
