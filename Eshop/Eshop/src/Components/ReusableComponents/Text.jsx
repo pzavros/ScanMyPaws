@@ -6,7 +6,7 @@ const Text = ({
   children,
   variant = 'body1',
   align = 'left',
-  color = 'inherit',
+  color = 'var(--text-color)',
   gutterBottom = false,
   ...props
 }) => {

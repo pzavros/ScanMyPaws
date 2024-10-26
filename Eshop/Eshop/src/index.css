@@ -45,39 +45,70 @@ button:hover {
   background-color: var(--secondary-color);
 } */
 
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* index.css */
+:root {
+  --primary-color: #ff6f61; /* A warm coral color */
+  --secondary-color: #ff8a5b; /* Soft orange for hover effects */
+  --background-color: #fdfdfd; /* Light neutral background */
+  --text-color: white; /* Dark gray for readability */
+  --font-family: 'Roboto', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --spacing-unit: 16px;
+  --card-background: #ffffff; /* Clean white for cards */
+  --button-background: #ff6f61; /* Match primary color for buttons */
+  --button-hover-background: #ff8a5b; /* Match secondary color */
+  --input-background: #ffffff;
+  --input-border-color: #cccccc; /* Light gray for input borders */
 }
 
+/* Basic reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--secondary-color);
+}
+
+/* Button styling */
+button {
+  background-color: var(--button-background);
+  color: #ffffff;
+  border: none;
+  padding: calc(var(--spacing-unit) / 2) var(--spacing-unit);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--button-hover-background);
+}
+
+/* Responsive container styles */
 body, #root {
   margin: 0;
   padding: 0;
   width: 100%;
-  --primary-color: #646cff;
-  --secondary-color: #535bf2;
-  --background-color: #ffffff;
-  --text-color: #213547;
-  --font-family: 'Roboto', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --spacing-unit: 16px;
+  font-family: 'Roboto', sans-serif;
+  overflow-x: hidden;
 }
 
-/* index.css */
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  font-family: 'Roboto', sans-serif; /* Or your preferred font */
-  background-color: var(--background-color);
-  color: var(--text-color);
-}
-
-
-
-/* Scroll Bar */
+/* Scroll bar customization */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -87,36 +118,32 @@ body, html {
 }
 
 ::-webkit-scrollbar-thumb {
-  /* background-color: var(--primary-color); */
-  background-color: grey;
+  background-color: #b0b0b0;
   border-radius: 10px;
   border: 3px solid #f1f1f1;
 }
-/* End of Scroll Bar */
 
-
-/* Light Mode */
+/* Light and Dark Mode Themes */
 :root {
-  --color-primary: #646cff;
-  --color-secondary: #535bf2;
-  --color-bg: #ffffff;
-  --color-text: #213547;
-  --color-card-bg: #f9f9f9;
-  --color-button: #646cff;
-  --color-button-hover: #535bf2;
+  --color-primary: #9b5049;
+  --color-secondary: #ff8a5b;
+  --color-bg: #fdfdfd;
+  --color-text: white;
+  --color-card-bg: #ffffff;
+  --color-button: #ab6d4e;
+  --color-button-hover: #ff8a5b;
   --color-input-bg: #ffffff;
-  --color-input-border: #e0e0e0;
+  --color-input-border: #cccccc;
 }
 
 [data-theme='dark'] {
-  --color-primary: #bb86fc;
-  --color-secondary: #3700b3;
-  --color-bg: #121212;
-  --color-text: #e0e0e0;
-  --color-card-bg: #1e1e1e;
-  --color-button: #bb86fc;
-  --color-button-hover: #3700b3;
-  --color-input-bg: #2c2c2c;
-  --color-input-border: #444444;
+  --color-primary: #ff9a8b; /* Softer coral for dark mode */
+  --color-secondary: #ff8a5b; /* Match hover color for consistency */
+  --color-bg: #1a1a1a; /* Darker background */
+  --color-text: #e0e0e0; /* Light text */
+  --color-card-bg: #2b2b2b; /* Slightly lighter than background for cards */
+  --color-button: #ff9a8b;
+  --color-button-hover: #ff8a5b;
+  --color-input-bg: #333333;
+  --color-input-border: #555555;
 }
-/* End of Theme Variables */
