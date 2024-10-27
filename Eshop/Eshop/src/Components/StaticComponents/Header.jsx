@@ -40,7 +40,7 @@ const Header = () => {
         {['home', 'shop', 'profile', 'help'].map((key) => (
           <ListItem key={key} disablePadding>
             <ListItemButton component={Link} to={`/${key}`}>
-              <ListItemText primary={t(`menu.${key}`)} sx={{ color: 'var(--color-text)' }} />
+              <ListItemText primary={t(`menu.${key}`)} sx={{ fontWeight: 'bold',color: 'var(--color-header)' }} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -66,7 +66,7 @@ const Header = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {/* Mobile Menu Icon */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
-            <IconButton onClick={handleDrawerToggle} sx={{ color: 'var(--color-text)' }}>
+            <IconButton onClick={handleDrawerToggle} sx={{ color: 'var(--color-header)' }}>
               <MenuIcon />
             </IconButton>
           </Box>
@@ -92,29 +92,29 @@ const Header = () => {
 
         {/* Desktop Navigation Links */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3 }}>
-          <Button component={Link} to="/" sx={{ color: 'var(--color-text)' }}>
+          <Button component={Link} to="/" sx={{ color: 'var(--color-header)', fontWeight:'bold' }}>
             {t('menu.home')}
           </Button>
-          <Button component={Link} to="/shop" sx={{ color: 'var(--color-text)' }}>
+          <Button component={Link} to="/shop" sx={{ color: 'var(--color-header)',fontWeight:'bold' }}>
             {t('menu.shop')}
           </Button>
-          <Button component={Link} to="/profile" sx={{ color: 'var(--color-text)' }}>
+          <Button component={Link} to="/profile" sx={{ color: 'var(--color-header)',fontWeight:'bold' }}>
             {t('menu.profile')}
           </Button>
-          <Button component={Link} to="/help" sx={{ color: 'var(--color-text)' }}>
+          <Button component={Link} to="/help" sx={{ color: 'var(--color-header)',fontWeight:'bold' }}>
             {t('menu.help')}
           </Button>
         </Box>
 
         {/* Icon Buttons */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <IconButton sx={{ color: 'var(--color-text)' }}>
+          <IconButton sx={{ color: 'var(--color-header)' }}>
             <AccountCircleIcon />
           </IconButton>
-          <IconButton sx={{ color: 'var(--color-text)' }}>
+          <IconButton sx={{ color: 'var(--color-header)' }}>
             <FavoriteBorderIcon />
           </IconButton>
-          <IconButton sx={{ color: 'var(--color-text)' }}>
+          <IconButton sx={{ color: 'var(--color-header)' }}>
             <ShoppingCartIcon />
           </IconButton>
 
@@ -125,9 +125,9 @@ const Header = () => {
             sx={{
               ml: 2,
               backgroundColor: 'var(--color-bg)',
-              color: 'var(--color-text)',
+              color: 'var(--color-header)',
               borderRadius: '8px',
-              '& .MuiSelect-icon': { color: 'var(--color-text)' },
+              '& .MuiSelect-icon': { color: 'var(--color-header)' },
               '& .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
             }}
           >

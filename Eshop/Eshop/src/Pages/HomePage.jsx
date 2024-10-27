@@ -9,6 +9,7 @@ import InputField from '../Components/ReusableComponents/InputField';
 import Page from '../Components/ReusableComponents/Page';
 import Text from '../Components/ReusableComponents/Text';
 import HeroSection from '../Components/HomePage/HeroSection';
+import WhyScanMyPawsSection from '../Components/HomePage/WhyScanMyPawsSection';
 
 const HomePage = () => {
   return (
@@ -16,23 +17,7 @@ const HomePage = () => {
       <HeroSection />
 
       <Section>
-        <Row gap={2}>
-          <Card>
-            <Text variant="h6">Product 1</Text>
-            <Text>Description of Product 1</Text>
-            <Button>Add to Cart</Button>
-          </Card>
-          <Card>
-            <Text variant="h6">Product 2</Text>
-            <Text>Description of Product 2</Text>
-            <Button>Add to Cart</Button>
-          </Card>
-          <Card>
-            <Text variant="h6">Product 3</Text>
-            <Text>Description of Product 3</Text>
-            <Button>Add to Cart</Button>
-          </Card>
-        </Row>
+      <WhyScanMyPawsSection />
       </Section>
 
       <Section backgroundColor="#e0e0e0">

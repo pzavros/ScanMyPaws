@@ -50,7 +50,7 @@ button:hover {
   --primary-color: #ff6f61; /* A warm coral color */
   --secondary-color: #ff8a5b; /* Soft orange for hover effects */
   --background-color: #fdfdfd; /* Light neutral background */
-  --text-color: white; /* Dark gray for readability */
+  --text-color: black; /* Dark gray for readability */
   --font-family: 'Roboto', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   --spacing-unit: 16px;
   --card-background: #ffffff; /* Clean white for cards */
@@ -128,12 +128,14 @@ body, #root {
   --color-primary: #9b5049;
   --color-secondary: #ff8a5b;
   --color-bg: #fdfdfd;
-  --color-text: white;
+  --color-text: black;
+  --color-hero:white;
   --color-card-bg: #ffffff;
   --color-button: #ab6d4e;
   --color-button-hover: #ff8a5b;
   --color-input-bg: #ffffff;
   --color-input-border: #cccccc;
+  --color-header:black;
 }
 
 [data-theme='dark'] {

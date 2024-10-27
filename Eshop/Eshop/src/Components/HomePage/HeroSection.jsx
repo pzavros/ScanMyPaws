@@ -44,18 +44,48 @@ const HeroSection = () => {
             top: { md: '40px' },
             left: { md: '40px' },
             textAlign: 'left',
-            color: '#fff', // White text for contrast
             width: { xs: '100%', md: '45%' },
             padding: { xs: 2, md: 0 },
           }}
         >
-          <Text variant="h2" gutterBottom sx={{ fontWeight: 'bold', fontSize: { xs: '1.8rem', md: '2.5rem' } }}>
+          <Text
+            variant="h2"
+            gutterBottom
+            sx={{
+              fontWeight: 'bold',
+              fontSize: { xs: '1.8rem', md: '2.5rem' },
+              color: { xs: '#000', md: '#fff' },
+            }}
+          >
             {t('b.title')}
           </Text>
-          <Text variant="body1" sx={{ mb: 3, fontSize: { xs: '1rem', md: '1.25rem' } }}>
+          <Text
+            variant="body1"
+            sx={{
+              mb: 3,
+              fontSize: { xs: '1rem', md: '1.25rem' },
+              color: { xs: '#000', md: '#fff' },
+            }}
+          >
             {t('b.description')}
           </Text>
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: 'rgba(121, 85, 72, 0.8)', // Matching color from the image
+              color: { xs: '#000', md: '#fff' },
+              padding: '10px 24px',
+              borderRadius: '8px', // Rounded corners for a minimal look
+              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)', // Soft shadow for elevation effect
+              fontWeight: 'bold',
+              transition: 'transform 0.2s, box-shadow 0.2s', // Smooth transition for hover effects
+              '&:hover': {
+                backgroundColor: 'rgba(121, 85, 72, 1)', // Slightly darker on hover
+                transform: 'translateY(-2px)', // Lift effect on hover
+                boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.3)', // More pronounced shadow on hover
+              },
+            }}
+          >
             {t('b.button')}
           </Button>
         </Box>

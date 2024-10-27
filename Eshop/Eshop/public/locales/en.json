@@ -1,14 +1,28 @@
 {
-    "menu": {
-      "home": "Home",
-      "shop": "Shop",
-      "profile": "Profile",
-      "help": "Help"
-    },
-    "b": {
+  "menu": {
+    "home": "Home",
+    "shop": "Shop",
+    "profile": "Profile",
+    "help": "Help"
+  },
+  "b": {
     "title": "The pet tag that does more.",
     "description": "Scan My Paws tags are the only pet tags that provide instant access to your pet's medical records, contact information, and more. All you need is a smartphone!",
-    "button": "Learn More"
+    "button": "Learn More",
+    
+    "whyScanMyPawsTitle": "Why do pet parents love Scan My Paws?",
+    "whyScanMyPawsDescription": "Scan My Paws tags are the only pet tags that provide instant access to your pet's medical records, contact information, and more. All you need is a smartphone!",
+    
+    "instantAccessTitle": "Instantly access your pet's profile",
+    "instantAccessDescription": "Scan My Paws tags are the only pet tags that provide instant access to your pet's medical records, contact information, and more. All you need is a smartphone!",
+
+    "easyUpdatesTitle": "Easily update your pet's information",
+    "easyUpdatesDescription": "Keep your pet's profile up-to-date with their latest medical records, your current contact information, and more, all from your phone.",
+
+    "shareProfileTitle": "Share your pet's profile with anyone",
+    "shareProfileDescription": "Share your pet's profile with anyone who might need it, like a pet sitter, dog walker, or veterinarian.",
+
+    "donationTitle": "For every tag sold, we donate to animal rescue organizations",
+    "donationDescription": "Every time you buy a Scan My Paws tag, you're helping animals in need. We donate a portion of our proceeds to animal rescue organizations."
   }
 }
-  
