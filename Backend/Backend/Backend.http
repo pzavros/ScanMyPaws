@@ -1,0 +1,6 @@
+@Backend_HostAddress = http://localhost:5295
+
+# No sample request included since WeatherForecast is removed. 
+# Add your actual endpoints here as you implement them in your API.
+
+###
