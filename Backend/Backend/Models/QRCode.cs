@@ -10,8 +10,8 @@ namespace Backend.Models
         public int QRCodeID { get; set; }
         [Required]
         [StringLength(500)]
-        public string QRCodeData { get; set; }
-        public string QRCodeImage { get; set; }
+        public string? QRCodeData { get; set; }
+        public string? QRCodeImage { get; set; } 
         public bool IsScannedForFirstTime { get; set; } = false;
         public bool IsActive { get; set; } = true;
         public bool IsDeleted { get; set; } = false;
