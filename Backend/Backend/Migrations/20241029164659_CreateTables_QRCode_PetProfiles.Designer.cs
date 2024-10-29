@@ -4,6 +4,7 @@ using Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241029164659_CreateTables_QRCode_PetProfiles")]
+    partial class CreateTables_QRCode_PetProfiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,9 @@ namespace Backend.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Breed")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -57,24 +62,24 @@ namespace Backend.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PhotoURL")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QRCodeID")
-                        .HasColumnType("int");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Sex")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("SpecialNotes")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
                     b.HasKey("PetID");
-
-                    b.HasIndex("QRCodeID")
-                        .IsUnique();
 
                     b.HasIndex("UserID");
 
@@ -107,16 +112,18 @@ namespace Backend.Migrations
                     b.Property<bool>("IsScannedForFirstTime")
                         .HasColumnType("bit");
 
+                    b.Property<int>("PetID")
+                        .HasColumnType("int");
+
                     b.Property<string>("QRCodeData")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("QRCodeImage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("QRCodeID");
+
+                    b.HasIndex("PetID")
+                        .IsUnique();
 
                     b.ToTable("QRCodes");
                 });
@@ -178,26 +185,29 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.PetProfile", b =>
                 {
-                    b.HasOne("Backend.Models.QRCode", "QRCode")
-                        .WithOne("PetProfile")
-                        .HasForeignKey("Backend.Models.PetProfile", "QRCodeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("QRCode");
-
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("Backend.Models.QRCode", b =>
                 {
-                    b.Navigation("PetProfile")
+                    b.HasOne("Backend.Models.PetProfile", "PetProfile")
+                        .WithOne("QRCode")
+                        .HasForeignKey("Backend.Models.QRCode", "PetID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PetProfile");
+                });
+
+            modelBuilder.Entity("Backend.Models.PetProfile", b =>
+                {
+                    b.Navigation("QRCode")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
