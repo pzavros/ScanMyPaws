@@ -64,6 +64,7 @@ namespace Backend.Services
             {
                 QRCodeID = qrCode.QRCodeID,
                 QRCodeData = qrCode.QRCodeData,
+                QRCodeImage = qrCode.QRCodeImage,
                 IsScannedForFirstTime = qrCode.IsScannedForFirstTime,
                 IsActive = qrCode.IsActive,
                 IsDeleted = qrCode.IsDeleted,
