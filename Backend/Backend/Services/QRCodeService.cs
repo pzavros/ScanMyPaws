@@ -20,39 +20,38 @@ namespace Backend.Services
 
         public async Task<QRCodeDto> CreateQRCode(QRCodeDto qrCodeDto)
         {
-            if (string.IsNullOrEmpty(qrCodeDto.QRCodeData))
-                throw new ArgumentException("QRCodeData is required");
-
             try
             {
                 using var qrGenerator = new QRCodeGenerator();
-                var qrCodeData = qrGenerator.CreateQrCode(qrCodeDto.QRCodeData, QRCodeGenerator.ECCLevel.Q);
+                var qrCodeData = qrGenerator.CreateQrCode("", QRCodeGenerator.ECCLevel.Q);
                 var qrCode = new PngByteQRCode(qrCodeData);
                 var qrCodeBytes = qrCode.GetGraphic(20);
 
-                qrCodeDto.QRCodeImage = Convert.ToBase64String(qrCodeBytes);
-
                 var qrCodeModel = new QRCode
                 {
-                    QRCodeData = qrCodeDto.QRCodeData,
-                    QRCodeImage = qrCodeDto.QRCodeImage,
-                    IsScannedForFirstTime = qrCodeDto.IsScannedForFirstTime,
-                    IsActive = qrCodeDto.IsActive,
-                    IsDeleted = qrCodeDto.IsDeleted,
-                    DateGenerated = DateTime.Now
+                    QRCodeImage = Convert.ToBase64String(qrCodeBytes),
+                    DateCreated = DateTime.Now,
+                    QRCodeData = null,
                 };
 
                 _context.QRCodes.Add(qrCodeModel);
                 await _context.SaveChangesAsync();
 
-                qrCodeDto.QRCodeID = qrCodeModel.QRCodeID;
-                return qrCodeDto;
+                return new QRCodeDto
+                {
+                    QRCodeID = qrCodeModel.QRCodeID,
+                    QRCodeImage = qrCodeModel.QRCodeImage,
+                    DateGenerated = qrCodeModel.DateCreated
+                };
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("An error occurred while generating the QR code", ex);
+                throw new ApplicationException("Error creating QR code", ex);
             }
         }
+
+
+
 
 
         public async Task<QRCodeDto> GetQRCodeById(int qrCodeId)
