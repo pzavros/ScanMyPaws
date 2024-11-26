@@ -13,6 +13,7 @@ namespace Backend
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Order> Orders { get; set; }
 
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Predefine statuses
@@ -29,8 +30,15 @@ namespace Backend
                 .HasForeignKey(o => o.OrderStatusID)
                 .OnDelete(DeleteBehavior.NoAction); // Prevent cascading deletes
 
+            // Configure Order <-> QRCode relationship
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.QRCode)
+                .WithMany() // No navigation property in QRCode
+                .HasForeignKey(o => o.QRCodeID)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete ensures the QRCode is deleted when the Order is deleted
+
+
             base.OnModelCreating(modelBuilder);
         }
-
     }
 }

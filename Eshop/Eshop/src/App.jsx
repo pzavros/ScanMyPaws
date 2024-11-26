@@ -3,6 +3,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './Pages/HomePage';
 import Header from './Components/StaticComponents/Header';
+import ProductsPage from './Pages/ProductsPage';
+import CheckoutPage from './Pages/CheckoutPage';
 
 const App = () => {
   return (
@@ -10,7 +12,8 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        {/* Add other routes here */}
+        <Route path="/Products" element={<ProductsPage />} />
+        <Route path="/Checkout" element={<CheckoutPage />} />
       </Routes>
     </Router>
   );

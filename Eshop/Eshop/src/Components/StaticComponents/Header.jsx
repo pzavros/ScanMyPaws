@@ -37,7 +37,7 @@ const Header = () => {
       onKeyDown={handleDrawerToggle}
     >
       <List>
-        {['home', 'shop', 'profile', 'help'].map((key) => (
+        {['home', 'products', 'profile', 'help'].map((key) => (
           <ListItem key={key} disablePadding>
             <ListItemButton component={Link} to={`/${key}`}>
               <ListItemText primary={t(`menu.${key}`)} sx={{ fontWeight: 'bold',color: 'var(--color-header)' }} />
@@ -95,7 +95,7 @@ const Header = () => {
           <Button component={Link} to="/" sx={{ color: 'var(--color-header)', fontWeight:'bold' }}>
             {t('menu.home')}
           </Button>
-          <Button component={Link} to="/shop" sx={{ color: 'var(--color-header)',fontWeight:'bold' }}>
+          <Button component={Link} to="/products" sx={{ color: 'var(--color-header)',fontWeight:'bold' }}>
             {t('menu.shop')}
           </Button>
           <Button component={Link} to="/profile" sx={{ color: 'var(--color-header)',fontWeight:'bold' }}>
