@@ -5,6 +5,7 @@ import HomePage from './Pages/HomePage';
 import Header from './Components/StaticComponents/Header';
 import ProductsPage from './Pages/ProductsPage';
 import CheckoutPage from './Pages/CheckoutPage';
+import SingleProduct from './Components/ProductsPage/SingleProduct';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/Products" element={<ProductsPage />} />
         <Route path="/Checkout" element={<CheckoutPage />} />
+        <Route path="/product/:hashedId" element={<SingleProduct />} />
       </Routes>
     </Router>
   );
