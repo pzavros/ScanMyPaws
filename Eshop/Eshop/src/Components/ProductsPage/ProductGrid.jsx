@@ -34,13 +34,14 @@ const mockProducts = [
 const ProductGrid = () => {
   const navigate = useNavigate();
 
+   // Hash the product ID
   const handleViewDetails = (product) => {
-    const hashedId = hashProductId(product.id); // Hash the product ID
+    const hashedId = hashProductId(product.id);
     navigate(`/product/${hashedId}`);
   };
 
   const handleBuyNow = (product) => {
-    navigate('/checkout', { state: { product, quantity: 1 } }); // Navigate to checkout with product details
+    navigate('/checkout', { state: { product, quantity: 1 } });
   };
 
   return (
@@ -107,7 +108,7 @@ const ProductGrid = () => {
                 }}
                 onMouseEnter={(e) => (e.target.style.backgroundColor = '#54117a')}
                 onMouseLeave={(e) => (e.target.style.backgroundColor = '#6a1b9a')}
-                onClick={() => handleBuyNow(product)} // Navigate to checkout directly
+                onClick={() => handleBuyNow(product)}
               >
                 Buy Now
               </Button>
