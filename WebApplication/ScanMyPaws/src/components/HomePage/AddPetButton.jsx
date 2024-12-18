@@ -6,8 +6,9 @@ const AddPetButton = () => {
   return (
     <Box
       position="fixed"
-      bottom="20px"
+      bottom="70px" // Move it slightly above the BottomNavbar
       left="50%"
+      zIndex={1100} // Higher z-index to ensure it's on top
       style={{ transform: "translateX(-50%)" }}
     >
       <Button
