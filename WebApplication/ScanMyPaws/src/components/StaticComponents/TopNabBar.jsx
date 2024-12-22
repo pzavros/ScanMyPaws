@@ -1,40 +1,104 @@
-import React from "react";
-import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import React, { useState, useEffect } from "react";
+import { AppBar, Toolbar, IconButton, Menu, MenuItem } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import ThemeToggle from "../../contexts/ThemeToggle";
 
 const TopNavbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Map route paths to page titles
-  const getPageTitle = () => {
-    switch (location.pathname) {
-      case "/":
-        return "Home";
-      case "/pets":
-        return "Pets";
-      case "/notifications":
-        return "Notifications";
-      case "/planner":
-        return "Planner";
-      default:
-        return "Scan My Paws";
-    }
+  // State for authentication
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // State for the Profile Menu
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const isMenuOpen = Boolean(anchorEl);
+
+  useEffect(() => {
+    // Check if the user is logged in (example using localStorage)
+    const userToken = localStorage.getItem("token"); // Replace with your auth logic
+    setIsLoggedIn(!!userToken);
+  }, []);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    console.log("User logged out");
+    localStorage.removeItem("token"); // Clear the token or session data
+    setIsLoggedIn(false);
+    handleMenuClose();
+    navigate("/signin"); // Redirect to login page
+  };
+
+  const handleLogin = () => {
+    navigate("/signin"); // Redirect to login page
+    handleMenuClose();
   };
 
   return (
-    <AppBar position="sticky" elevation={1} sx={{ backgroundColor: "#ffffff", color: "#000" }}>
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        backgroundColor: "var(--background-color)",
+        color: "var(--text-color)",
+        boxShadow: "none",
+        borderBottom: "none",
+      }}
+    >
       <Toolbar>
-        {/* Back Button */}
-        <IconButton edge="start" color="inherit" onClick={() => navigate(-1)}>
-          <ArrowBackIcon />
+        {/* Theme Toggle */}
+        <ThemeToggle />
+
+        {/* Profile Menu Button */}
+        <IconButton
+          edge="end"
+          color="inherit"
+          onClick={handleMenuOpen}
+          aria-controls={isMenuOpen ? "profile-menu" : undefined}
+          aria-haspopup="true"
+        >
+          👤
         </IconButton>
 
-        {/* Page Title */}
-        <Typography variant="h6" sx={{ flexGrow: 1, textAlign: "center" }}>
-          {getPageTitle()}
-        </Typography>
+        {/* Profile Menu */}
+        <Menu
+          id="profile-menu"
+          anchorEl={anchorEl}
+          open={isMenuOpen}
+          onClose={handleMenuClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          {isLoggedIn ? (
+            <>
+              <MenuItem
+                onClick={() => {
+                  navigate("/profile");
+                  handleMenuClose();
+                }}
+              >
+                Profile
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </>
+          ) : (
+            <MenuItem onClick={handleLogin}>Login</MenuItem>
+          )}
+        </Menu>
       </Toolbar>
     </AppBar>
   );

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import Section from "../ReusableComponents/Section";
 import Text from "../ReusableComponents/Text";
 import { fetchPetStats } from "./api";
+import SectionTitle from "../ReusableComponents/SectionTitle";
 
 const PetStats = () => {
   const [stats, setStats] = useState({});
@@ -18,10 +19,34 @@ const PetStats = () => {
 
   return (
     <Section>
-      <Text variant="h6" mb={2}>Pet Statistics</Text>
-      <Text variant="body1">Age: {stats.age}</Text>
-      <Text variant="body1">Weight: {stats.weight}</Text>
-      <Text variant="body1">Activity Level: {stats.activity}</Text>
+      <SectionTitle mb={2}>Pet Statistics</SectionTitle>
+      <Paper
+        elevation={2}
+        sx={{
+          padding: "16px",
+          borderRadius: "12px",
+          backgroundColor: "var(--card-background)", // Consistent card background
+          color: "var(--text-color)", // Adapt text color to theme
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px", // Add spacing between stats
+          }}
+        >
+          <Text variant="body1" fontWeight="bold">
+            Age: <span style={{ fontWeight: "normal" }}>{stats.age || "-"}</span>
+          </Text>
+          <Text variant="body1" fontWeight="bold">
+            Weight: <span style={{ fontWeight: "normal" }}>{stats.weight || "-"}</span>
+          </Text>
+          <Text variant="body1" fontWeight="bold">
+            Activity Level: <span style={{ fontWeight: "normal" }}>{stats.activity || "-"}</span>
+          </Text>
+        </Box>
+      </Paper>
     </Section>
   );
 };

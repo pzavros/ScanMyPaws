@@ -5,6 +5,7 @@ import Row from "../ReusableComponents/Row";
 import Card from "../ReusableComponents/Card";
 import Section from "../ReusableComponents/Section";
 import { fetchUpcomingTasks } from "./api";
+import SectionTitle from "../ReusableComponents/SectionTitle";
 
 const UpcomingTasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -21,16 +22,16 @@ const UpcomingTasks = () => {
   return (
     <Section>
       <Box mb={3}>
-        <Text variant="h6" mb={1}>
+        <SectionTitle mb={1}>
           Upcoming Tasks
-        </Text>
+        </SectionTitle>
         <Row>
           {tasks.map((task, index) => (
             <Card key={index}>
               <Text variant="body1" fontWeight="bold">
                 {task.title}
               </Text>
-              <Text variant="body2" color="textSecondary">
+              <Text variant="body2">
                 {task.description}
               </Text>
             </Card>
