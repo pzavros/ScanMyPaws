@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import Section from "../ReusableComponents/Section";
 import Text from "../ReusableComponents/Text";
+import Row from "../ReusableComponents/Row";
 import Card from "../ReusableComponents/Card";
+import Section from "../ReusableComponents/Section";
 import { fetchMedicalRecords } from "./api";
+import SectionTitle from "../ReusableComponents/SectionTitle";
 
 const MedicalRecordsSummary = () => {
   const [records, setRecords] = useState([]);
@@ -19,16 +21,20 @@ const MedicalRecordsSummary = () => {
 
   return (
     <Section>
-      <Text variant="h6" mb={2}>Medical Records Summary</Text>
-      {records.map((record) => (
-        <Card key={record.id}>
-          <Text variant="body1" fontWeight="bold">
-            {record.type}
-          </Text>
-          <Text variant="body2">Date: {record.date}</Text>
-          <Text variant="body2">Vet: {record.vet}</Text>
-        </Card>
-      ))}
+      <Box mb={3}>
+        <SectionTitle mb={1}>Medical Records Summary</SectionTitle>
+        <Row>
+          {records.map((record, index) => (
+            <Card key={index}>
+              <Text variant="body1" fontWeight="bold">
+                {record.type}
+              </Text>
+              <Text variant="body2">Date: {record.date}</Text>
+              <Text variant="body2">Vet: {record.vet}</Text>
+            </Card>
+          ))}
+        </Row>
+      </Box>
     </Section>
   );
 };

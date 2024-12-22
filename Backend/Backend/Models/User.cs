@@ -1,15 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-
 
 namespace Backend.Models
 {
     public class User
     {
         public DateTime DateCreated { get; set; } = DateTime.Now;
-        
+
         public DateTime? DateModified { get; set; }
 
         [Key]
@@ -39,5 +36,24 @@ namespace Backend.Models
         public bool IsActive { get; set; } = true;
 
         public bool IsDeleted { get; set; } = false;
+
+        // New Fields
+        public DateTime? DateOfBirth { get; set; }
+
+        public bool? Gender { get; set; }
+
+        public string? Address { get; set; }
+
+        public string? City { get; set; }
+
+        public string? State { get; set; }
+
+        public string? Country { get; set; }
+
+        public string? ZipCode { get; set; }
+
+        public DateTime? LastLoginDate { get; set; }
+
+        public int FailedLoginAttempts { get; set; } = 0;
     }
 }
