@@ -12,8 +12,8 @@ namespace Backend
         public DbSet<QRCode> QRCodes { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<DogBreed> DogBreeds { get; set; }
 
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Predefine statuses
@@ -28,15 +28,37 @@ namespace Backend
                 .HasOne(o => o.OrderStatus)
                 .WithMany()
                 .HasForeignKey(o => o.OrderStatusID)
-                .OnDelete(DeleteBehavior.NoAction); // Prevent cascading deletes
+                .OnDelete(DeleteBehavior.NoAction);
 
             // Configure Order <-> QRCode relationship
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.QRCode)
-                .WithMany() // No navigation property in QRCode
+                .WithMany()
                 .HasForeignKey(o => o.QRCodeID)
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete ensures the QRCode is deleted when the Order is deleted
+                .OnDelete(DeleteBehavior.Cascade);
 
+            // Configure PetProfile <-> User relationship
+            modelBuilder.Entity<PetProfile>()
+                .HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure PetProfile <-> QRCode relationship
+            modelBuilder.Entity<PetProfile>()
+                .HasOne(p => p.QRCode)
+                .WithOne(q => q.PetProfile)
+                .HasForeignKey<PetProfile>(p => p.QRCodeID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure DogBreed and seed data
+            modelBuilder.Entity<DogBreed>().HasData(
+                new DogBreed { BreedID = 1, BreedName = "Affenpinscher" },
+                new DogBreed { BreedID = 2, BreedName = "Airedale Terrier" },
+                new DogBreed { BreedID = 3, BreedName = "Akita" },
+                // Add all other breeds here
+                new DogBreed { BreedID = 200, BreedName = "Yorkshire Terrier" }
+            );
 
             base.OnModelCreating(modelBuilder);
         }

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Section from "../ReusableComponents/Section";
 import Button from "../ReusableComponents/Button";
 import InputField from "../ReusableComponents/InputField";
-import GoogleIcon from '@mui/icons-material/Google';
+import GoogleIcon from "@mui/icons-material/Google";
 import { signInUser } from "./api";
 
 const SignInForm = () => {
@@ -34,25 +34,27 @@ const SignInForm = () => {
         maxWidth: "400px",
         margin: "0 auto",
         textAlign: "center",
-        backgroundColor: "#f9f9f9",
-        borderRadius: "8px",
+        backgroundColor: "var(--card-background)",
+        borderRadius: "16px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", // Subtle shadow
+        color: "var(--text-color)", // Adapt to dark/light mode
       }}
     >
       {/* Logo */}
-      <Box sx={{ marginBottom: 2 }}>
+      <Box sx={{ marginBottom: 3 }}>
         <img
           src="https://via.placeholder.com/64" // Replace with your logo URL
           alt="Logo"
-          style={{ width: "64px", height: "64px", margin: "0 auto" }}
+          style={{ width: "64px", height: "64px", margin: "0 auto", borderRadius: "50%" }}
         />
       </Box>
 
       {/* Title */}
-      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+      <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: "8px" }}>
         Welcome Back!
       </Typography>
-      <Typography variant="body2" sx={{ color: "#777", marginBottom: 3 }}>
-        Enter your account details here.
+      <Typography variant="body2" sx={{ color: "var(--text-color-secondary)", marginBottom: 3 }}>
+        Enter your account details below to access your account.
       </Typography>
 
       {/* Error Message */}
@@ -72,14 +74,21 @@ const SignInForm = () => {
         {/* Email Field */}
         <Box mb={2}>
           <InputField
-            label="Email"
+            placeholder="Email"
             fullWidth
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             sx={{
-              "& .MuiInputBase-root": {
-                height: "48px",
+              input: {
+                color: "var(--text-color)",
+                backgroundColor: "var(--input-background)",
+                border: "1px solid var(--input-border-color)",
+                borderRadius: "8px",
+                padding: "12px",
+                "&::placeholder": {
+                  color: "var(--text-color-secondary)",
+                },
               },
             }}
           />
@@ -88,15 +97,22 @@ const SignInForm = () => {
         {/* Password Field */}
         <Box mb={2}>
           <InputField
-            label="Password"
+            placeholder="Password"
             type="password"
             fullWidth
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             sx={{
-              "& .MuiInputBase-root": {
-                height: "48px",
+              input: {
+                color: "var(--text-color)",
+                backgroundColor: "var(--input-background)",
+                border: "1px solid var(--input-border-color)",
+                borderRadius: "8px",
+                padding: "12px",
+                "&::placeholder": {
+                  color: "var(--text-color-secondary)",
+                },
               },
             }}
           />
@@ -111,6 +127,11 @@ const SignInForm = () => {
           sx={{
             fontSize: "1rem",
             height: "48px",
+            borderRadius: "8px",
+            backgroundColor: "var(--primary-color)",
+            "&:hover": {
+              backgroundColor: "var(--secondary-color)",
+            },
           }}
         >
           Login
@@ -118,7 +139,7 @@ const SignInForm = () => {
       </Box>
 
       {/* Divider */}
-      <Divider sx={{ my: 3 }}>Or continue with</Divider>
+      <Divider sx={{ my: 3, color: "var(--text-color-secondary)" }}>Or continue with</Divider>
 
       {/* Google Button */}
       <MuiButton
@@ -129,6 +150,12 @@ const SignInForm = () => {
           height: "48px",
           fontSize: "1rem",
           textTransform: "none",
+          border: "1px solid var(--input-border-color)",
+          color: "var(--text-color)",
+          "&:hover": {
+            backgroundColor: "var(--button-hover-background)",
+            borderColor: "var(--input-border-color)",
+          },
         }}
       >
         Google
@@ -140,7 +167,14 @@ const SignInForm = () => {
         <Typography
           component="span"
           variant="body2"
-          sx={{ fontWeight: "bold", cursor: "pointer", color: "primary.main" }}
+          sx={{
+            fontWeight: "bold",
+            cursor: "pointer",
+            color: "var(--primary-color)",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          }}
           onClick={() => navigate("/SignUp")}
         >
           Register Here

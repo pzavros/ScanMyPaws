@@ -1,31 +1,36 @@
-// src/Components/ReusableComponents/InputField.jsx
-import React from 'react';
-import { TextField } from '@mui/material';
+import React from "react";
+import { TextField } from "@mui/material";
 
-const InputField = ({ label, variant = 'outlined', fullWidth = true, ...props }) => {
+const InputField = ({ name, label, placeholder, value, onChange, ...props }) => {
   return (
     <TextField
+      name={name}
       label={label}
-      variant={variant}
-      fullWidth={fullWidth}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      fullWidth
+      variant="outlined"
+      InputLabelProps={{
+        style: {
+          color: "var(--text-color)", // Ensures the label color adapts to dark mode
+        },
+      }}
       sx={{
-        marginBottom: { xs: 2, sm: 3 },
-        backgroundColor: 'var(--color-input-bg)',
+        "& .MuiOutlinedInput-root": {
+          "& fieldset": {
+            borderColor: "var(--border-color)", // Adapt border color to theme
+          },
+          "&:hover fieldset": {
+            borderColor: "var(--primary-color)", // Highlight border on hover
+          },
+          "&.Mui-focused fieldset": {
+            borderColor: "var(--primary-color)", // Highlight border on focus
+          },
+        },
         input: {
-          color: 'var(--color-text)',
+          color: "var(--text-color)", // Ensures the input text color adapts to dark mode
         },
-        '& .MuiOutlinedInput-root': {
-          '& fieldset': {
-            borderColor: 'var(--color-input-border)',
-          },
-          '&:hover fieldset': {
-            borderColor: 'var(--color-primary)',
-          },
-          '&.Mui-focused fieldset': {
-            borderColor: 'var(--color-primary)',
-          },
-        },
-        ...props.sx,
       }}
       {...props}
     />

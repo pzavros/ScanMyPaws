@@ -8,6 +8,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure the HTTP server to listen on all network interfaces
+builder.WebHost.UseUrls("http://0.0.0.0:5000", "https://0.0.0.0:44330");
+
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -18,16 +21,17 @@ builder.Services.AddScoped<IQrCodeService, QrCodeService>();
 builder.Services.AddScoped<IPetProfileService, PetProfileService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IDogBreedService, DogBreedService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add CORS policy for Vite frontend
+// Add CORS policy for Vite frontend and external devices
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
-        policy.WithOrigins("http://localhost:5173", "http://localhost:5175")
-            .AllowAnyHeader()
-            .AllowAnyMethod());
+    options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod());
 });
 
 // Add JWT Authentication
@@ -56,7 +60,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend"); // Apply CORS policy
+app.UseCors("AllowAll"); // Apply the CORS policy
 app.UseAuthentication(); // Enable authentication
 app.UseAuthorization();
 

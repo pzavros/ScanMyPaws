@@ -105,7 +105,7 @@ namespace Backend.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
+                    new Claim("UserID", user.UserID.ToString()), // Explicitly add UserID claim
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Name, user.FirstName ?? "User")
                 }),
@@ -118,5 +118,6 @@ namespace Backend.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
     }
 }

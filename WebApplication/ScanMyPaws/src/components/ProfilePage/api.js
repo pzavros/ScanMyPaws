@@ -1,16 +1,19 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://localhost:44330/api/User";
+// Use the environment variable for the API base URL
+const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 
+// Helper: Authorization Header
 const getAuthHeader = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
 
+// Fetch User Profile
 export const fetchUserProfile = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/profile`, getAuthHeader());
+    const response = await axios.get(`${API_BASE_URL}/api/User/profile`, getAuthHeader());
     return response.data;
   } catch (error) {
     console.error("Error fetching user profile:", error);
@@ -18,9 +21,10 @@ export const fetchUserProfile = async () => {
   }
 };
 
+// Update User Profile
 export const updateUserProfile = async (userData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/profile`, userData, getAuthHeader());
+    const response = await axios.put(`${API_BASE_URL}/api/User/profile`, userData, getAuthHeader());
     return response.data;
   } catch (error) {
     console.error("Error updating user profile:", error);
@@ -28,9 +32,10 @@ export const updateUserProfile = async (userData) => {
   }
 };
 
+// Fetch User Notifications
 export const fetchUserNotifications = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/notifications`, getAuthHeader());
+    const response = await axios.get(`${API_BASE_URL}/api/User/notifications`, getAuthHeader());
     return response.data;
   } catch (error) {
     console.error("Error fetching user notifications:", error);

@@ -24,12 +24,11 @@ namespace Backend.Controllers
                 var result = await _qrCodeService.CreateQRCode(qrCodeDto);
                 return CreatedAtAction(nameof(GetQRCodeById), new { qrCodeId = result.QRCodeID }, result);
             }
-            catch (Exception ex)
+            catch
             {
                 return StatusCode(500, "Internal server error while creating QR code.");
             }
         }
-
 
         [HttpGet("{qrCodeId}")]
         public async Task<IActionResult> GetQRCodeById(int qrCodeId)
@@ -49,6 +48,16 @@ namespace Backend.Controllers
                 return NotFound();
 
             return NoContent();
+        }
+
+        [HttpPut("scan/{qrCodeId}")]
+        public async Task<IActionResult> ScanQRCode(int qrCodeId)
+        {
+            var result = await _qrCodeService.ScanQRCode(qrCodeId);
+            if (!result)
+                return BadRequest(new { message = "QR Code is invalid or has already been used." });
+
+            return Ok(new { message = "QR Code scanned successfully." });
         }
     }
 }

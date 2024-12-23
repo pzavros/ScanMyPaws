@@ -22,6 +22,46 @@ namespace Backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Backend.Models.DogBreed", b =>
+                {
+                    b.Property<int>("BreedID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BreedID"));
+
+                    b.Property<string>("BreedName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("BreedID");
+
+                    b.ToTable("DogBreeds");
+
+                    b.HasData(
+                        new
+                        {
+                            BreedID = 1,
+                            BreedName = "Affenpinscher"
+                        },
+                        new
+                        {
+                            BreedID = 2,
+                            BreedName = "Airedale Terrier"
+                        },
+                        new
+                        {
+                            BreedID = 3,
+                            BreedName = "Akita"
+                        },
+                        new
+                        {
+                            BreedID = 200,
+                            BreedName = "Yorkshire Terrier"
+                        });
+                });
+
             modelBuilder.Entity("Backend.Models.Order", b =>
                 {
                     b.Property<int>("OrderID")
@@ -109,7 +149,11 @@ namespace Backend.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Breed")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("BreedID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -138,7 +182,8 @@ namespace Backend.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Sex")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("SpecialNotes")
                         .HasColumnType("nvarchar(max)");
@@ -147,6 +192,8 @@ namespace Backend.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("PetID");
+
+                    b.HasIndex("BreedID");
 
                     b.HasIndex("QRCodeID")
                         .IsUnique();
@@ -181,6 +228,9 @@ namespace Backend.Migrations
 
                     b.Property<bool?>("IsScannedForFirstTime")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("PetProfileID")
+                        .HasColumnType("int");
 
                     b.Property<string>("QRCodeData")
                         .HasColumnType("nvarchar(max)");
@@ -337,6 +387,10 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.PetProfile", b =>
                 {
+                    b.HasOne("Backend.Models.DogBreed", "DogBreed")
+                        .WithMany()
+                        .HasForeignKey("BreedID");
+
                     b.HasOne("Backend.Models.QRCode", "QRCode")
                         .WithOne("PetProfile")
                         .HasForeignKey("Backend.Models.PetProfile", "QRCodeID")
@@ -346,8 +400,10 @@ namespace Backend.Migrations
                     b.HasOne("Backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("DogBreed");
 
                     b.Navigation("QRCode");
 
