@@ -9,5 +9,6 @@ namespace Backend.Interfaces
         Task<PetProfileDto> GetPetProfileById(int petId);
         Task<bool> DeactivatePetProfile(int petId);
         Task<List<PetProfileDto>> GetUserPets(int userId);
+        Task<bool> UpdatePetProfile(int petId, PetProfileDto petProfileDto); // Corrected signature
     }
 }

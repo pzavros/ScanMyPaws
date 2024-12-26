@@ -9,11 +9,9 @@ import './i18n.js';
 const theme = createTheme(); // Create the MUI theme directly here
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
     <MUIThemeProvider theme={theme}>
       <CustomThemeProvider>
         <App />
       </CustomThemeProvider>
     </MUIThemeProvider>
-  </StrictMode>
 );

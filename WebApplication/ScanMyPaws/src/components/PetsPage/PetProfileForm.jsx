@@ -13,8 +13,8 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
         sex: "",
         specialNotes: "",
     });
-    const [images, setImages] = useState([]); // Store the selected images
-    const [imagePreviews, setImagePreviews] = useState([]); // Store the image previews
+    const [image, setImage] = useState(null); // Store the selected image
+    const [imagePreview, setImagePreview] = useState(null); // Store the image preview
     const [breeds, setBreeds] = useState([]);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -44,27 +44,18 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
     };
 
     const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
+        const file = e.target.files[0]; // Get the first selected file
 
-        if (images.length + files.length > 5) {
-            setError("You can upload up to 5 images.");
-            return;
-        }
+        if (!file) return;
 
         setError("");
-        setImages((prev) => [...prev, ...files]);
-
-        // Generate image previews
-        const newPreviews = files.map((file) => URL.createObjectURL(file));
-        setImagePreviews((prev) => [...prev, ...newPreviews]);
+        setImage(file); // Store the single image
+        setImagePreview(URL.createObjectURL(file)); // Generate a preview
     };
 
-    const handleRemoveImage = (index) => {
-        const updatedImages = images.filter((_, i) => i !== index);
-        const updatedPreviews = imagePreviews.filter((_, i) => i !== index);
-
-        setImages(updatedImages);
-        setImagePreviews(updatedPreviews);
+    const handleRemoveImage = () => {
+        setImage(null); // Clear the image
+        setImagePreview(null); // Clear the preview
     };
 
     const handleSubmit = async (e) => {
@@ -80,8 +71,11 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
             formData.append("age", form.age);
             formData.append("sex", form.sex);
             formData.append("specialNotes", form.specialNotes);
-            images.forEach((image, index) => formData.append(`photos[${index}]`, image)); // Append all images
             formData.append("qrCodeId", qrCodeId);
+
+            if (image) {
+                formData.append("Photo", image); // Append the single image
+            }
 
             // Call API with form data
             await createPetProfile(formData);
@@ -152,21 +146,13 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                             ...provided,
                             backgroundColor: "var(--input-background)", // Matches input background
                             color: "var(--text-color)", // Text color inside dropdown
-                            zIndex: 9999,
                             borderRadius: "8px",
-                            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-                        }),
-                        menuList: (provided) => ({
-                            ...provided,
-                            backgroundColor: "var(--input-background)", // Matches input background
-                            color: "var(--text-color)", // Text color for options
-                            maxHeight: "200px",
-                            overflowY: "auto", // Scrollable options
+                            zIndex: 9999,
                         }),
                         option: (provided, state) => ({
                             ...provided,
                             backgroundColor: state.isFocused ? "var(--primary-color)" : "var(--input-background)", // Highlight focused option
-                            color: state.isFocused ? "white" : "var(--text-color)", // Adjust text color for dark mode
+                            color: state.isFocused ? "white" : "var(--text-color)", // Adjust text color
                             padding: "8px",
                             "&:hover": { backgroundColor: "var(--primary-color-hover)", color: "white" }, // Hover styles
                         }),
@@ -177,10 +163,6 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                         singleValue: (provided) => ({
                             ...provided,
                             color: "var(--text-color)", // Selected value color
-                        }),
-                        input: (provided) => ({
-                            ...provided,
-                            color: "var(--text-color)", // Text color for typing in the search field
                         }),
                     }}
                 />
@@ -215,7 +197,7 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
 
             {/* Photo Upload Field */}
             <Typography variant="body1" sx={{ mt: 2, mb: 1 }}>
-                Upload Photos (Up to 5)
+                Upload Photo
             </Typography>
             <Box
                 sx={{
@@ -232,52 +214,50 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                 <input
                     type="file"
                     accept="image/*"
-                    multiple
                     onChange={handleImageChange}
                     style={{ display: "none" }}
                     id="photoUpload"
                 />
                 <label htmlFor="photoUpload" style={{ cursor: "pointer", color: "var(--text-color)" }}>
-                    {images.length > 0 ? "Add More Images" : "Click to upload or drag and drop images here"}
+                    {imagePreview ? "Change Photo" : "Click to upload a photo"}
                 </label>
             </Box>
 
-            {/* Image Previews */}
-            <Grid container spacing={2} sx={{ mb: 3 }}>
-                {imagePreviews.map((preview, index) => (
-                    <Grid item xs={4} key={index}>
-                        <Box sx={{ position: "relative" }}>
-                            <img
-                                src={preview}
-                                alt={`Preview ${index}`}
-                                style={{
-                                    width: "100%",
-                                    height: "100px",
-                                    objectFit: "cover",
-                                    borderRadius: "8px",
-                                }}
-                            />
-                            <Button
-                                variant="contained"
-                                color="error"
-                                size="small"
-                                onClick={() => handleRemoveImage(index)}
-                                sx={{
-                                    position: "absolute",
-                                    top: "4px",
-                                    right: "4px",
-                                    minWidth: "24px",
-                                    height: "24px",
-                                    padding: "0",
-                                    fontSize: "12px",
-                                }}
-                            >
-                                X
-                            </Button>
-                        </Box>
-                    </Grid>
-                ))}
-            </Grid>
+            {/* Display the image preview if available */}
+            {imagePreview && (
+                <Box sx={{ position: "relative", textAlign: "center", mb: 3 }}>
+                    <img
+                        src={imagePreview}
+                        alt="Preview"
+                        style={{
+                            width: "100%",
+                            maxHeight: "150px",
+                            objectFit: "cover",
+                            borderRadius: "8px",
+                        }}
+                    />
+                    {/* Add the "X" button */}
+                    <Button
+                        variant="contained"
+                        color="error"
+                        size="small"
+                        onClick={handleRemoveImage}
+                        sx={{
+                            position: "absolute",
+                            top: "8px",
+                            right: "8px",
+                            minWidth: "24px",
+                            height: "24px",
+                            padding: "0",
+                            borderRadius: "50%",
+                            fontSize: "16px",
+                            lineHeight: "1",
+                        }}
+                    >
+                        &times;
+                    </Button>
+                </Box>
+            )}
 
             {/* Special Notes Field */}
             <InputField

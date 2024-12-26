@@ -19,20 +19,20 @@ namespace Backend.Models
         [Required]
         [StringLength(100)]
         public string PetName { get; set; }
+
         public int? Age { get; set; }
+
         [ForeignKey("DogBreed")]
-        public int? BreedID { get; set; }
+        public int? BreedID { get; set; } // Store only BreedID
 
-        public virtual DogBreed DogBreed { get; set; }
+        public virtual DogBreed DogBreed { get; set; } // Navigation property
+
         public bool IsTransferred { get; set; } = false;
-
-        [StringLength(50)]
-        public string? Breed { get; set; }
 
         [StringLength(10)]
         public string? Sex { get; set; }
 
-        public string? PhotoURL { get; set; }
+        public byte[]? Photo { get; set; }
 
         public string? SpecialNotes { get; set; }
 

@@ -1,4 +1,3 @@
-// src/Components/ReusableComponents/Text.jsx
 import React from 'react';
 import { Typography } from '@mui/material';
 
@@ -6,17 +5,17 @@ const Text = ({
   children,
   variant = 'body1',
   align = 'left',
-  color = 'var(--text-color)',
   gutterBottom = false,
+  color = 'var(--text-color)', // Default color to the theme variable
   ...props
 }) => {
   return (
     <Typography
       variant={variant}
       align={align}
-      color={color}
       gutterBottom={gutterBottom}
       sx={{
+        color,
         ...(variant === 'h1' && { fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' } }),
         ...(variant === 'h2' && { fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' } }),
         ...(variant === 'h3' && { fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' } }),

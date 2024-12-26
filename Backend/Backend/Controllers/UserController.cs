@@ -74,7 +74,11 @@ namespace Backend.Controllers
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserID");
+            if (userIdClaim == null)
+                return Unauthorized("User is not logged in, or there is an issue with the UserID");
+
+            var userId = int.Parse(userIdClaim.Value);
             var user = await _userService.GetUserById(userId);
 
             if (user == null)

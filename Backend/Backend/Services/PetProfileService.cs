@@ -2,6 +2,9 @@ using Backend.Interfaces;
 using Backend.DTOs;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Backend.Services
@@ -32,14 +35,14 @@ namespace Backend.Services
                 DateCreated = DateTime.Now,
                 UserID = userId,
                 PetName = petProfileDto.PetName,
-                Breed = petProfileDto.Breed,
+                BreedID = petProfileDto.BreedID,
                 Age = petProfileDto.Age,
                 IsTransferred = petProfileDto.IsTransferred,
-                IsActive = petProfileDto.IsActive,
-                IsDeleted = petProfileDto.IsDeleted,
+                IsActive = true,
+                IsDeleted = false,
                 QRCodeID = petProfileDto.QRCodeID,
                 Sex = petProfileDto.Sex,
-                PhotoURL = petProfileDto.PhotoURL, // Save Base64 or URL
+                Photo = petProfileDto.Photo,
                 SpecialNotes = petProfileDto.SpecialNotes,
             };
 
@@ -62,27 +65,24 @@ namespace Backend.Services
             return petProfileDto;
         }
 
-
         public async Task<PetProfileDto> GetPetProfileById(int petId)
         {
-            var petProfile = await _context.PetProfiles.FindAsync(petId);
+            var petProfile = await _context.PetProfiles
+                .Include(p => p.DogBreed)
+                .FirstOrDefaultAsync(p => p.PetID == petId);
+
             if (petProfile == null) return null;
 
             return new PetProfileDto
             {
                 PetID = petProfile.PetID,
-                UserID = petProfile.UserID,
                 PetName = petProfile.PetName,
-                Breed = petProfile.Breed,
+                BreedID = petProfile.BreedID,
+                BreedName = petProfile.DogBreed != null ? petProfile.DogBreed.BreedName : null,
                 Age = petProfile.Age,
-                IsTransferred = petProfile.IsTransferred,
-                IsActive = petProfile.IsActive,
-                IsDeleted = petProfile.IsDeleted,
-                DateCreated = petProfile.DateCreated,
-                QRCodeID = petProfile.QRCodeID,
                 Sex = petProfile.Sex,
-                PhotoURL = petProfile.PhotoURL,
-                SpecialNotes = petProfile.SpecialNotes
+                SpecialNotes = petProfile.SpecialNotes,
+                Photo = petProfile.Photo,
             };
         }
 
@@ -95,30 +95,44 @@ namespace Backend.Services
             await _context.SaveChangesAsync();
             return true;
         }
-        
+
         public async Task<List<PetProfileDto>> GetUserPets(int userId)
         {
-            var petProfiles = await _context.PetProfiles
+            return await _context.PetProfiles
                 .Where(p => p.UserID == userId && p.IsActive && !p.IsDeleted)
+                .AsNoTracking()
+                .Select(pet => new PetProfileDto
+                {
+                    PetID = pet.PetID,
+                    PetName = pet.PetName,
+                    Photo = pet.Photo,
+                    BreedName = pet.DogBreed != null ? pet.DogBreed.BreedName : null
+                })
                 .ToListAsync();
-
-            return petProfiles.Select(pet => new PetProfileDto
-            {
-                PetID = pet.PetID,
-                UserID = pet.UserID,
-                PetName = pet.PetName,
-                Breed = pet.Breed,
-                Age = pet.Age,
-                IsTransferred = pet.IsTransferred,
-                IsActive = pet.IsActive,
-                IsDeleted = pet.IsDeleted,
-                DateCreated = pet.DateCreated,
-                QRCodeID = pet.QRCodeID,
-                Sex = pet.Sex,
-                PhotoURL = pet.PhotoURL,
-                SpecialNotes = pet.SpecialNotes
-            }).ToList();
         }
 
+
+        public async Task<bool> UpdatePetProfile(int petId, PetProfileDto petProfileDto)
+        {
+            var petProfile = await _context.PetProfiles.FindAsync(petId);
+            if (petProfile == null) return false;
+
+            petProfile.PetName = petProfileDto.PetName;
+            petProfile.BreedID = petProfileDto.BreedID;
+            petProfile.Age = petProfileDto.Age;
+            petProfile.Sex = petProfileDto.Sex;
+            petProfile.SpecialNotes = petProfileDto.SpecialNotes;
+
+            if (petProfileDto.Photo != null)
+            {
+                petProfile.Photo = petProfileDto.Photo;
+            }
+
+            petProfile.DateModified = DateTime.Now;
+
+            _context.PetProfiles.Update(petProfile);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

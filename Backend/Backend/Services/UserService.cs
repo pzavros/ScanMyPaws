@@ -45,8 +45,12 @@ namespace Backend.Services
 
         public async Task<UserDto> GetUserById(int userId)
         {
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null) return null;
+            var user = await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.UserID == userId);
+
+            if (user == null) 
+                return null;
 
             return new UserDto
             {
@@ -68,6 +72,8 @@ namespace Backend.Services
                 FailedLoginAttempts = user.FailedLoginAttempts
             };
         }
+
+
 
         public async Task<UserDto> UpdateUserProfile(UserDto userDto)
         {

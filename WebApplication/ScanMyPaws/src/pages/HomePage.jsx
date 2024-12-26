@@ -19,7 +19,7 @@ const HomePage = () => {
       <PlannerHighlights />
       <PetStats />
       <QuickActions />
-      <AddPetButton />
+      {/* <AddPetButton /> */}
     </Page>
   );
 };

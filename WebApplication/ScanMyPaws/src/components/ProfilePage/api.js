@@ -13,7 +13,11 @@ const getAuthHeader = () => ({
 // Fetch User Profile
 export const fetchUserProfile = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/User/profile`, getAuthHeader());
+    const response = await axios.get(`${API_BASE_URL}/api/User/profile`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching user profile:", error);

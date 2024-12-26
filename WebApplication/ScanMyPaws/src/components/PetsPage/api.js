@@ -8,18 +8,19 @@ export const scanQRCode = async (qrCodeId) => {
 };
 
 export const createPetProfile = async (formData) => {
-    const response = await axios.post(
-      `${API_BASE_URL}/api/PetProfile`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    return response.data;
-  };
+  const response = await axios.post(
+    `${API_BASE_URL}/api/PetProfile`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  return response.data;
+};
+
   
 
 export const fetchPetProfile = async (petId) => {
@@ -42,3 +43,9 @@ export const fetchDogBreeds = async () => {
     });
     return response.data;
   };
+
+  export const fetchPetDetails = async (petId) => {
+    const response = await axios.get(`${API_BASE_URL}/api/PetProfile/${petId}`);
+    return response.data;
+  };
+  
