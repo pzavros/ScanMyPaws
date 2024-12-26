@@ -1,33 +1,34 @@
+// Updated RecentNotifications.js
 import React, { useEffect, useState } from "react";
-import { Box, List, ListItem, ListItemText, Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import Section from "../ReusableComponents/Section";
 import Text from "../ReusableComponents/Text";
 import { fetchRecentNotifications } from "./api";
 import SectionTitle from "../ReusableComponents/SectionTitle";
 
-const RecentNotifications = () => {
+const RecentNotifications = ({ petId }) => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const loadNotifications = async () => {
-      const data = await fetchRecentNotifications();
-      setNotifications(data);
+      if (petId) {
+        const data = await fetchRecentNotifications(petId);
+        setNotifications(data);
+      }
     };
 
     loadNotifications();
-  }, []);
+  }, [petId]);
 
   return (
     <Section>
       <Box mb={3}>
-        <SectionTitle mb={1}>
-          Recent Notifications
-        </SectionTitle>
+        <SectionTitle mb={1}>Recent Notifications</SectionTitle>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "12px", // Spacing between notifications
+            gap: "12px",
           }}
         >
           {notifications.map((notification) => (
@@ -37,8 +38,8 @@ const RecentNotifications = () => {
               sx={{
                 padding: "16px",
                 borderRadius: "12px",
-                backgroundColor: "var(--card-background)", // Match card background
-                color: "var(--text-color)", // Text color
+                backgroundColor: "var(--card-background)",
+                color: "var(--text-color)",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "flex-start",
@@ -47,7 +48,10 @@ const RecentNotifications = () => {
               <Text variant="body1" fontWeight="bold" mb={0.5}>
                 {notification.title}
               </Text>
-              <Text variant="body2" sx={{ fontSize: "0.875rem", color: "var(--text-color)" }}>
+              <Text
+                variant="body2"
+                sx={{ fontSize: "0.875rem", color: "var(--text-color)" }}
+              >
                 {notification.time}
               </Text>
             </Paper>

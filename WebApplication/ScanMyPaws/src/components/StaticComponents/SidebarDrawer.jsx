@@ -15,6 +15,7 @@ import {
   Person as ProfileIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import ThemeToggle from "../../contexts/ThemeToggle";
 
 const SidebarDrawer = ({ isDrawerOpen, toggleDrawer }) => {
   const navigate = useNavigate();
@@ -145,6 +146,7 @@ const SidebarDrawer = ({ isDrawerOpen, toggleDrawer }) => {
             ))}
           </Box>
         </Box>
+        <ThemeToggle />
 
         {/* Bottom Section */}
         {isLoggedIn && (

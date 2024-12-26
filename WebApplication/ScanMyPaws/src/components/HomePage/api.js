@@ -1,58 +1,92 @@
-// components/HomePage/api.js
+// Updated components/HomePage/api.js
+import axios from "axios";
+
+const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 
 export const fetchPetData = async () => {
-    return {
-      name: "Muffin",
-      age: 3,
-      breed: "Tabby",
-      gender: "Male",
-      imageUrl: "https://via.placeholder.com/100",
-    };
+  return {
+    name: "Muffin",
+    age: 3,
+    breed: "Tabby",
+    gender: "Male",
+    imageUrl: "https://via.placeholder.com/100",
   };
-  
-  export const fetchUpcomingTasks = async () => {
-    return [
-      { title: "Vet Visit", description: "In 2 days" },
-      { title: "Dental Care", description: "Due in 4 days" },
-    ];
-  };
-  
-  export const fetchQuickActions = async () => {
-    return [
-      { label: "Add Weight", icon: "Add" },
-      { label: "Record Video", icon: "Add" },
-      { label: "Add a Task", icon: "Add" },
-    ];
-  };
-  
+};
 
-  // components/HomePage/api.js
-
-// Mock API for notifications
-export const fetchRecentNotifications = async () => {
+export const fetchUpcomingTasks = async (petId) => {
   return [
-    { id: 1, title: "Vet Visit Reminder", time: "1 hour ago" },
+    { title: "Vet Visit", description: `In 2 days for pet ${petId}` },
+    { title: "Dental Care", description: "Due in 4 days" },
+  ];
+};
+
+export const fetchQuickActions = async () => {
+  return [
+    { label: "Add Weight", icon: "Add" },
+    { label: "Record Video", icon: "Add" },
+    { label: "Add a Task", icon: "Add" },
+  ];
+};
+
+export const fetchRecentNotifications = async (petId) => {
+  return [
+    { id: 1, title: `Vet Visit Reminder for pet ${petId}`, time: "1 hour ago" },
     { id: 2, title: "Weight Update Needed", time: "3 days ago" },
   ];
 };
 
-// Mock API for medical records
-export const fetchMedicalRecords = async () => {
+export const fetchMedicalRecords = async (petId) => {
   return [
     { id: 1, type: "Vaccination", date: "2024-06-01", vet: "Dr. Smith" },
     { id: 2, type: "Checkup", date: "2024-05-15", vet: "Dr. Adams" },
   ];
 };
 
-// Mock API for planner highlights
-export const fetchPlannerHighlights = async () => {
+export const fetchPlannerHighlights = async (petId) => {
   return [
-    { id: 1, title: "Grooming Appointment", date: "June 10" },
+    { id: 1, title: `Grooming Appointment for pet ${petId}`, date: "June 10" },
     { id: 2, title: "Dental Cleaning", date: "June 15" },
   ];
 };
 
-// Mock API for pet stats
-export const fetchPetStats = async () => {
+export const fetchPetStats = async (petId) => {
   return { age: "3 Years", weight: "12 kg", activity: "High" };
 };
+
+export const fetchUserPets = async () => {
+  console.log("fetchUserPets function invoked"); // Debug log
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/PetProfile/user`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    console.log("API Response:", response.data); // Debug log
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Error in fetchUserPets:", error);
+    return [];
+  }
+};
+
+
+//delay
+// export const fetchUserPets = async () => {
+//   console.log("fetchUserPets function invoked"); // Debug log
+//   try {
+//     // Simulating a delay
+//     await new Promise((resolve) => setTimeout(resolve, 3000));
+
+//     const response = await axios.get(`${API_BASE_URL}/api/PetProfile/user`, {
+//       headers: {
+//         Authorization: `Bearer ${localStorage.getItem("token")}`,
+//       },
+//     });
+
+//     console.log("API Response:", response.data); // Debug log
+//     return response.data?.data || [];
+//   } catch (error) {
+//     console.error("Error in fetchUserPets:", error);
+//     return [];
+//   }
+// };

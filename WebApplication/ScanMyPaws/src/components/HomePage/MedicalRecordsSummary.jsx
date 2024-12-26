@@ -1,3 +1,4 @@
+// Updated MedicalRecordsSummary.js
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Text from "../ReusableComponents/Text";
@@ -7,17 +8,19 @@ import Section from "../ReusableComponents/Section";
 import { fetchMedicalRecords } from "./api";
 import SectionTitle from "../ReusableComponents/SectionTitle";
 
-const MedicalRecordsSummary = () => {
+const MedicalRecordsSummary = ({ petId }) => {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
     const loadRecords = async () => {
-      const data = await fetchMedicalRecords();
-      setRecords(data);
+      if (petId) {
+        const data = await fetchMedicalRecords(petId);
+        setRecords(data);
+      }
     };
 
     loadRecords();
-  }, []);
+  }, [petId]);
 
   return (
     <Section>

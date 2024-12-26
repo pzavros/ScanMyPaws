@@ -106,7 +106,10 @@ namespace Backend.Services
                     PetID = pet.PetID,
                     PetName = pet.PetName,
                     Photo = pet.Photo,
-                    BreedName = pet.DogBreed != null ? pet.DogBreed.BreedName : null
+                    BreedName = pet.DogBreed != null ? pet.DogBreed.BreedName : null,
+                    Age = pet.Age != null ? pet.Age : null,
+                    Sex = pet.Sex,
+                    SpecialNotes = pet.SpecialNotes != null ? pet.SpecialNotes : null
                 })
                 .ToListAsync();
         }

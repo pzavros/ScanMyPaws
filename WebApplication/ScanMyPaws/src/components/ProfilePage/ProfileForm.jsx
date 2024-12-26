@@ -17,7 +17,7 @@ const ProfileForm = () => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [gender, setGender] = useState(null);
+  const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
@@ -34,8 +34,14 @@ const ProfileForm = () => {
         setLastName(profile.lastName || "");
         setEmail(profile.email || "");
         setPhoneNumber(profile.phoneNumber || "");
-        setDateOfBirth(profile.dateOfBirth || "");
-        setGender(profile.gender !== null ? (profile.gender ? "Male" : "Female") : "");
+        setDateOfBirth(
+          profile.dateOfBirth
+            ? new Date(profile.dateOfBirth).toISOString().split("T")[0]
+            : ""
+        );
+        setGender(
+          profile.gender !== null ? (profile.gender ? "Male" : "Female") : ""
+        );
         setAddress(profile.address || "");
         setCity(profile.city || "");
         setState(profile.state || "");
@@ -84,10 +90,10 @@ const ProfileForm = () => {
         color: "var(--text-color)",
         padding: "24px",
         borderRadius: "16px",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow for elevation
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
         transition: "box-shadow 0.3s ease",
         "&:hover": {
-          boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)", // Slightly stronger shadow on hover
+          boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
         },
       }}
     >
@@ -98,11 +104,18 @@ const ProfileForm = () => {
         Update Profile
       </Typography>
 
-      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {success}
+        </Alert>
+      )}
 
-      {/* Fields */}
-      {[
+      {[ // Input fields
         { placeholder: "First Name", value: firstName, setter: setFirstName },
         { placeholder: "Last Name", value: lastName, setter: setLastName },
         { placeholder: "Email", value: email, setter: setEmail, disabled: true },
@@ -138,7 +151,6 @@ const ProfileForm = () => {
         </Box>
       ))}
 
-      {/* Gender Dropdown */}
       <Box mb={3}>
         <FormControl fullWidth sx={{ backgroundColor: "var(--input-background)" }}>
           <Select
@@ -165,7 +177,6 @@ const ProfileForm = () => {
         </FormControl>
       </Box>
 
-      {/* Submit Button */}
       <Button
         type="submit"
         variant="contained"

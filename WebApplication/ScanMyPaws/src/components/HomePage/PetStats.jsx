@@ -1,3 +1,4 @@
+// Updated PetStats.js
 import React, { useEffect, useState } from "react";
 import { Box, Paper } from "@mui/material";
 import Section from "../ReusableComponents/Section";
@@ -5,17 +6,19 @@ import Text from "../ReusableComponents/Text";
 import { fetchPetStats } from "./api";
 import SectionTitle from "../ReusableComponents/SectionTitle";
 
-const PetStats = () => {
+const PetStats = ({ petId }) => {
   const [stats, setStats] = useState({});
 
   useEffect(() => {
     const loadStats = async () => {
-      const data = await fetchPetStats();
-      setStats(data);
+      if (petId) {
+        const data = await fetchPetStats(petId);
+        setStats(data);
+      }
     };
 
     loadStats();
-  }, []);
+  }, [petId]);
 
   return (
     <Section>
@@ -25,15 +28,15 @@ const PetStats = () => {
         sx={{
           padding: "16px",
           borderRadius: "12px",
-          backgroundColor: "var(--card-background)", // Consistent card background
-          color: "var(--text-color)", // Adapt text color to theme
+          backgroundColor: "var(--card-background)",
+          color: "var(--text-color)",
         }}
       >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: "8px", // Add spacing between stats
+            gap: "8px",
           }}
         >
           <Text variant="body1" fontWeight="bold">

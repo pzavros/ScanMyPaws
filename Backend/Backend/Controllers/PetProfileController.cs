@@ -96,17 +96,27 @@ namespace Backend.Controllers
             {
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserID");
                 if (userIdClaim == null)
-                    return Unauthorized("UserID claim is missing from the token.");
+                    return Unauthorized(new { Message = "UserID claim is missing from the token." });
 
-                var userId = int.Parse(userIdClaim.Value);
+                if (!int.TryParse(userIdClaim.Value, out var userId))
+                    return BadRequest(new { Message = "Invalid UserID format in the token." });
+
                 var pets = await _petProfileService.GetUserPets(userId);
-                return Ok(pets);
+
+                if (pets == null || !pets.Any())
+                {
+                    return Ok(new { Message = "No pets found.", Data = new List<object>() });
+                }
+
+                return Ok(new { Message = "Pets fetched successfully.", Data = pets });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                Console.WriteLine($"Error fetching pets: {ex.Message}");
+                return StatusCode(500, new { Message = "Internal server error.", Details = ex.Message });
             }
         }
+
 
         [HttpPut("{petId}")]
         public async Task<IActionResult> UpdatePetProfile(int petId, [FromForm] PetProfileDto petProfileDto)

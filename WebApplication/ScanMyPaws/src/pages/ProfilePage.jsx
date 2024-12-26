@@ -1,5 +1,5 @@
 import React from "react";
-import Page from "../components/ReusableComponents/page";
+import Page from "../components/ReusableComponents/Page";
 import ProfileForm from "../components/ProfilePage/ProfileForm";
 import Notifications from "../components/ProfilePage/Notifications";
 

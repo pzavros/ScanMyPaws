@@ -1,3 +1,4 @@
+// Updated UpcomingTasks.js
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Text from "../ReusableComponents/Text";
@@ -7,33 +8,31 @@ import Section from "../ReusableComponents/Section";
 import { fetchUpcomingTasks } from "./api";
 import SectionTitle from "../ReusableComponents/SectionTitle";
 
-const UpcomingTasks = () => {
+const UpcomingTasks = ({ petId }) => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     const loadTasks = async () => {
-      const data = await fetchUpcomingTasks();
-      setTasks(data);
+      if (petId) {
+        const data = await fetchUpcomingTasks(petId);
+        setTasks(data);
+      }
     };
 
     loadTasks();
-  }, []);
+  }, [petId]);
 
   return (
     <Section>
       <Box mb={3}>
-        <SectionTitle mb={1}>
-          Upcoming Tasks
-        </SectionTitle>
+        <SectionTitle mb={1}>Upcoming Tasks</SectionTitle>
         <Row>
           {tasks.map((task, index) => (
             <Card key={index}>
               <Text variant="body1" fontWeight="bold">
                 {task.title}
               </Text>
-              <Text variant="body2">
-                {task.description}
-              </Text>
+              <Text variant="body2">{task.description}</Text>
             </Card>
           ))}
         </Row>

@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, Button } from "@mui/material";
-import Text from "../ReusableComponents/Text";
+import { useNavigate } from "react-router-dom";
 import Section from "../ReusableComponents/Section";
-import { fetchPetData } from "./api";
 import SectionTitle from "../ReusableComponents/SectionTitle";
 
-const ProfileHeader = () => {
-  const [pet, setPet] = useState({});
+const ProfileHeader = ({ pet, pets = [], currentPetIndex, onDotClick }) => {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadPetData = async () => {
-      const data = await fetchPetData();
-      setPet(data);
-    };
-
-    loadPetData();
-  }, []);
+  if (!pet) {
+    return <div>Loading pets...</div>;
+  }
 
   return (
     <Section>
@@ -27,55 +21,47 @@ const ProfileHeader = () => {
           backgroundColor: "var(--card-background)",
           borderRadius: "16px",
           boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        {/* Pet Image */}
-        <img
-          src={pet.imageUrl || "https://via.placeholder.com/150"}
-          alt={pet.name || "Loading"}
-          style={{
-            borderRadius: "50%",
-            width: "120px",
-            height: "120px",
-            marginBottom: "16px",
-            border: "3px solid var(--primary-color)", // Add border color
-          }}
-        />
-
-        {/* Pet Name */}
         <SectionTitle
           sx={{
             fontSize: "1.8rem",
             fontWeight: "bold",
-            marginBottom: "8px",
             color: "var(--text-color)",
+            textAlign: "center",
           }}
         >
-          {pet.name || "Loading..."}
+          {pet.petName || "Unknown"}
         </SectionTitle>
 
-        {/* Pet Details */}
-        <Text
-          variant="body1"
-          sx={{
-            color: "var(--text-color)",
-            marginBottom: "16px",
-            fontSize: "1rem",
-          }}
-        >
-          Age: {pet.age || "-"}, Breed: {pet.breed || "-"}, Gender:{" "}
-          {pet.gender || "-"}
-        </Text>
+        {pet.photo && (
+          <img
+            src={`data:image/jpeg;base64,${pet.photo}`}
+            alt={pet.petName || "Pet"}
+            style={{
+              borderRadius: "50%",
+              width: "120px",
+              height: "120px",
+              marginBottom: "16px",
+              border: "3px solid var(--primary-color)",
+            }}
+          />
+        )}
 
-        {/* View Profile Button */}
         <Button
           variant="contained"
           color="primary"
+          onClick={() => navigate(`/pets/${pet.petID}`)}
           sx={{
             borderRadius: "24px",
             padding: "8px 24px",
             fontSize: "1rem",
             textTransform: "capitalize",
+            marginTop: "16px",
             "&:hover": {
               backgroundColor: "var(--button-hover-background)",
             },
@@ -83,6 +69,29 @@ const ProfileHeader = () => {
         >
           View Profile
         </Button>
+
+        <Box
+          mt={2}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          {pets.map((_, index) => (
+            <Box
+              key={index}
+              onClick={() => onDotClick(index)}
+              sx={{
+                width: "10px",
+                height: "10px",
+                margin: "0 5px",
+                borderRadius: "50%",
+                backgroundColor: currentPetIndex === index ? "var(--primary-color)" : "gray",
+                cursor: "pointer",
+                transition: "background-color 0.3s ease",
+              }}
+            />
+          ))}
+        </Box>
       </Box>
     </Section>
   );

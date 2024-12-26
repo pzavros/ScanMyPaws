@@ -1,3 +1,4 @@
+// Updated PlannerHighlights.js
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Text from "../ReusableComponents/Text";
@@ -7,17 +8,19 @@ import Section from "../ReusableComponents/Section";
 import { fetchPlannerHighlights } from "./api";
 import SectionTitle from "../ReusableComponents/SectionTitle";
 
-const PlannerHighlights = () => {
+const PlannerHighlights = ({ petId }) => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const loadEvents = async () => {
-      const data = await fetchPlannerHighlights();
-      setEvents(data);
+      if (petId) {
+        const data = await fetchPlannerHighlights(petId);
+        setEvents(data);
+      }
     };
 
     loadEvents();
-  }, []);
+  }, [petId]);
 
   return (
     <Section>
