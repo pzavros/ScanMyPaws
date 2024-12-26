@@ -1,186 +1,180 @@
-import React, { useState, useEffect } from "react";
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Menu,
-  MenuItem,
-  Divider,
-  ListItemIcon,
-  Typography,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { Settings, HelpOutline, Logout, Person } from "@mui/icons-material";
-import ThemeToggle from "../../contexts/ThemeToggle";
+import React, { useState } from "react";
+import { AppBar, Toolbar, IconButton, Box, Typography, Modal, Paper } from "@mui/material";
+import { Menu as MenuIcon, Home as HomeIcon, Pets as PetsIcon, Notifications as NotificationsIcon } from "@mui/icons-material";
+import { useNavigate, useLocation } from "react-router-dom";
+import SidebarDrawer from "./SidebarDrawer";
 
 const TopNavbar = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current route to determine the active page
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isNotificationsOpen, setNotificationsOpen] = useState(false);
 
-  // State for authentication
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // State for the Profile Menu
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-
-  useEffect(() => {
-    // Check if the user is logged in (example using localStorage)
-    const userToken = localStorage.getItem("token"); // Replace with your auth logic
-    setIsLoggedIn(!!userToken);
-  }, []);
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
+      return;
+    }
+    setDrawerOpen(open);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  const toggleNotifications = () => {
+    setNotificationsOpen(!isNotificationsOpen);
   };
 
-  const handleLogout = () => {
-    console.log("User logged out");
-    localStorage.removeItem("token"); // Clear the token or session data
-    setIsLoggedIn(false);
-    handleMenuClose();
-    navigate("/signin"); // Redirect to login page
-  };
-
-  const handleLogin = () => {
-    navigate("/signin"); // Redirect to login page
-    handleMenuClose();
-  };
+  const navItems = [
+    { label: "Home", icon: <HomeIcon />, path: "/" },
+    { label: "Pets", icon: <PetsIcon />, path: "/pets" },
+  ];
 
   return (
-    <AppBar
-      position="sticky"
-      elevation={0}
-      sx={{
-        backgroundColor: "var(--background-color)",
-        color: "var(--text-color)",
-        boxShadow: "none",
-        borderBottom: "none",
-      }}
-    >
-      <Toolbar
+    <>
+      {/* Top AppBar */}
+      <AppBar
+        position="sticky"
+        elevation={1}
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          backgroundColor: "var(--background-color)",
+          color: "var(--text-color)",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
         }}
       >
-        {/* Theme Toggle */}
-        <ThemeToggle />
-
-        {/* Profile Menu Button */}
-        <IconButton
-          edge="end"
-          color="inherit"
-          onClick={handleMenuOpen}
-          aria-controls={isMenuOpen ? "profile-menu" : undefined}
-          aria-haspopup="true"
+        <Toolbar
           sx={{
-            backgroundColor: "var(--card-background)",
-            borderRadius: "50%",
-            padding: "8px",
-            "&:hover": {
-              backgroundColor: "var(--card-hover)",
-            },
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <Person />
-        </IconButton>
+          {/* Hamburger Menu Button */}
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={toggleDrawer(true)}
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
 
-        {/* Profile Menu */}
-        <Menu
-          id="profile-menu"
-          anchorEl={anchorEl}
-          open={isMenuOpen}
-          onClose={handleMenuClose}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
+          {/* Navigation Buttons */}
+          <Box sx={{ display: "flex", gap: 3 }}>
+            {navItems.map((item, index) => (
+              <Box
+                key={index}
+                onClick={() => navigate(item.path)}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  position: "relative",
+                  transition: "all 0.3s ease",
+                  color: location.pathname === item.path ? "var(--primary-color)" : "var(--text-color)",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "8px 16px",
+                    backgroundColor: location.pathname === item.path ? "var(--hover-color)" : "transparent",
+                    borderRadius: "24px",
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      transition: "transform 0.3s ease",
+                      transform:
+                        location.pathname === item.path ? "translateX(-8px)" : "translateX(0)",
+                    }}
+                  >
+                    {item.icon}
+                  </Box>
+                  {location.pathname === item.path && (
+                    <Typography
+                      sx={{
+                        marginLeft: "8px",
+                        opacity: 1,
+                        transition: "opacity 0.3s ease",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.label}
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+            ))}
+
+            {/* Notifications Icon */}
+            <Box
+              onClick={toggleNotifications}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                position: "relative",
+                color: "var(--text-color)", // Match the theme color for visibility
+                "&:hover": {
+                  color: "var(--primary-color)", // Highlight on hover
+                },
+              }}
+            >
+              <IconButton>
+                <NotificationsIcon sx={{ color: "var(--text-color)" }} />
+              </IconButton>
+            </Box>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      {/* Sidebar Drawer */}
+      <SidebarDrawer isDrawerOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
+
+      {/* Notifications Modal */}
+      <Modal
+        open={isNotificationsOpen}
+        onClose={toggleNotifications}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Paper
           sx={{
-            "& .MuiPaper-root": {
-              color: "var(--text-color)",
-              borderRadius: "12px",
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
-              minWidth: "200px",
-              border: "1px solid var(--divider-color)", // Border for better visibility
-            },
+            width: "90%",
+            maxWidth: 400,
+            padding: 2,
+            backgroundColor: "var(--background-color)",
+            color: "var(--text-color)",
+            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            borderRadius: "16px",
           }}
         >
-          {isLoggedIn ? (
-            <>
-              {/* Profile Section */}
-              <MenuItem
-                onClick={() => {
-                  navigate("/profile");
-                  handleMenuClose();
-                }}
-              >
-                <ListItemIcon>
-                  <Person fontSize="small" sx={{ color: "var(--primary-color)" }} />
-                </ListItemIcon>
-                Profile
-              </MenuItem>
-
-              <Divider sx={{ backgroundColor: "var(--divider-color)" }} />
-
-              {/* Settings Section */}
-              <MenuItem
-                onClick={() => {
-                  navigate("/settings");
-                  handleMenuClose();
-                }}
-              >
-                <ListItemIcon>
-                  <Settings fontSize="small" sx={{ color: "var(--primary-color)" }} />
-                </ListItemIcon>
-                Settings
-              </MenuItem>
-
-              {/* Help Section */}
-              <MenuItem
-                onClick={() => {
-                  navigate("/help");
-                  handleMenuClose();
-                }}
-              >
-                <ListItemIcon>
-                  <HelpOutline fontSize="small" sx={{ color: "var(--primary-color)" }} />
-                </ListItemIcon>
-                Help
-              </MenuItem>
-
-              <Divider sx={{ backgroundColor: "var(--divider-color)" }} />
-
-              {/* Logout Section */}
-              <MenuItem onClick={handleLogout}>
-                <ListItemIcon>
-                  <Logout fontSize="small" sx={{ color: "var(--error-color)" }} />
-                </ListItemIcon>
-                Logout
-              </MenuItem>
-            </>
-          ) : (
-            <MenuItem onClick={handleLogin}>
-              <ListItemIcon>
-                <Person fontSize="small" sx={{ color: "var(--primary-color)" }} />
-              </ListItemIcon>
-              Login
-            </MenuItem>
-          )}
-        </Menu>
-      </Toolbar>
-    </AppBar>
+          <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
+            Notifications
+          </Typography>
+          <Box>
+            <Typography variant="body1" sx={{ mb: 1 }}>
+              • Reminder: Take your pet to the vet tomorrow.
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 1 }}>
+              • New feature: Explore your pet's activity history!
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 1 }}>
+              • Special offer: Get 20% off pet grooming services!
+            </Typography>
+          </Box>
+        </Paper>
+      </Modal>
+    </>
   );
 };
 
 export default TopNavbar;
+  

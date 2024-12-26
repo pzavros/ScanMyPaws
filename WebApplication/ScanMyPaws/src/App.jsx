@@ -9,10 +9,9 @@ import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import ProfilePage from "./pages/ProfilePage";
 import TopNavbar from "./components/StaticComponents/TopNabBar";
-import BottomNavbar from "./components/StaticComponents/BottomNavBar";
-import PetDetailsPage from "./pages/PetDetailsPage";
 import Wizard from "./components/StaticComponents/Wizard";
 import { isLoggedIn } from "./components/Authentication/api";
+import PetDetailsPage from "./pages/PetDetailsPage";
 
 const PrivateRoute = ({ element }) => {
   return isLoggedIn() ? element : <Navigate to="/signin" />;
@@ -22,7 +21,6 @@ const App = () => {
   const [showWizard, setShowWizard] = useState(false);
 
   useEffect(() => {
-    // Check if the wizard has already been completed
     const hasCompletedWizard = localStorage.getItem("hasCompletedWizard");
     if (!hasCompletedWizard) {
       setShowWizard(true);
@@ -56,7 +54,6 @@ const App = () => {
           <Route path="/pets/:petId" element={<PetDetailsPage />} />
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
-        {!shouldHideNav && <BottomNavbar />}
       </Router>
     </ThemeProvider>
   );
