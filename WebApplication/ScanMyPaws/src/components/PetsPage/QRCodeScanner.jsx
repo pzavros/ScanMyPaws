@@ -49,9 +49,17 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
   };
 
   useEffect(() => {
-    const scanInterval = setInterval(captureAndDecode, 1000);
-    return () => clearInterval(scanInterval);
+    async function requestCameraAccess() {
+      try {
+        await navigator.mediaDevices.getUserMedia({ video: true });
+      } catch (error) {
+        setQrError("Camera access denied. Please enable camera permissions.");
+      }
+    }
+    requestCameraAccess();
   }, []);
+  
+  
 
   return (
     <Section>
