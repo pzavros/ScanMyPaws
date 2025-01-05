@@ -1,0 +1,15 @@
+# Ignore build artifacts
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+
+# Ignore Rider IDE files
+*.idea/
+*.iml
+*.ipr
+
+# Ignore NuGet packages
+*.nuget/
