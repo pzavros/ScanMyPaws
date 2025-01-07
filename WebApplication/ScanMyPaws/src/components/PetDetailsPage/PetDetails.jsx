@@ -5,6 +5,8 @@ import Select from "react-select";
 import Section from "../ReusableComponents/Section";
 import { fetchPetDetails, updatePetDetails, fetchDogBreeds } from "./api";
 import Button from "../ReusableComponents/Button";
+import EditIcon from "@mui/icons-material/Edit";
+import PetsIcon from "@mui/icons-material/Pets";
 
 const PetDetails = () => {
   const { petId } = useParams();
@@ -109,40 +111,123 @@ const PetDetails = () => {
 
   return (
     <Section>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
-        <Button
-          onClick={() => navigate("/pets")}
-          sx={{
-            backgroundColor: "var(--primary-color)",
-            color: "white",
-            borderRadius: "24px",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            "&:hover": {
-              backgroundColor: "var(--secondary-color)",
-            },
-          }}
-        >
-          Back to Pet List
-        </Button>
-        <Button
-          onClick={handleEditToggle}
-          sx={{
-            backgroundColor: isEditing
-              ? "var(--secondary-color)"
-              : "var(--primary-color)",
-            color: "white",
-            borderRadius: "24px",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            "&:hover": {
-              backgroundColor: isEditing
-                ? "var(--secondary-color)"
-                : "var(--secondary-color)",
-            },
-          }}
-        >
-          {isEditing ? "Cancel" : "Edit"}
-        </Button>
-      </Box>
+      <Box
+  sx={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 2,
+    mb: 3,
+    width: "100%", // Ensures responsive width
+  }}
+>
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "space-around",
+      width: "100%",
+      gap: 2, // Space between buttons
+    }}
+  >
+    {/* Back to Pet List Button */}
+    <Button
+      onClick={() => navigate("/pets")}
+      sx={{
+        backgroundColor: "var(--primary-color)",
+        color: "white",
+        borderRadius: "20px",
+        padding: "6px 10px",
+        fontSize: "0.75rem",
+        fontWeight: "bold",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+        flex: 1, // Equal button width
+        "&:hover": {
+          backgroundColor: "var(--secondary-color)",
+        },
+      }}
+    >
+      Back
+    </Button>
+
+    {/* Create or View Pet Card Button */}
+    <Button
+      onClick={() =>
+        pet?.isHavingCard
+          ? navigate(`/viewpetcard/${petId}`)
+          : navigate(`/createpetcard/${petId}`)
+      }
+      sx={{
+        background: pet?.isHavingCard
+          ? "linear-gradient(90deg, #4caf50, #81c784)" // Green gradient for "View Card"
+          : "linear-gradient(90deg, #ff6f61, #ff9671)", // Coral gradient for "Create Card"
+        color: "white",
+        borderRadius: "28px",
+        padding: "8px 12px",
+        fontSize: "0.85rem",
+        fontWeight: "bold",
+        boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.15)", // Slight shadow
+        flex: 2, // Larger width for main action button
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 1,
+        "&:hover": {
+          background: pet?.isHavingCard
+            ? "linear-gradient(90deg, #81c784, #4caf50)"
+            : "linear-gradient(90deg, #ff9671, #ff6f61)",
+          boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
+        },
+      }}
+    >
+      <PetsIcon sx={{ fontSize: "1.1rem" }} />
+      {pet?.isHavingCard ? "View Card" : "Create Card"}
+    </Button>
+
+    {/* Edit Button */}
+    <Button
+      onClick={handleEditToggle}
+      sx={{
+        backgroundColor: "var(--primary-color)",
+        color: "white",
+        borderRadius: "20px",
+        padding: "6px 10px",
+        fontSize: "0.75rem",
+        fontWeight: "bold",
+        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+        flex: 1, // Equal button width
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        "&:hover": {
+          backgroundColor: "var(--secondary-color)",
+        },
+      }}
+    >
+      <EditIcon sx={{ fontSize: "1.1rem" }} />
+      Edit
+    </Button>
+  </Box>
+
+  {/* Explanation Text for Create Pet Card */}
+  {!pet?.isHavingCard && (
+    <Typography
+      variant="body2"
+      sx={{
+        color: "var(--text-color-secondary)",
+        textAlign: "center",
+        maxWidth: "90%",
+        fontSize: "0.75rem", // Smaller text
+        marginTop: "8px", // Added spacing
+      }}
+    >
+      Tap "Create Card" to generate a QR code for your pet. This card helps others return your pet if it's lost.
+    </Typography>
+  )}
+</Box>
+
+
+
+
 
       <Card
         sx={{

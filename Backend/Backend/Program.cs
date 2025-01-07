@@ -22,6 +22,7 @@ builder.Services.AddScoped<IPetProfileService, PetProfileService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IDogBreedService, DogBreedService>();
+builder.Services.AddScoped<IPetCardService, PetCardService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

@@ -48,5 +48,6 @@ namespace Backend.Models
 
         // Navigation property to User
         public virtual User User { get; set; } // This creates the relationship
+        public bool IsHavingCard { get; set; } = false;
     }
 }

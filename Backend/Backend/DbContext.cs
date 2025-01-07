@@ -15,6 +15,7 @@ namespace Backend
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<DogBreed> DogBreeds { get; set; }
+        public DbSet<PetCard> PetCards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

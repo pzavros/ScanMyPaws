@@ -4,6 +4,7 @@ using Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250106180343_UpdatePetCardSchema")]
+    partial class UpdatePetCardSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1132,16 +1135,10 @@ namespace Backend.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Age")
-                        .HasColumnType("int");
-
                     b.Property<string>("AlternativeContactName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AlternativeContactPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BreedName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateCreated")
@@ -1167,19 +1164,6 @@ namespace Backend.Migrations
 
                     b.Property<int>("PetID")
                         .HasColumnType("int");
-
-                    b.Property<string>("PetName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Sex")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SpecialNotes")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");

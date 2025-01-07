@@ -83,6 +83,7 @@ namespace Backend.Services
                 Sex = petProfile.Sex,
                 SpecialNotes = petProfile.SpecialNotes,
                 Photo = petProfile.Photo,
+                IsHavingCard = petProfile.IsHavingCard
             };
         }
 

@@ -4,6 +4,7 @@ using Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250105225116_IsHavingCard")]
+    partial class IsHavingCard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1117,82 +1120,6 @@ namespace Backend.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Backend.Models.PetCard", b =>
-                {
-                    b.Property<int>("PetCardID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetCardID"));
-
-                    b.Property<string>("AdditionalInfo")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AlternativeContactName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AlternativeContactPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BreedName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImportantInformation")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("MobilePhone1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MobilePhone2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PetID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PetName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Sex")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SpecialNotes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("PetCardID");
-
-                    b.HasIndex("PetID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("PetCards");
-                });
-
             modelBuilder.Entity("Backend.Models.PetProfile", b =>
                 {
                     b.Property<int>("PetID")
@@ -1438,25 +1365,6 @@ namespace Backend.Migrations
                     b.Navigation("OrderStatus");
 
                     b.Navigation("QRCode");
-                });
-
-            modelBuilder.Entity("Backend.Models.PetCard", b =>
-                {
-                    b.HasOne("Backend.Models.PetProfile", "PetProfile")
-                        .WithMany()
-                        .HasForeignKey("PetID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PetProfile");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Backend.Models.PetProfile", b =>

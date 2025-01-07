@@ -14,4 +14,6 @@ public class PetProfileDto
     public byte[]? Photo { get; set; }
     public string? SpecialNotes { get; set; }
     public int QRCodeID { get; set; }
+    public bool IsHavingCard { get; set; } = false;
+
 }
