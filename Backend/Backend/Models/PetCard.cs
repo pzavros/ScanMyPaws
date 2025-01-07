@@ -47,5 +47,6 @@ namespace Backend.Models
         public string? Sex { get; set; }
         public string? SpecialNotes { get; set; }
         public byte[]? Photo { get; set; }
+        public double? Weight { get; set; }
     }
 }

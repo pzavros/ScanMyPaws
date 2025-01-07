@@ -153,7 +153,7 @@ const PetDetails = () => {
     <Button
       onClick={() =>
         pet?.isHavingCard
-          ? navigate(`/viewpetcard/${petId}`)
+          ? navigate(`/petcard/${petId}`)
           : navigate(`/createpetcard/${petId}`)
       }
       sx={{

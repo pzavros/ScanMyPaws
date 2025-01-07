@@ -22,7 +22,6 @@ namespace Backend.Controllers
         {
             try
             {
-                // Decode userID from JWT token
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserID");
                 if (userIdClaim == null)
                 {
@@ -30,11 +29,8 @@ namespace Backend.Controllers
                 }
 
                 var userId = int.Parse(userIdClaim.Value);
-
-                // Assign UserID to the DTO
                 petCardDto.UserID = userId;
 
-                // Call the service to create the pet card
                 var result = await _petCardService.CreatePetCard(petCardDto);
 
                 if (result == null)
@@ -61,6 +57,26 @@ namespace Backend.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpPut("{petId}")]
+        public async Task<IActionResult> UpdatePetCard(int petId, [FromBody] PetCardDto updatedPetCard)
+        {
+            try
+            {
+                var result = await _petCardService.UpdatePetCard(petId, updatedPetCard);
+                if (result == null)
+                {
+                    return NotFound("Pet card not found.");
+                }
+
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "An internal server error occurred.");
+            }
         }
     }
 }
