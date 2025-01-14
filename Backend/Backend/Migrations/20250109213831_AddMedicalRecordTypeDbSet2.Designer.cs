@@ -4,6 +4,7 @@ using Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250109213831_AddMedicalRecordTypeDbSet2")]
+    partial class AddMedicalRecordTypeDbSet2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1067,6 +1070,9 @@ namespace Backend.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("MedicalRecordTypeTypeID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("NextDueDate")
                         .HasColumnType("datetime2");
 
@@ -1085,9 +1091,7 @@ namespace Backend.Migrations
 
                     b.HasKey("MedicalRecordID");
 
-                    b.HasIndex("PetID");
-
-                    b.HasIndex("TypeID");
+                    b.HasIndex("MedicalRecordTypeTypeID");
 
                     b.ToTable("MedicalRecords");
                 });
@@ -1553,21 +1557,9 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.MedicalRecord", b =>
                 {
-                    b.HasOne("Backend.Models.PetProfile", "PetProfile")
-                        .WithMany()
-                        .HasForeignKey("PetID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.MedicalRecordType", "MedicalRecordType")
+                    b.HasOne("Backend.Models.MedicalRecordType", null)
                         .WithMany("MedicalRecords")
-                        .HasForeignKey("TypeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MedicalRecordType");
-
-                    b.Navigation("PetProfile");
+                        .HasForeignKey("MedicalRecordTypeTypeID");
                 });
 
             modelBuilder.Entity("Backend.Models.Order", b =>

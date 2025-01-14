@@ -36,11 +36,20 @@ export const fetchRecentNotifications = async (petId) => {
 };
 
 export const fetchMedicalRecords = async (petId) => {
-  return [
-    { id: 1, type: "Vaccination", date: "2024-06-01", vet: "Dr. Smith" },
-    { id: 2, type: "Checkup", date: "2024-05-15", vet: "Dr. Adams" },
-  ];
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/MedicalRecord/pet/${petId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    console.log("Medical Records Response:", response.data); // Debug log
+    return response.data || [];
+  } catch (error) {
+    console.error("Error fetching medical records:", error);
+    return [];
+  }
 };
+
 
 export const fetchPlannerHighlights = async (petId) => {
   return [

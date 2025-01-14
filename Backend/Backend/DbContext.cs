@@ -16,6 +16,10 @@ namespace Backend
         public DbSet<Order> Orders { get; set; }
         public DbSet<DogBreed> DogBreeds { get; set; }
         public DbSet<PetCard> PetCards { get; set; }
+        public DbSet<MedicalRecord> MedicalRecords { get; set; }
+        public DbSet<MedicalRecordType> MedicalRecordTypes { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -53,6 +57,18 @@ namespace Backend
                 .WithOne(q => q.PetProfile)
                 .HasForeignKey<PetProfile>(p => p.QRCodeID)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<MedicalRecordType>().HasData(
+                new MedicalRecordType { TypeID = 1, TypeName = "Vaccination" },
+                new MedicalRecordType { TypeID = 2, TypeName = "Deworming" },
+                new MedicalRecordType { TypeID = 3, TypeName = "Preventive Care" },
+                new MedicalRecordType { TypeID = 4, TypeName = "Surgery" },
+                new MedicalRecordType { TypeID = 5, TypeName = "Medication" },
+                new MedicalRecordType { TypeID = 6, TypeName = "Routine Check-Up" },
+                new MedicalRecordType { TypeID = 7, TypeName = "Test Results" },
+                new MedicalRecordType { TypeID = 8, TypeName = "Injury Treatment" },
+                new MedicalRecordType { TypeID = 9, TypeName = "Sterilization" }
+            );
 
             // Configure DogBreed and seed data
             modelBuilder.Entity<DogBreed>().HasData(

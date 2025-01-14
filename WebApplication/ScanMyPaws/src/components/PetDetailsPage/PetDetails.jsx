@@ -10,6 +10,7 @@ import PetsIcon from "@mui/icons-material/Pets";
 
 const PetDetails = () => {
   const { petId } = useParams();
+  console.log("Pet ID from URL:", petId); // Debug log
   const navigate = useNavigate();
   const [pet, setPet] = useState(null);
   const [isEditing, setIsEditing] = useState(false);

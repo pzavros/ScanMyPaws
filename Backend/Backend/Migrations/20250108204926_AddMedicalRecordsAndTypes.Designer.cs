@@ -4,6 +4,7 @@ using Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250108204926_AddMedicalRecordsAndTypes")]
+    partial class AddMedicalRecordsAndTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1042,133 +1045,6 @@ namespace Backend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Backend.Models.MedicalRecord", b =>
-                {
-                    b.Property<int>("MedicalRecordID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MedicalRecordID"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("NextDueDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PetID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("VetClinicName")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("MedicalRecordID");
-
-                    b.HasIndex("PetID");
-
-                    b.HasIndex("TypeID");
-
-                    b.ToTable("MedicalRecords");
-                });
-
-            modelBuilder.Entity("Backend.Models.MedicalRecordType", b =>
-                {
-                    b.Property<int>("TypeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TypeID"));
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("TypeName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("TypeID");
-
-                    b.ToTable("MedicalRecordTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            TypeID = 1,
-                            IsActive = true,
-                            TypeName = "Vaccination"
-                        },
-                        new
-                        {
-                            TypeID = 2,
-                            IsActive = true,
-                            TypeName = "Deworming"
-                        },
-                        new
-                        {
-                            TypeID = 3,
-                            IsActive = true,
-                            TypeName = "Preventive Care"
-                        },
-                        new
-                        {
-                            TypeID = 4,
-                            IsActive = true,
-                            TypeName = "Surgery"
-                        },
-                        new
-                        {
-                            TypeID = 5,
-                            IsActive = true,
-                            TypeName = "Medication"
-                        },
-                        new
-                        {
-                            TypeID = 6,
-                            IsActive = true,
-                            TypeName = "Routine Check-Up"
-                        },
-                        new
-                        {
-                            TypeID = 7,
-                            IsActive = true,
-                            TypeName = "Test Results"
-                        },
-                        new
-                        {
-                            TypeID = 8,
-                            IsActive = true,
-                            TypeName = "Injury Treatment"
-                        },
-                        new
-                        {
-                            TypeID = 9,
-                            IsActive = true,
-                            TypeName = "Sterilization"
-                        });
-                });
-
             modelBuilder.Entity("Backend.Models.Order", b =>
                 {
                     b.Property<int>("OrderID")
@@ -1551,25 +1427,6 @@ namespace Backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Backend.Models.MedicalRecord", b =>
-                {
-                    b.HasOne("Backend.Models.PetProfile", "PetProfile")
-                        .WithMany()
-                        .HasForeignKey("PetID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.MedicalRecordType", "MedicalRecordType")
-                        .WithMany("MedicalRecords")
-                        .HasForeignKey("TypeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MedicalRecordType");
-
-                    b.Navigation("PetProfile");
-                });
-
             modelBuilder.Entity("Backend.Models.Order", b =>
                 {
                     b.HasOne("Backend.Models.Status", "OrderStatus")
@@ -1631,11 +1488,6 @@ namespace Backend.Migrations
                     b.Navigation("QRCode");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Backend.Models.MedicalRecordType", b =>
-                {
-                    b.Navigation("MedicalRecords");
                 });
 
             modelBuilder.Entity("Backend.Models.QRCode", b =>

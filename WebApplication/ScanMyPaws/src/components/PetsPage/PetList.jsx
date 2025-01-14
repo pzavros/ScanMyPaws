@@ -91,18 +91,7 @@ const PetList = () => {
                   {pet.petName}
                 </SectionTitle>
                 <Box sx={{ textAlign: "center" }}>
-                  <Button
-                    onClick={() => navigate(`/pets/${pet.petID}`)} // Navigate with petID
-                    sx={{
-                      backgroundColor: "var(--primary-color)",
-                      color: "white",
-                      borderRadius: "24px",
-                      padding: "8px 16px",
-                      "&:hover": {
-                        backgroundColor: "var(--primary-color-hover)",
-                      },
-                    }}
-                  >
+                  <Button onClick={() => navigate(`/pets/${pet.petID}`)}>
                     View Details
                   </Button>
                 </Box>

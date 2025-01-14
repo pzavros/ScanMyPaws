@@ -14,6 +14,8 @@ import { isLoggedIn } from "./components/Authentication/api";
 import PetDetailsPage from "./pages/PetDetailsPage";
 import CreatePetCardPage from "./pages/CreatePetCardPage";
 import PetCardPage from "./pages/PetCardPage";
+import MedicalRecordsPage from "./pages/MedicalRecordsPage";
+import SelectPetPage from "./pages/SelectPetPage";
 
 const PrivateRoute = ({ element }) => {
   return isLoggedIn() ? element : <Navigate to="/signin" />;
@@ -56,6 +58,8 @@ const App = () => {
           <Route path="/pets/:petId" element={<PetDetailsPage />} />
           <Route path="/createpetcard/:petId" element={<CreatePetCardPage />} />
           <Route path="/petcard/:petId" element={<PetCardPage />} />
+          <Route path="/medical-records/:petID" element={<MedicalRecordsPage />} />
+          <Route path="select-pet" element={<SelectPetPage />} />
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </Router>

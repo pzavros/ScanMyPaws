@@ -50,13 +50,16 @@ namespace Backend.Controllers
         [HttpGet("{petId}")]
         public async Task<IActionResult> GetPetCardByPetId(int petId)
         {
-            var result = await _petCardService.GetPetCardByPetId(petId);
-            if (result == null)
+            try
             {
-                return NotFound("Pet card not found.");
+                var result = await _petCardService.GetPetCardByPetId(petId);
+                return Ok(result);
             }
-
-            return Ok(result);
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [HttpPut("{petId}")]

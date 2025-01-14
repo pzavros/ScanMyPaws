@@ -81,7 +81,7 @@ namespace Backend.Controllers
                 if (!result)
                     return NotFound();
 
-                return NoContent();
+                return Ok("Pet Profile Deactivated");
             }
             catch (Exception ex)
             {

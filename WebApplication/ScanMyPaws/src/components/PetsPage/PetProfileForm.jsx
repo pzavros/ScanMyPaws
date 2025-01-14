@@ -13,8 +13,8 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
         sex: "",
         specialNotes: "",
     });
-    const [image, setImage] = useState(null); // Store the selected image
-    const [imagePreview, setImagePreview] = useState(null); // Store the image preview
+    const [image, setImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [breeds, setBreeds] = useState([]);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -44,18 +44,18 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
     };
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0]; // Get the first selected file
+        const file = e.target.files[0];
 
         if (!file) return;
 
         setError("");
-        setImage(file); // Store the single image
-        setImagePreview(URL.createObjectURL(file)); // Generate a preview
+        setImage(file);
+        setImagePreview(URL.createObjectURL(file)); 
     };
 
     const handleRemoveImage = () => {
-        setImage(null); // Clear the image
-        setImagePreview(null); // Clear the preview
+        setImage(null); 
+        setImagePreview(null);
     };
 
     const handleSubmit = async (e) => {
@@ -74,7 +74,7 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
             formData.append("qrCodeId", qrCodeId);
 
             if (image) {
-                formData.append("Photo", image); // Append the single image
+                formData.append("Photo", image); 
             }
 
             // Call API with form data
@@ -134,8 +134,8 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                     styles={{
                         control: (provided, state) => ({
                             ...provided,
-                            backgroundColor: "var(--input-background)", // Matches input background
-                            color: "var(--text-color)", // Text color for input
+                            backgroundColor: "var(--input-background)", 
+                            color: "var(--text-color)",
                             borderColor: state.isFocused ? "var(--primary-color)" : "var(--input-border-color)",
                             boxShadow: state.isFocused ? "0 0 0 2px var(--primary-color)" : "none",
                             "&:hover": { borderColor: "var(--primary-color-hover)" },
@@ -144,25 +144,25 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                         }),
                         menu: (provided) => ({
                             ...provided,
-                            backgroundColor: "var(--input-background)", // Matches input background
-                            color: "var(--text-color)", // Text color inside dropdown
+                            backgroundColor: "var(--input-background)",
+                            color: "var(--text-color)", 
                             borderRadius: "8px",
                             zIndex: 9999,
                         }),
                         option: (provided, state) => ({
                             ...provided,
-                            backgroundColor: state.isFocused ? "var(--primary-color)" : "var(--input-background)", // Highlight focused option
-                            color: state.isFocused ? "white" : "var(--text-color)", // Adjust text color
+                            backgroundColor: state.isFocused ? "var(--primary-color)" : "var(--input-background)",
+                            color: state.isFocused ? "white" : "var(--text-color)",
                             padding: "8px",
-                            "&:hover": { backgroundColor: "var(--primary-color-hover)", color: "white" }, // Hover styles
+                            "&:hover": { backgroundColor: "var(--primary-color-hover)", color: "white" },
                         }),
                         placeholder: (provided) => ({
                             ...provided,
-                            color: "var(--text-color-secondary)", // Placeholder text color
+                            color: "var(--text-color-secondary)",
                         }),
                         singleValue: (provided) => ({
                             ...provided,
-                            color: "var(--text-color)", // Selected value color
+                            color: "var(--text-color)",
                         }),
                     }}
                 />
@@ -283,8 +283,16 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                     fontSize: "1rem",
                     padding: "12px",
                     borderRadius: "8px",
-                    backgroundColor: "var(--primary-color)",
-                    "&:hover": { backgroundColor: "var(--secondary-color)" },
+                    background:
+                      "linear-gradient(90deg, rgba(255,111,97,1) 0%, rgba(255,165,97,1) 100%)",
+                    color: "#fff",
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    borderRadius: "50px",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(90deg, rgba(255,165,97,1) 0%, rgba(255,111,97,1) 100%)",
+                    },
                 }}
             >
                 Submit

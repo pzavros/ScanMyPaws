@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box, Button, Alert, Typography } from "@mui/material";
+import { Box, Alert, Typography, Card } from "@mui/material";
 import Section from "../ReusableComponents/Section";
 import { scanQRCode } from "./api";
 import Webcam from "react-webcam";
 import jsQR from "jsqr";
+import Button from "../ReusableComponents/Button"; 
 
 const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
   const [qrError, setQrError] = useState("");
@@ -36,7 +37,7 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
         setQrError("No QR code detected.");
         return;
       }
-      const response = await scanQRCode(scannedCode);
+      await scanQRCode(scannedCode);
       onScanSuccess(scannedCode);
     } catch (error) {
       setQrError(error.message || "An error occurred while validating the QR Code.");
@@ -44,7 +45,7 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
   };
 
   const handleSimulateScan = () => {
-    const simulatedCode = "11"; // Simulated QRCodeID for testing
+    const simulatedCode = "13"; // Simulated QRCodeID for testing
     setScannedCode(simulatedCode);
   };
 
@@ -58,45 +59,93 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
     }
     requestCameraAccess();
   }, []);
-  
-  
 
   return (
     <Section>
-      <Typography variant="h5" sx={{ mb: 2 }}>
-        Scan QR Code
-      </Typography>
-      {qrError && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {qrError}
-        </Alert>
-      )}
-      <Webcam
-        ref={webcamRef}
-        audio={false}
-        width="100%"
-        screenshotFormat="image/png"
-        videoConstraints={{ facingMode: "environment" }}
-      />
-      <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          gap: 3,
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: "bold",
+            color: "var(--text-color-primary)",
+            mb: 2,
+          }}
+        >
+          Scan QR Code
+        </Typography>
+
+        {qrError && (
+          <Alert severity="error" sx={{ width: "100%", maxWidth: 600 }}>
+            {qrError}
+          </Alert>
+        )}
+
+        <Card
+          sx={{
+            width: "100%",
+            maxWidth: 600,
+            padding: 2,
+            borderRadius: "16px",
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.15)",
+            backgroundColor: "var(--card-background)",
+          }}
+        >
+          <Webcam
+            ref={webcamRef}
+            audio={false}
+            screenshotFormat="image/png"
+            videoConstraints={{ facingMode: "environment" }}
+            style={{
+              width: "100%",
+              borderRadius: "12px",
+            }}
+          />
+        </Card>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            flexWrap: "wrap",
+            width: "100%",
+            maxWidth: 600,
+          }}
+        >
+          {scannedCode && (
+            <Button onClick={handleSubmit}>
+              Submit
+            </Button>
+          )}
+          <Button onClick={handleSimulateScan} variant="outlined">
+            Simulate QR Code Scan
+          </Button>
+          <Button onClick={onCancel} variant="outlined">
+            Cancel
+          </Button>
+        </Box>
+
         {scannedCode && (
-          <Button
-            onClick={handleSubmit}
-            variant="contained"
+          <Typography
+            variant="body1"
             sx={{
-              backgroundColor: "var(--primary-color)",
-              "&:hover": { backgroundColor: "var(--secondary-color)" },
+              fontStyle: "italic",
+              color: "var(--text-color-secondary)",
+              textAlign: "center",
+              mt: 2,
             }}
           >
-            Submit
-          </Button>
+            Detected QR Code: <strong>{scannedCode}</strong>
+          </Typography>
         )}
-        <Button onClick={handleSimulateScan} variant="contained" sx={{ backgroundColor: "var(--secondary-color)" }}>
-          Simulate QR Code Scan
-        </Button>
-        <Button onClick={onCancel} variant="outlined" sx={{ color: "var(--primary-color)" }}>
-          Cancel
-        </Button>
       </Box>
     </Section>
   );

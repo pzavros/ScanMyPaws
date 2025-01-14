@@ -62,8 +62,15 @@ const ProfileHeader = ({ pet, pets = [], currentPetIndex, onDotClick }) => {
             fontSize: "1rem",
             textTransform: "capitalize",
             marginTop: "16px",
+            background:
+              "linear-gradient(90deg, rgba(255,111,97,1) 0%, rgba(255,165,97,1) 100%)",
+            color: "#fff",
+            textTransform: "none",
+            fontWeight: "bold",
+            borderRadius: "50px",
             "&:hover": {
-              backgroundColor: "var(--button-hover-background)",
+              background:
+                "linear-gradient(90deg, rgba(255,165,97,1) 0%, rgba(255,111,97,1) 100%)",
             },
           }}
         >
