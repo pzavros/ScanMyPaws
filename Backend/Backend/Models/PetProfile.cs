@@ -13,19 +13,19 @@ namespace Backend.Models
         public int PetID { get; set; }
 
         [Required]
-        [ForeignKey("User")] // This sets up the foreign key relationship
+        [ForeignKey("User")]
         public int UserID { get; set; }
 
         [Required]
         [StringLength(100)]
         public string PetName { get; set; }
-
+        public string? UniqueUrl { get; set; }
         public int? Age { get; set; }
 
         [ForeignKey("DogBreed")]
-        public int? BreedID { get; set; } // Store only BreedID
+        public int? BreedID { get; set; }
 
-        public virtual DogBreed DogBreed { get; set; } // Navigation property
+        public virtual DogBreed DogBreed { get; set; }
 
         public bool IsTransferred { get; set; } = false;
 
@@ -40,14 +40,12 @@ namespace Backend.Models
 
         public bool IsDeleted { get; set; } = false;
 
-        // Foreign Key to QRCode (One-to-One relationship)
         [ForeignKey("QRCode")]
         public int QRCodeID { get; set; }
 
         public virtual QRCode QRCode { get; set; }
 
-        // Navigation property to User
-        public virtual User User { get; set; } // This creates the relationship
+        public virtual User User { get; set; }
         public bool IsHavingCard { get; set; } = false;
     }
 }

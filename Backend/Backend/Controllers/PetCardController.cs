@@ -53,12 +53,27 @@ namespace Backend.Controllers
             try
             {
                 var result = await _petCardService.GetPetCardByPetId(petId);
-                return Ok(result);
+                return result != null ? Ok(result) : NotFound("Pet card not found.");
             }
-            catch (Exception e)
+            catch (System.Exception ex)
             {
-                Console.WriteLine(e);
-                throw;
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "An internal server error occurred.");
+            }
+        }
+
+        [HttpGet("public/{uniqueUrl}")]
+        public async Task<IActionResult> GetPublicPetCard(string uniqueUrl)
+        {
+            try
+            {
+                var result = await _petCardService.GetPublicPetCard(uniqueUrl);
+                return result != null ? Ok(result) : NotFound("Pet card not found.");
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return StatusCode(500, "An internal server error occurred.");
             }
         }
 
@@ -68,14 +83,12 @@ namespace Backend.Controllers
             try
             {
                 var result = await _petCardService.UpdatePetCard(petId, updatedPetCard);
-                if (result == null)
-                {
+                if (result == null) 
                     return NotFound("Pet card not found.");
-                }
 
                 return Ok(result);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
                 return StatusCode(500, "An internal server error occurred.");

@@ -5,6 +5,7 @@ namespace Backend.Dtos
         public int PetCardID { get; set; }
         public int PetID { get; set; }
         public int UserID { get; set; } 
+        public string? UniqueUrl { get; set; }
         public string FullName { get; set; }
         public string MobilePhone1 { get; set; }
         public string? MobilePhone2 { get; set; }
@@ -13,8 +14,6 @@ namespace Backend.Dtos
         public string? AlternativeContactPhone { get; set; }
         public string? ImportantInformation { get; set; }
         public string? AdditionalInfo { get; set; }
-
-        // Pet Details
         public string PetName { get; set; }
         public string? BreedName { get; set; }
         public int? Age { get; set; }

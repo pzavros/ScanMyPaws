@@ -163,28 +163,28 @@ const CardForm = ({ petId }) => {
         value={petDetails?.petName || ""}
         fullWidth
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Breed"
         value={petDetails?.breedName || ""}
         fullWidth
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Age"
         value={petDetails?.age || "N/A"}
         fullWidth
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Sex"
         value={petDetails?.sex || "N/A"}
         fullWidth
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Special Notes"
@@ -193,7 +193,7 @@ const CardForm = ({ petId }) => {
         multiline
         rows={3}
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
 
       <TextField
@@ -203,7 +203,7 @@ const CardForm = ({ petId }) => {
         onChange={handleChange}
         fullWidth
         required
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Mobile Phone 1 *"
@@ -212,7 +212,7 @@ const CardForm = ({ petId }) => {
         onChange={handleChange}
         fullWidth
         required
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Mobile Phone 2"
@@ -220,7 +220,7 @@ const CardForm = ({ petId }) => {
         value={formData.mobilePhone2}
         onChange={handleChange}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Address *"
@@ -229,7 +229,7 @@ const CardForm = ({ petId }) => {
         onChange={handleChange}
         fullWidth
         required
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Alternative Contact Name"
@@ -237,7 +237,7 @@ const CardForm = ({ petId }) => {
         value={formData.alternativeContactName}
         onChange={handleChange}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Alternative Contact Phone"
@@ -245,7 +245,7 @@ const CardForm = ({ petId }) => {
         value={formData.alternativeContactPhone}
         onChange={handleChange}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Important Information"
@@ -255,7 +255,7 @@ const CardForm = ({ petId }) => {
         multiline
         rows={3}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
       <TextField
         label="Additional Info"
@@ -265,7 +265,7 @@ const CardForm = ({ petId }) => {
         multiline
         rows={4}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color-secondary)" } }}
+        InputLabelProps={{ style: { color: "var(--text-color)" } }}
       />
 
       <Button
@@ -307,7 +307,7 @@ const CardForm = ({ petId }) => {
           {operationSuccess ? (
             <Button
               variant="contained"
-              onClick={() => window.location.href = `/pet-card/${petId}`}
+              onClick={() => window.location.href = `/petcard/${petId}`}
               sx={{
                 backgroundColor: "var(--primary-color)",
                 "&:hover": { backgroundColor: "var(--primary-color-hover)" },

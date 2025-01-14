@@ -17,11 +17,11 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateQRCode([FromBody] QRCodeDto qrCodeDto)
+        public async Task<IActionResult> CreateQRCode()
         {
             try
             {
-                var result = await _qrCodeService.CreateQRCode(qrCodeDto);
+                var result = await _qrCodeService.CreateQRCode(new QRCodeDto());
                 return CreatedAtAction(nameof(GetQRCodeById), new { qrCodeId = result.QRCodeID }, result);
             }
             catch

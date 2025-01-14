@@ -21,6 +21,7 @@ namespace Backend.Models
         [ForeignKey("User")]
         public int UserID { get; set; }
         public virtual User User { get; set; }
+        public string UniqueUrl { get; set; }
 
         [Required]
         public string FullName { get; set; }

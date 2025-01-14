@@ -35,7 +35,7 @@ namespace Backend.Controllers
                         using (var memoryStream = new MemoryStream())
                         {
                             await file.CopyToAsync(memoryStream);
-                            petProfileDto.Photo = memoryStream.ToArray(); // Save binary data
+                            petProfileDto.Photo = memoryStream.ToArray();
                         }
                     }
                 }

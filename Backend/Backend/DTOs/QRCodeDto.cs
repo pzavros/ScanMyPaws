@@ -9,6 +9,6 @@ namespace Backend.DTOs
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
         public DateTime? DateGenerated { get; set; }
-        public int? PetProfileID { get; set; } // Linked PetProfile
+        public int? PetProfileID { get; set; }
     }
 }

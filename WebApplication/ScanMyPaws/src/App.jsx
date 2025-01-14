@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import React, { useEffect, useState, Suspense } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import HomePage from "./pages/HomePage";
-import PetsPage from "./pages/PetsPage";
-import NotificationsPage from "./pages/NotificationsPage";
-import PlannerPage from "./pages/PlannerPage";
-import SignUpPage from "./pages/SignUpPage";
-import SignInPage from "./pages/SignInPage";
-import ProfilePage from "./pages/ProfilePage";
 import TopNavbar from "./components/StaticComponents/TopNabBar";
 import Wizard from "./components/StaticComponents/Wizard";
 import { isLoggedIn } from "./components/Authentication/api";
-import PetDetailsPage from "./pages/PetDetailsPage";
-import CreatePetCardPage from "./pages/CreatePetCardPage";
-import PetCardPage from "./pages/PetCardPage";
-import MedicalRecordsPage from "./pages/MedicalRecordsPage";
-import SelectPetPage from "./pages/SelectPetPage";
+
+const HomePage = React.lazy(() => import("./pages/HomePage"));
+const PetsPage = React.lazy(() => import("./pages/PetsPage"));
+const NotificationsPage = React.lazy(() => import("./pages/NotificationsPage"));
+const PlannerPage = React.lazy(() => import("./pages/PlannerPage"));
+const SignUpPage = React.lazy(() => import("./pages/SignUpPage"));
+const SignInPage = React.lazy(() => import("./pages/SignInPage"));
+const ProfilePage = React.lazy(() => import("./pages/ProfilePage"));
+const PetDetailsPage = React.lazy(() => import("./pages/PetDetailsPage"));
+const CreatePetCardPage = React.lazy(() => import("./pages/CreatePetCardPage"));
+const PetCardPage = React.lazy(() => import("./pages/PetCardPage"));
+const PublicPetCardPage = React.lazy(() => import("./pages/PublicPetCardPage"));
+const MedicalRecordsPage = React.lazy(() => import("./pages/MedicalRecordsPage"));
+const SelectPetPage = React.lazy(() => import("./pages/SelectPetPage"));
+const InstructionsPage = React.lazy(() => import("./pages/InstructionsPage"));
 
 const PrivateRoute = ({ element }) => {
   return isLoggedIn() ? element : <Navigate to="/signin" />;
@@ -36,9 +39,6 @@ const App = () => {
     setShowWizard(false);
   };
 
-  const hideNavPages = ["/signin", "/signup"];
-  const shouldHideNav = hideNavPages.includes(window.location.pathname.toLowerCase());
-
   if (showWizard) {
     return <Wizard onComplete={handleWizardComplete} />;
   }
@@ -46,7 +46,22 @@ const App = () => {
   return (
     <ThemeProvider>
       <Router>
-        {!shouldHideNav && <TopNavbar />}
+        <RouterContent />
+      </Router>
+    </ThemeProvider>
+  );
+};
+
+const RouterContent = () => {
+  const location = useLocation();
+
+  const hideNavPages = ["/signin", "/signup"];
+  const shouldHideNav = hideNavPages.includes(location.pathname.toLowerCase());
+
+  return (
+    <>
+      {!shouldHideNav && <TopNavbar />}
+      <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" exact element={<HomePage />} />
           <Route path="/pets" element={<PetsPage />} />
@@ -58,12 +73,14 @@ const App = () => {
           <Route path="/pets/:petId" element={<PetDetailsPage />} />
           <Route path="/createpetcard/:petId" element={<CreatePetCardPage />} />
           <Route path="/petcard/:petId" element={<PetCardPage />} />
-          <Route path="/medical-records/:petID" element={<MedicalRecordsPage />} />
-          <Route path="select-pet" element={<SelectPetPage />} />
+          <Route path="/public-petcard/:uniqueUrl" element={<PublicPetCardPage />} />
+          <Route path="/medical-records/:petId" element={<MedicalRecordsPage />} />
+          <Route path="/select-pet" element={<SelectPetPage />} />
+          <Route path="/instructions" element={<InstructionsPage />} />
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
-      </Router>
-    </ThemeProvider>
+      </Suspense>
+    </>
   );
 };
 

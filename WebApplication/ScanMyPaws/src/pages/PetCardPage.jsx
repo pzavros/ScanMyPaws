@@ -14,6 +14,7 @@ const PetCardPage = () => {
     const fetchDetails = async () => {
       try {
         const data = await fetchPetDetails(petId);
+        console.log(data);
         setPetDetails(data);
       } catch (error) {
         console.error("Error fetching pet details:", error);
@@ -27,12 +28,13 @@ const PetCardPage = () => {
 
   const handleSave = async (updatedDetails) => {
     try {
-      const updatedData = await updatePetDetails(petId, updatedDetails);
+      const updatedData = await updatePetDetails(updatedDetails.petCardID, updatedDetails);
       setPetDetails(updatedData);
     } catch (error) {
       console.error("Error updating pet details:", error);
     }
   };
+  
 
   if (loading) {
     return (

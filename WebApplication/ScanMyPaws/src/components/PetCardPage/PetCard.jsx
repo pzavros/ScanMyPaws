@@ -58,7 +58,7 @@ const PetCard = ({ petDetails, onSave }) => {
             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
               <InputBase
                 name="petName"
-                value={form.petName}
+                value={form.petName || ""}
                 onChange={handleInputChange}
                 sx={{
                   fontSize: "1.5rem",
@@ -67,6 +67,7 @@ const PetCard = ({ petDetails, onSave }) => {
                   color: "white",
                 }}
               />
+
               <IconButton
                 onClick={() => handleSave("petName")}
                 sx={{ color: "white", ml: 1 }}

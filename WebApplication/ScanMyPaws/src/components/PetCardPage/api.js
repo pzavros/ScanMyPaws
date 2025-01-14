@@ -26,3 +26,16 @@ export const updatePetDetails = async (petId, petDetails) => {
   };
   
 
+  export const fetchPublicPetCard = async (uniqueUrl) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/PetCard/public/${uniqueUrl}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching public pet card:", error);
+      throw error;
+    }
+  };
+  
+  
+
+  

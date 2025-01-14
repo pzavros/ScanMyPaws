@@ -1,5 +1,5 @@
-using Backend.Interfaces;
 using Backend.DTOs;
+using Backend.Interfaces;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,15 +20,18 @@ namespace Backend.Services
 
         public async Task<PetProfileDto> CreatePetProfile(PetProfileDto petProfileDto, int userId)
         {
-            // Validate that the UserID exists
             var userExists = await _context.Users.AnyAsync(u => u.UserID == userId);
             if (!userExists)
                 throw new Exception("User does not exist.");
 
-            // Validate that the QRCodeID exists
-            var qrCodeExists = await _context.QRCodes.AnyAsync(q => q.QRCodeID == petProfileDto.QRCodeID);
-            if (!qrCodeExists)
+            var qrCode = await _context.QRCodes.FirstOrDefaultAsync(q => q.QRCodeID == petProfileDto.QRCodeID);
+            if (qrCode == null)
                 throw new Exception("QR Code does not exist.");
+
+            // Extract UniqueUrl from QRCodeData
+            string uniqueUrl = qrCode.QRCodeData?.Split('/').LastOrDefault();
+            if (string.IsNullOrEmpty(uniqueUrl))
+                throw new Exception("Invalid QRCodeData format. Unique URL not found.");
 
             var petProfile = new PetProfile
             {
@@ -44,24 +47,21 @@ namespace Backend.Services
                 Sex = petProfileDto.Sex,
                 Photo = petProfileDto.Photo,
                 SpecialNotes = petProfileDto.SpecialNotes,
+                UniqueUrl = uniqueUrl // Save only the unique segment
             };
 
             _context.PetProfiles.Add(petProfile);
             await _context.SaveChangesAsync();
 
-            // Update the QR code with the pet profile information
-            var qrCode = await _context.QRCodes.FindAsync(petProfileDto.QRCodeID);
-            if (qrCode != null)
-            {
-                qrCode.PetProfileID = petProfile.PetID;
-                qrCode.IsScannedForFirstTime = true;
-                qrCode.QRCodeData = $"http://localhost:5173/pet/{petProfile.PetID}";
-                qrCode.DateModified = DateTime.Now;
-
-                await _context.SaveChangesAsync();
-            }
+            // Update QRCode with pet profile information
+            qrCode.PetProfileID = petProfile.PetID;
+            qrCode.IsScannedForFirstTime = true;
+            qrCode.DateModified = DateTime.Now;
+            await _context.SaveChangesAsync();
 
             petProfileDto.PetID = petProfile.PetID;
+            petProfileDto.UniqueUrl = petProfile.UniqueUrl;
+
             return petProfileDto;
         }
 
@@ -69,6 +69,7 @@ namespace Backend.Services
         {
             var petProfile = await _context.PetProfiles
                 .Include(p => p.DogBreed)
+                .Include(p => p.QRCode)
                 .FirstOrDefaultAsync(p => p.PetID == petId);
 
             if (petProfile == null) return null;
@@ -78,12 +79,13 @@ namespace Backend.Services
                 PetID = petProfile.PetID,
                 PetName = petProfile.PetName,
                 BreedID = petProfile.BreedID,
-                BreedName = petProfile.DogBreed != null ? petProfile.DogBreed.BreedName : null,
+                BreedName = petProfile.DogBreed?.BreedName,
                 Age = petProfile.Age,
                 Sex = petProfile.Sex,
                 SpecialNotes = petProfile.SpecialNotes,
                 Photo = petProfile.Photo,
-                IsHavingCard = petProfile.IsHavingCard
+                IsHavingCard = petProfile.IsHavingCard,
+                UniqueUrl = petProfile.UniqueUrl // Include the unique URL
             };
         }
 
@@ -108,13 +110,12 @@ namespace Backend.Services
                     PetName = pet.PetName,
                     Photo = pet.Photo,
                     BreedName = pet.DogBreed != null ? pet.DogBreed.BreedName : null,
-                    Age = pet.Age != null ? pet.Age : null,
+                    Age = pet.Age,
                     Sex = pet.Sex,
-                    SpecialNotes = pet.SpecialNotes != null ? pet.SpecialNotes : null
+                    SpecialNotes = pet.SpecialNotes
                 })
                 .ToListAsync();
         }
-
 
         public async Task<bool> UpdatePetProfile(int petId, PetProfileDto petProfileDto)
         {

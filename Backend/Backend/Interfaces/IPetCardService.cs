@@ -8,5 +8,6 @@ namespace Backend.Interfaces
         Task<PetCardDto> CreatePetCard(PetCardDto petCardDto);
         Task<PetCardDto> GetPetCardByPetId(int petId);
         Task<PetCardDto> UpdatePetCard(int petId, PetCardDto updatedPetCard);
+        Task<PetCardDto> GetPublicPetCard(string uniqueUrl);
     }
 }

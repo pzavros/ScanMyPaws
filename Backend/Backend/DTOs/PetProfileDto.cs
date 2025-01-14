@@ -4,7 +4,8 @@ public class PetProfileDto
     public int UserID { get; set; }
     public string PetName { get; set; }
     public int? BreedID { get; set; }
-    public string? BreedName { get; set; } // To include the breed name
+    public string? BreedName { get; set; }
+    public string? UniqueUrl { get; set; }
     public int? Age { get; set; }
     public bool IsTransferred { get; set; }
     public bool IsActive { get; set; }
