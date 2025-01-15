@@ -8,11 +8,12 @@ import HomeIcon from "@mui/icons-material/Home";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import Section from "../ReusableComponents/Section";
 
-const PetCard = ({ petDetails, onSave }) => {
+const PetCard = ({ petDetails, onSave, readOnly = false }) => {
   const [form, setForm] = useState(petDetails);
   const [isEditing, setIsEditing] = useState({});
 
   const handleEditToggle = (field) => {
+    if (readOnly) return; // Prevent editing in read-only mode
     setIsEditing((prev) => ({
       ...prev,
       [field]: !prev[field],
@@ -25,8 +26,8 @@ const PetCard = ({ petDetails, onSave }) => {
   };
 
   const handleSave = (field) => {
-    handleEditToggle(field);
-    onSave(form);
+    setIsEditing((prev) => ({ ...prev, [field]: false }));
+    if (onSave) onSave(form); // Trigger save callback
   };
 
   const imageSrc = form.photo ? `data:image/jpeg;base64,${form.photo}` : null;
@@ -67,7 +68,6 @@ const PetCard = ({ petDetails, onSave }) => {
                   color: "white",
                 }}
               />
-
               <IconButton
                 onClick={() => handleSave("petName")}
                 sx={{ color: "white", ml: 1 }}
@@ -77,48 +77,20 @@ const PetCard = ({ petDetails, onSave }) => {
             </Box>
           ) : (
             <>
-              {form.petName}
-              <IconButton
-                onClick={() => handleEditToggle("petName")}
-                sx={{ color: "white", ml: 1 }}
-              >
-                <EditIcon />
-              </IconButton>
+              {form.petName || "Unnamed Pet"}
+              {!readOnly && (
+                <IconButton
+                  onClick={() => handleEditToggle("petName")}
+                  sx={{ color: "white", ml: 1 }}
+                >
+                  <EditIcon />
+                </IconButton>
+              )}
             </>
           )}
         </Typography>
         <Typography variant="subtitle1" sx={{ fontStyle: "italic", color: "rgba(255, 255, 255, 0.8)" }}>
-          {isEditing.breedName ? (
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <InputBase
-                name="breedName"
-                value={form.breedName}
-                onChange={handleInputChange}
-                sx={{
-                  fontSize: "1rem",
-                  textAlign: "center",
-                  borderBottom: "2px solid white",
-                  color: "white",
-                }}
-              />
-              <IconButton
-                onClick={() => handleSave("breedName")}
-                sx={{ color: "white", ml: 1 }}
-              >
-                <SaveIcon />
-              </IconButton>
-            </Box>
-          ) : (
-            <>
-              {form.breedName || "Unknown Breed"}
-              <IconButton
-                onClick={() => handleEditToggle("breedName")}
-                sx={{ color: "rgba(255, 255, 255, 0.8)", ml: 1 }}
-              >
-                <EditIcon />
-              </IconButton>
-            </>
-          )}
+          {form.breedName || "Unknown Breed"}
         </Typography>
       </Box>
 
@@ -168,12 +140,14 @@ const PetCard = ({ petDetails, onSave }) => {
                 ) : (
                   <>
                     <Typography sx={{ mt: 1 }}>{stat.value}</Typography>
-                    <IconButton
-                      onClick={() => handleEditToggle(stat.name)}
-                      sx={{ color: "white", mt: 1 }}
-                    >
-                      <EditIcon />
-                    </IconButton>
+                    {!readOnly && (
+                      <IconButton
+                        onClick={() => handleEditToggle(stat.name)}
+                        sx={{ color: "white", mt: 1 }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    )}
                   </>
                 )}
               </Box>
@@ -236,14 +210,16 @@ const PetCard = ({ petDetails, onSave }) => {
                     )}
                   </Box>
                 </Box>
-                <IconButton
-                  onClick={() =>
-                    isEditing[contact.name] ? handleSave(contact.name) : handleEditToggle(contact.name)
-                  }
-                  sx={{ color: "white" }}
-                >
-                  {isEditing[contact.name] ? <SaveIcon /> : <EditIcon />}
-                </IconButton>
+                {!readOnly && (
+                  <IconButton
+                    onClick={() =>
+                      isEditing[contact.name] ? handleSave(contact.name) : handleEditToggle(contact.name)
+                    }
+                    sx={{ color: "white" }}
+                  >
+                    {isEditing[contact.name] ? <SaveIcon /> : <EditIcon />}
+                  </IconButton>
+                )}
               </Box>
             </Grid>
           ))}

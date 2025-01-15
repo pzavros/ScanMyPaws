@@ -55,8 +55,10 @@ const App = () => {
 const RouterContent = () => {
   const location = useLocation();
 
+  // Define pages where the navbar should not be visible
   const hideNavPages = ["/signin", "/signup"];
-  const shouldHideNav = hideNavPages.includes(location.pathname.toLowerCase());
+  const isPublicPetCard = location.pathname.startsWith("/public-petcard/");
+  const shouldHideNav = hideNavPages.includes(location.pathname.toLowerCase()) || isPublicPetCard;
 
   return (
     <>
@@ -74,7 +76,7 @@ const RouterContent = () => {
           <Route path="/createpetcard/:petId" element={<CreatePetCardPage />} />
           <Route path="/petcard/:petId" element={<PetCardPage />} />
           <Route path="/public-petcard/:uniqueUrl" element={<PublicPetCardPage />} />
-          <Route path="/medical-records/:petId" element={<MedicalRecordsPage />} />
+          <Route path="/medical-records/:petID" element={<MedicalRecordsPage />} />
           <Route path="/select-pet" element={<SelectPetPage />} />
           <Route path="/instructions" element={<InstructionsPage />} />
           <Route path="*" element={<div>Page Not Found</div>} />

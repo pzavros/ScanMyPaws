@@ -6,8 +6,8 @@ import { fetchPetDetails, updatePetDetails } from "../components/PetCardPage/api
 import PetCard from "../components/PetCardPage/PetCard";
 
 const PetCardPage = () => {
-  const { petId } = useParams(); 
-  const [petDetails, setPetDetails] = useState(null); 
+  const { petId } = useParams();
+  const [petDetails, setPetDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,12 +29,11 @@ const PetCardPage = () => {
   const handleSave = async (updatedDetails) => {
     try {
       const updatedData = await updatePetDetails(updatedDetails.petCardID, updatedDetails);
-      setPetDetails(updatedData);
+      setPetDetails(updatedData); // Update the state with the new data
     } catch (error) {
       console.error("Error updating pet details:", error);
     }
   };
-  
 
   if (loading) {
     return (
@@ -46,7 +45,8 @@ const PetCardPage = () => {
 
   return (
     <Page>
-      <PetCard petDetails={petDetails} onSave={handleSave} />
+      {/* Pass `readOnly` as `false` explicitly */}
+      <PetCard petDetails={petDetails} onSave={handleSave} readOnly={false} />
     </Page>
   );
 };
