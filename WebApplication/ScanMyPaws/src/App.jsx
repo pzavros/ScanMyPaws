@@ -4,6 +4,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import TopNavbar from "./components/StaticComponents/TopNabBar";
 import Wizard from "./components/StaticComponents/Wizard";
 import { isLoggedIn } from "./components/Authentication/api";
+import { Schedule } from "@mui/icons-material";
 
 const HomePage = React.lazy(() => import("./pages/HomePage"));
 const PetsPage = React.lazy(() => import("./pages/PetsPage"));
@@ -19,6 +20,7 @@ const PublicPetCardPage = React.lazy(() => import("./pages/PublicPetCardPage"));
 const MedicalRecordsPage = React.lazy(() => import("./pages/MedicalRecordsPage"));
 const SelectPetPage = React.lazy(() => import("./pages/SelectPetPage"));
 const InstructionsPage = React.lazy(() => import("./pages/InstructionsPage"));
+const SchedulesPage = React.lazy(() => import("./pages/SchedulesPage"));
 
 const PrivateRoute = ({ element }) => {
   return isLoggedIn() ? element : <Navigate to="/signin" />;
@@ -79,6 +81,7 @@ const RouterContent = () => {
           <Route path="/medical-records/:petID" element={<MedicalRecordsPage />} />
           <Route path="/select-pet" element={<SelectPetPage />} />
           <Route path="/instructions" element={<InstructionsPage />} />
+          <Route path="/schedules" element={<SchedulesPage />} />
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </Suspense>

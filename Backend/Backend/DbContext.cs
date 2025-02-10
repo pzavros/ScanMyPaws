@@ -18,6 +18,10 @@ namespace Backend
         public DbSet<PetCard> PetCards { get; set; }
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
         public DbSet<MedicalRecordType> MedicalRecordTypes { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+
+
 
 
 

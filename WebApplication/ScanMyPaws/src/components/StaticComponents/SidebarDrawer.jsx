@@ -14,6 +14,7 @@ import {
   Logout as LogoutIcon,
   Person as ProfileIcon,
   Assignment as MedicalRecordsIcon,
+  EventNote as SchedulesIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import ThemeToggle from "../../contexts/ThemeToggle";
@@ -33,7 +34,8 @@ const SidebarDrawer = ({ isDrawerOpen, toggleDrawer }) => {
   const accountItems = [
     { label: "Profile", icon: <ProfileIcon />, route: "/profile" },
     { label: "Notifications", icon: <NotificationsIcon />, route: "/notifications" },
-    { label: "Medical Records", icon: <MedicalRecordsIcon />, route: "/select-pet" }
+    { label: "Medical Records", icon: <MedicalRecordsIcon />, route: "/select-pet" },
+    { label: "Schedules", icon: <SchedulesIcon />, route: "/schedules" }
   ];
 
   const appItems = [
