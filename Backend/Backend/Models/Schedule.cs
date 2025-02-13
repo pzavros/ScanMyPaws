@@ -26,6 +26,9 @@ namespace Backend.Models
         [Required]
         public DateTime Date { get; set; }
 
+        [Required]
+        public TimeSpan Time { get; set; }
+
         [MaxLength(500)]
         public string Description { get; set; }
 

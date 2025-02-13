@@ -3,6 +3,7 @@ import { AppBar, Toolbar, IconButton, Box, Typography, Modal, Paper } from "@mui
 import { Menu as MenuIcon, Home as HomeIcon, Pets as PetsIcon, Notifications as NotificationsIcon } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import SidebarDrawer from "./SidebarDrawer";
+import NotificationsPanel from "../Notifications/NotificationsPanel";
 
 const TopNavbar = () => {
   const navigate = useNavigate();
@@ -18,7 +19,11 @@ const TopNavbar = () => {
   };
 
   const toggleNotifications = () => {
-    setNotificationsOpen(!isNotificationsOpen);
+    setNotificationsOpen((prev) => !prev);
+  };
+
+  const closeNotifications = () => {
+    setNotificationsOpen(false); // Ensure it actually closes
   };
 
   const navItems = [
@@ -136,42 +141,7 @@ const TopNavbar = () => {
       <SidebarDrawer isDrawerOpen={isDrawerOpen} toggleDrawer={toggleDrawer} />
 
       {/* Notifications Modal */}
-      <Modal
-        open={isNotificationsOpen}
-        onClose={toggleNotifications}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Paper
-          sx={{
-            width: "90%",
-            maxWidth: 400,
-            padding: 2,
-            backgroundColor: "var(--background-color)",
-            color: "var(--text-color)",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            borderRadius: "16px",
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
-            Notifications
-          </Typography>
-          <Box>
-            <Typography variant="body1" sx={{ mb: 1 }}>
-              • Reminder: Take your pet to the vet tomorrow.
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 1 }}>
-              • New feature: Explore your pet's activity history!
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 1 }}>
-              • Special offer: Get 20% off pet grooming services!
-            </Typography>
-          </Box>
-        </Paper>
-      </Modal>
+      <NotificationsPanel isOpen={isNotificationsOpen} onClose={closeNotifications} />
     </>
   );
 };

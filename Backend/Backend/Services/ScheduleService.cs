@@ -5,16 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using Backend.Hubs;
 
 namespace Backend.Services
 {
     public class ScheduleService : IScheduleService
     {
         private readonly ApplicationDbContext _context;
-
-        public ScheduleService(ApplicationDbContext context)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly NotificationService _notificationService;
+        
+        public ScheduleService(ApplicationDbContext context, IHubContext<NotificationHub> hubContext, NotificationService notificationService)
         {
             _context = context;
+            _hubContext = hubContext;
+            _notificationService = notificationService;
         }
 
         public async Task<IEnumerable<ScheduleDto>> GetUserSchedules(int userID)
@@ -56,6 +62,7 @@ namespace Backend.Services
                 UserID = scheduleDto.UserID,
                 Title = scheduleDto.Title,
                 Date = scheduleDto.Date,
+                Time = scheduleDto.Time,
                 Description = scheduleDto.Description,
                 IsCompleted = scheduleDto.IsCompleted
             };
@@ -63,9 +70,21 @@ namespace Backend.Services
             _context.Schedules.Add(schedule);
             await _context.SaveChangesAsync();
 
+            await _notificationService.SendNotificationAsync(new NotificationDto
+            {
+                UserID = schedule.UserID,
+                Title = "Upcoming Schedule",
+                Message = $"Reminder: {schedule.Title} is scheduled on {schedule.Date.ToShortDateString()} at {schedule.Time}.",
+                Type = "Schedule Reminder",
+                ReferenceID = schedule.ScheduleID,
+                ScheduledTime = schedule.Date.Add(schedule.Time)
+            });
+
+
             scheduleDto.ScheduleID = schedule.ScheduleID;
             return scheduleDto;
         }
+
 
         public async Task<bool> UpdateSchedule(int scheduleID, ScheduleDto scheduleDto)
         {

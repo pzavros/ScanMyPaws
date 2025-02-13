@@ -21,8 +21,14 @@ namespace Backend.Controllers
         [HttpGet("{userId}")]
         public ActionResult<List<NotificationDto>> GetNotifications(int userId)
         {
-            return _notificationService.GetNotificationsByUser(userId).ToList();
+            var notifications = _notificationService.GetNotificationsByUser(userId).ToList();
+            if (notifications == null || !notifications.Any())
+            {
+                return NoContent();
+            }
+            return notifications;
         }
+
 
         [HttpPost("send")]
         public async Task<IActionResult> SendNotification([FromBody] NotificationDto notificationDto)

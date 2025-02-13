@@ -26,14 +26,19 @@ namespace Backend.Services
                 Title = notificationDto.Title,
                 Message = notificationDto.Message,
                 DateCreated = DateTime.UtcNow,
-                DateModified = DateTime.UtcNow
+                DateModified = DateTime.UtcNow,
+                Type = notificationDto.Type,
+                ReferenceID = notificationDto.ReferenceID,
+                ScheduledTime = notificationDto.ScheduledTime
             };
 
             _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
 
-            await _hubContext.Clients.User(notificationDto.UserID.ToString()).SendAsync("ReceiveNotification", notificationDto.Title, notificationDto.Message);
+            await _hubContext.Clients.User(notificationDto.UserID.ToString())
+                .SendAsync("ReceiveNotification", notificationDto.Title, notificationDto.Message);
         }
+
 
         public IQueryable<NotificationDto> GetNotificationsByUser(int userId)
         {

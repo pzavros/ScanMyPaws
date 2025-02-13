@@ -46,41 +46,41 @@ export const fetchSchedules = async () => {
  * Create a new schedule entry.
  */
 export const createSchedule = async (scheduleData) => {
-    const userID = localStorage.getItem("userID");
-    if (!userID) {
-        console.error("User ID is missing. Cannot create schedule.");
-        throw new Error("User ID is missing.");
-    }
+  const userID = getUserIDFromToken();
+  if (!userID) {
+    console.error("User ID is missing. Cannot create schedule.");
+    throw new Error("User ID is missing.");
+  }
 
-    try {
-        const response = await axios.post(
-            `${API_BASE_URL}/api/schedules`,
-            { ...scheduleData, userID }, // Ensure userID is included
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            }
-        );
-        return response.data;
-    } catch (error) {
-        console.error("Error creating schedule:", error.response?.data || error.message);
-        throw error;
-    }
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/schedules`,
+      { ...scheduleData, userID }, // Ensure userID is included
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating schedule:", error.response?.data || error.message);
+    throw error;
+  }
 };
 
 /**
  * Delete a schedule.
  */
 export const deleteSchedule = async (scheduleID) => {
-    try {
-        await axios.delete(`${API_BASE_URL}/api/schedules/${scheduleID}`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-        });
-    } catch (error) {
-        console.error("Error deleting schedule:", error.response?.data || error.message);
-        throw error;
-    }
+  try {
+    await axios.delete(`${API_BASE_URL}/api/schedules/${scheduleID}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting schedule:", error.response?.data || error.message);
+    throw error;
+  }
 };

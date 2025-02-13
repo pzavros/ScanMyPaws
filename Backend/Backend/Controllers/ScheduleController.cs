@@ -33,11 +33,16 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ScheduleDto>> CreateSchedule(ScheduleDto scheduleDto)
+        public async Task<IActionResult> CreateSchedule([FromBody] ScheduleDto scheduleDto)
         {
             var createdSchedule = await _scheduleService.CreateSchedule(scheduleDto);
-            return CreatedAtAction(nameof(GetScheduleById), new { scheduleID = createdSchedule.ScheduleID }, createdSchedule);
+            if (createdSchedule == null)
+            {
+                return BadRequest("Error creating schedule.");
+            }
+            return Ok(createdSchedule);
         }
+
 
         [HttpPut("{scheduleID}")]
         public async Task<IActionResult> UpdateSchedule(int scheduleID, ScheduleDto scheduleDto)
