@@ -7,7 +7,7 @@ import NotificationsPanel from "../Notifications/NotificationsPanel";
 
 const TopNavbar = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // Get the current route to determine the active page
+  const location = useLocation();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isNotificationsOpen, setNotificationsOpen] = useState(false);
 
@@ -23,7 +23,7 @@ const TopNavbar = () => {
   };
 
   const closeNotifications = () => {
-    setNotificationsOpen(false); // Ensure it actually closes
+    setNotificationsOpen(false);
   };
 
   const navItems = [
@@ -123,9 +123,9 @@ const TopNavbar = () => {
                 alignItems: "center",
                 cursor: "pointer",
                 position: "relative",
-                color: "var(--text-color)", // Match the theme color for visibility
+                color: "var(--text-color)",
                 "&:hover": {
-                  color: "var(--primary-color)", // Highlight on hover
+                  color: "var(--primary-color)",
                 },
               }}
             >

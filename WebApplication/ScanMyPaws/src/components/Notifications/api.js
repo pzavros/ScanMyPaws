@@ -24,29 +24,41 @@ export const fetchUserNotifications = async () => {
   const userID = getUserIDFromToken();
   if (!userID) {
     console.error("User ID is missing.");
-    return [];
+    return { upcoming: [], past: [] };
   }
 
   try {
+    console.log(`Fetching notifications for userID: ${userID}`);
+    
     const response = await axios.get(`${API_BASE_URL}/api/notifications/${userID}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
-    return response.data;
+
+    console.log("Notifications received:", response.data);
+    return response.data; // Returns { upcoming: [...], past: [...] }
   } catch (error) {
     console.error("Error fetching notifications:", error.response?.data || error.message);
-    return [];
+    return { upcoming: [], past: [] };
   }
 };
+
 
 /**
  * Mark Notification as Read
  */
 export const markNotificationAsRead = async (notificationID) => {
   try {
-    await axios.put(`${API_BASE_URL}/api/notifications/read/${notificationID}`, {}, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    console.log(`Marking notification ${notificationID} as read`);
+
+    await axios.put(
+      `${API_BASE_URL}/api/notifications/read/${notificationID}`,
+      {},
+      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+    );
+
+    console.log(`Notification ${notificationID} marked as read`);
   } catch (error) {
     console.error("Error marking notification as read:", error.response?.data || error.message);
   }
 };
+

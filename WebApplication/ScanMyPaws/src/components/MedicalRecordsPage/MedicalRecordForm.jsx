@@ -22,7 +22,6 @@ const MedicalRecordForm = ({ onClose, petID, onSave, editableRecord }) => {
     vetClinicName: "",
   });
 
-  // Pre-fill the form if editableRecord is provided
   useEffect(() => {
     if (editableRecord) {
       setFormData({
@@ -72,7 +71,7 @@ const MedicalRecordForm = ({ onClose, petID, onSave, editableRecord }) => {
         notes: formData.notes || null,
         vetClinicName: formData.vetClinicName || null,
       };
-      await onSave(recordData, false); // Pass false to indicate create
+      await onSave(recordData, false);
       onClose();
     } catch (error) {
       console.error("Error creating record:", error);

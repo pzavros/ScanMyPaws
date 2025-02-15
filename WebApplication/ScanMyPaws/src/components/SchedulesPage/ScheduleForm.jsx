@@ -4,6 +4,7 @@ import InputField from "../ReusableComponents/InputField";
 import Button from "../ReusableComponents/Button";
 import Text from "../ReusableComponents/Text";
 import { createSchedule } from "./api";
+import { getUserIDFromToken } from "./api"; 
 
 const ScheduleForm = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -19,20 +20,26 @@ const ScheduleForm = ({ isOpen, onClose, onSave }) => {
 
   const handleSubmit = async () => {
     const scheduleData = {
+      userID: getUserIDFromToken(),
       title: formData.title,
-      date: `${formData.date}T${formData.time}`, // Combining date and time for API
+      date: formData.date,
+      time: formData.time + ":00",
       description: formData.description,
     };
-
+    
+  
+  
+  
     try {
       const createdSchedule = await createSchedule(scheduleData);
-      onSave(createdSchedule); // Pass new schedule to update UI
+      onSave(createdSchedule);  
       setFormData({ title: "", date: "", time: "", description: "" });
       onClose();
     } catch (error) {
       console.error("Failed to save schedule:", error);
     }
   };
+  
 
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth>

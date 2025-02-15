@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Backend.Hubs;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services
 {
@@ -40,9 +41,11 @@ namespace Backend.Services
         }
 
 
-        public IQueryable<NotificationDto> GetNotificationsByUser(int userId)
+        public async Task<Dictionary<string, List<NotificationDto>>> GetNotificationsByUser(int userId)
         {
-            return _context.Notifications
+            var now = DateTime.UtcNow;
+
+            var allNotifications = await _context.Notifications
                 .Where(n => n.UserID == userId)
                 .Select(n => new NotificationDto
                 {
@@ -52,8 +55,37 @@ namespace Backend.Services
                     UserID = n.UserID,
                     Title = n.Title,
                     Message = n.Message,
-                    IsRead = n.IsRead
-                });
+                    IsRead = n.IsRead,
+                    ScheduledTime = n.ScheduledTime
+                }).ToListAsync();
+
+            var upcoming = allNotifications
+                .Where(n => n.ScheduledTime.HasValue && n.ScheduledTime > now && !n.IsRead)
+                .ToList();
+
+            var past = allNotifications
+                .Where(n => n.IsRead || (n.ScheduledTime.HasValue && n.ScheduledTime <= now))
+                .OrderByDescending(n => n.ScheduledTime)
+                .ToList();
+
+            return new Dictionary<string, List<NotificationDto>>
+            {
+                { "upcoming", upcoming },
+                { "past", past }
+            };
         }
+
+        
+        public async Task<bool> MarkNotificationAsRead(int notificationId)
+        {
+            var notification = await _context.Notifications.FindAsync(notificationId);
+            if (notification == null) return false;
+
+            notification.IsRead = true;
+            notification.DateModified = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

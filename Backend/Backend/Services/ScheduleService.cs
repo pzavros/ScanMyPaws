@@ -61,7 +61,7 @@ namespace Backend.Services
             {
                 UserID = scheduleDto.UserID,
                 Title = scheduleDto.Title,
-                Date = scheduleDto.Date,
+                Date = scheduleDto.Date.Date, 
                 Time = scheduleDto.Time,
                 Description = scheduleDto.Description,
                 IsCompleted = scheduleDto.IsCompleted
@@ -69,6 +69,7 @@ namespace Backend.Services
 
             _context.Schedules.Add(schedule);
             await _context.SaveChangesAsync();
+
 
             await _notificationService.SendNotificationAsync(new NotificationDto
             {

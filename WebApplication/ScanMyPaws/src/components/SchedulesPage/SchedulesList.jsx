@@ -30,7 +30,6 @@ const SchedulesList = () => {
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  // Fetch schedules when component mounts
   useEffect(() => {
     const loadSchedules = async () => {
       setLoading(true);
@@ -47,7 +46,6 @@ const SchedulesList = () => {
     loadSchedules();
   }, []);
 
-  // Delete confirmation
   const handleDeleteClick = (schedule) => {
     setSelectedSchedule(schedule);
     setOpen(true);
@@ -79,15 +77,11 @@ const SchedulesList = () => {
     setIsFormOpen(false);
   };
 
-  const handleAddSchedule = async (scheduleData) => {
-    try {
-      const createdSchedule = await createSchedule(scheduleData);
-      setSchedules((prev) => [...prev, createdSchedule]);
-      setIsFormOpen(false);
-    } catch (error) {
-      console.error("Error adding schedule:", error);
-    }
+  const handleAddSchedule = (createdSchedule) => {
+    if (!createdSchedule) return;
+    setSchedules((prev) => [...prev, createdSchedule]);
   };
+  
 
   return (
     <Section>

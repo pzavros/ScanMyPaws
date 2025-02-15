@@ -5,18 +5,19 @@ const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 /**
  * Decode JWT token to extract UserID.
  */
-const getUserIDFromToken = () => {
+export const getUserIDFromToken = () => {
   const token = localStorage.getItem("token");
   if (!token) return null;
 
   try {
-    const payload = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
+    const payload = JSON.parse(atob(token.split(".")[1]));
     return payload.UserID || null;
   } catch (error) {
     console.error("Error decoding token:", error);
     return null;
   }
 };
+
 
 /**
  * Fetch schedules for the logged-in user.
@@ -46,20 +47,12 @@ export const fetchSchedules = async () => {
  * Create a new schedule entry.
  */
 export const createSchedule = async (scheduleData) => {
-  const userID = getUserIDFromToken();
-  if (!userID) {
-    console.error("User ID is missing. Cannot create schedule.");
-    throw new Error("User ID is missing.");
-  }
-
   try {
     const response = await axios.post(
       `${API_BASE_URL}/api/schedules`,
-      { ...scheduleData, userID }, // Ensure userID is included
+      scheduleData,
       {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
     );
     return response.data;
@@ -68,6 +61,9 @@ export const createSchedule = async (scheduleData) => {
     throw error;
   }
 };
+
+
+
 
 /**
  * Delete a schedule.

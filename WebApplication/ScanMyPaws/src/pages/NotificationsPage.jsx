@@ -1,7 +1,8 @@
 import React from "react";
+import Page from "../components/Page";
 
 const NotificationsPage = () => {
-  return <h1>Notifications Page</h1>;
+  return <Page>Notifications Page</Page>;
 };
 
 export default NotificationsPage;

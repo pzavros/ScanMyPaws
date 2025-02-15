@@ -19,15 +19,16 @@ namespace Backend.Controllers
         }
 
         [HttpGet("{userId}")]
-        public ActionResult<List<NotificationDto>> GetNotifications(int userId)
+        public async Task<ActionResult<Dictionary<string, List<NotificationDto>>>> GetNotifications(int userId)
         {
-            var notifications = _notificationService.GetNotificationsByUser(userId).ToList();
-            if (notifications == null || !notifications.Any())
+            var notifications = await _notificationService.GetNotificationsByUser(userId);
+            if (notifications["upcoming"].Count == 0 && notifications["past"].Count == 0)
             {
                 return NoContent();
             }
             return notifications;
         }
+
 
 
         [HttpPost("send")]
@@ -36,5 +37,17 @@ namespace Backend.Controllers
             await _notificationService.SendNotificationAsync(notificationDto);
             return Ok(new { message = "Notification sent successfully!" });
         }
+        
+        [HttpPut("read/{notificationId}")]
+        public async Task<IActionResult> MarkNotificationAsRead(int notificationId)
+        {
+            var success = await _notificationService.MarkNotificationAsRead(notificationId);
+            if (!success)
+            {
+                return NotFound(new { message = "Notification not found." });
+            }
+            return Ok(new { message = "Notification marked as read." });
+        }
+
     }
 }
