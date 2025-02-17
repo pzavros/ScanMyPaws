@@ -92,15 +92,20 @@ namespace Backend.Services
             var schedule = await _context.Schedules.FindAsync(scheduleID);
             if (schedule == null) return false;
 
-            schedule.Title = scheduleDto.Title;
-            schedule.Date = scheduleDto.Date;
-            schedule.Description = scheduleDto.Description;
+            // Ensure missing fields retain their existing values
+            schedule.Title = !string.IsNullOrEmpty(scheduleDto.Title) ? scheduleDto.Title : schedule.Title;
+            schedule.Date = scheduleDto.Date != default ? scheduleDto.Date : schedule.Date;
+            schedule.Time = scheduleDto.Time != default ? scheduleDto.Time : schedule.Time;
+            schedule.Description = !string.IsNullOrEmpty(scheduleDto.Description) ? scheduleDto.Description : schedule.Description;
             schedule.IsCompleted = scheduleDto.IsCompleted;
-            schedule.DateModified = System.DateTime.UtcNow;
 
+            schedule.DateModified = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;
         }
+
+
+
 
         public async Task<bool> DeleteSchedule(int scheduleID)
         {

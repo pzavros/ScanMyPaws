@@ -45,12 +45,19 @@ namespace Backend.Controllers
 
 
         [HttpPut("{scheduleID}")]
-        public async Task<IActionResult> UpdateSchedule(int scheduleID, ScheduleDto scheduleDto)
+        public async Task<IActionResult> UpdateSchedule(int scheduleID, [FromBody] ScheduleDto scheduleDto)
         {
+            if (scheduleDto == null)
+            {
+                return BadRequest("Schedule data is missing.");
+            }
+
             var success = await _scheduleService.UpdateSchedule(scheduleID, scheduleDto);
             if (!success) return NotFound();
             return NoContent();
         }
+
+
 
         [HttpDelete("{scheduleID}")]
         public async Task<IActionResult> DeleteSchedule(int scheduleID)

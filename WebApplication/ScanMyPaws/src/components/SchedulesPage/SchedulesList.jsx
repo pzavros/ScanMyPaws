@@ -10,41 +10,90 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Fab,
+  Typography,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
 import EventIcon from "@mui/icons-material/Event";
 import Section from "../ReusableComponents/Section";
-import Text from "../ReusableComponents/Text";
-import Button from "../ReusableComponents/Button";
-import { fetchSchedules, createSchedule, deleteSchedule } from "./api";
+import { fetchSchedules, deleteSchedule, updateSchedule } from "./api";
 import ScheduleForm from "./ScheduleForm";
 import { formatDate } from "../ReusableComponents/dateUtils";
 
 const SchedulesList = () => {
   const [schedules, setSchedules] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [pastSchedules, setPastSchedules] = useState([]);
+  const [upcomingSchedules, setUpcomingSchedules] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
 
   useEffect(() => {
     const loadSchedules = async () => {
-      setLoading(true);
       try {
         const data = await fetchSchedules();
+        const today = new Date();
+
+        const past = data.filter((schedule) => new Date(schedule.date) < today);
+        const upcoming = data.filter((schedule) => new Date(schedule.date) >= today);
+
+        setPastSchedules(past);
+        setUpcomingSchedules(upcoming);
         setSchedules(data);
       } catch (error) {
         console.error("Error fetching schedules:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
     loadSchedules();
   }, []);
+
+  const handleEditClick = (schedule) => {
+    setSelectedSchedule(schedule);
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+    setSelectedSchedule(null);
+  };
+
+  const handleSaveSchedule = async (updatedSchedule) => {
+    try {
+      const fullSchedule = {
+        scheduleID: updatedSchedule.scheduleID,
+        userID: updatedSchedule.userID,
+        title: updatedSchedule.title || selectedSchedule.title,
+        date: updatedSchedule.date ? new Date(updatedSchedule.date).toISOString() : selectedSchedule.date, // ✅ Ensure correct format
+        time: updatedSchedule.time || selectedSchedule.time,
+        description: updatedSchedule.description || selectedSchedule.description,
+        isCompleted: updatedSchedule.isCompleted !== undefined ? updatedSchedule.isCompleted : selectedSchedule.isCompleted,
+      };
+  
+      const response = await updateSchedule(fullSchedule);
+      if (response) {
+        setSchedules((prev) =>
+          prev.map((item) => (item.scheduleID === updatedSchedule.scheduleID ? fullSchedule : item))
+        );
+  
+        setPastSchedules((prev) =>
+          prev.map((item) => (item.scheduleID === updatedSchedule.scheduleID ? fullSchedule : item))
+        );
+        setUpcomingSchedules((prev) =>
+          prev.map((item) => (item.scheduleID === updatedSchedule.scheduleID ? fullSchedule : item))
+        );
+  
+        handleCloseForm();
+      }
+    } catch (error) {
+      console.error("Error updating schedule:", error);
+    }
+  };
+  
+  
 
   const handleDeleteClick = (schedule) => {
     setSelectedSchedule(schedule);
@@ -60,7 +109,12 @@ const SchedulesList = () => {
     if (selectedSchedule) {
       try {
         await deleteSchedule(selectedSchedule.scheduleID);
-        setSchedules((prev) => prev.filter((item) => item.scheduleID !== selectedSchedule.scheduleID));
+        setUpcomingSchedules((prev) =>
+          prev.filter((item) => item.scheduleID !== selectedSchedule.scheduleID)
+        );
+        setPastSchedules((prev) =>
+          prev.filter((item) => item.scheduleID !== selectedSchedule.scheduleID)
+        );
       } catch (error) {
         console.error("Error deleting schedule:", error);
       }
@@ -68,90 +122,121 @@ const SchedulesList = () => {
     handleClose();
   };
 
-  // Add new schedule
-  const handleOpenForm = () => {
-    setIsFormOpen(true);
-  };
-
-  const handleCloseForm = () => {
-    setIsFormOpen(false);
-  };
-
-  const handleAddSchedule = (createdSchedule) => {
-    if (!createdSchedule) return;
-    setSchedules((prev) => [...prev, createdSchedule]);
-  };
-  
-
   return (
     <Section>
-      <Box sx={{ textAlign: "center", marginBottom: 4 }}>
-        <Text variant="h5" weight="bold" color="primary" align="center">
-          Upcoming Schedules
-        </Text>
+      {/* Title Section */}
+      <Box textAlign="center" marginBottom={4}>
+        <Box
+          sx={{
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: 60,
+            height: 60,
+            background: "linear-gradient(135deg, #FFC1A1, #FF6F61)",
+            borderRadius: "50%",
+            marginBottom: 1,
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <EventIcon sx={{ color: "#fff", fontSize: "1.8rem" }} />
+        </Box>
+        <Typography variant="h5" fontWeight="bold" color="var(--text-color)" marginBottom={1}>
+          My Schedules
+        </Typography>
       </Box>
 
-      <Grid container spacing={4}>
-        {schedules.map((schedule) => (
-          <Grid item xs={12} sm={6} md={4} key={schedule.scheduleID}>
-            <Card sx={{ borderRadius: "16px", boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.15)" }}>
-              <CardContent>
-                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", marginBottom: 2 }}>
-                  <EventIcon sx={{ fontSize: "2rem", color: "#FF6F61" }} />
-                </Box>
-                <Text variant="h6" weight="bold" align="center">{schedule.title}</Text>
-                <Text variant="body2" align="center">{formatDate(schedule.date)}</Text>
-                <Box sx={{ textAlign: "center", marginTop: 2 }}>
-                  <Button onClick={() => console.log("Edit Schedule")} variant="secondary">Edit</Button>
-                  <IconButton onClick={() => handleDeleteClick(schedule)} sx={{ marginLeft: 2 }}>
-                    <DeleteIcon sx={{ color: "#FF6F61" }} />
-                  </IconButton>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-
-      <Fab
-        color="primary"
-        aria-label="add"
-        onClick={handleOpenForm}
+      {/* Tabs for Upcoming & Past Schedules */}
+      <Tabs
+        value={tabIndex}
+        onChange={(_, newValue) => setTabIndex(newValue)}
+        centered
         sx={{
-          position: "fixed",
-          bottom: 16,
-          right: 16,
-          background:
-            "linear-gradient(90deg, rgba(255,111,97,1) 0%, rgba(255,165,97,1) 100%)",
-          color: "#fff",
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.25)",
-          "&:hover": {
-            background:
-              "linear-gradient(90deg, rgba(255,165,97,1) 0%, rgba(255,111,97,1) 100%)",
+          "& .MuiTabs-indicator": {
+            backgroundColor: "#FF6F61",
+          },
+          "& .MuiTab-root": {
+            color: "var(--text-color)",
+          },
+          "& .Mui-selected": {
+            color: "#FF6F61 !important",
+            backgroundColor: "transparent !important",
           },
         }}
       >
-        <AddIcon />
-      </Fab>
+        <Tab label="Upcoming Schedules" />
+        <Tab label="Past Schedules" />
+      </Tabs>
 
-      {/* Add Schedule Form Dialog */}
-      <ScheduleForm isOpen={isFormOpen} onClose={handleCloseForm} onSave={handleAddSchedule} />
+      {/* Schedule Grid */}
+      <Grid container spacing={3} sx={{ marginTop: 2 }}>
+        {tabIndex === 0 && upcomingSchedules.length === 0 ? (
+          <Box sx={{ width: "100%", textAlign: "center", marginTop: 4 }}>
+            <Typography variant="h6" sx={{ color: "var(--text-color)", fontStyle: "italic" }}>
+              No upcoming schedules.
+            </Typography>
+          </Box>
+        ) : tabIndex === 1 && pastSchedules.length === 0 ? (
+          <Box sx={{ width: "100%", textAlign: "center", marginTop: 4 }}>
+            <Typography variant="h6" sx={{ color: "var(--text-color)", fontStyle: "italic" }}>
+              No past schedules.
+            </Typography>
+          </Box>
+        ) : (
+          (tabIndex === 0 ? upcomingSchedules : pastSchedules).map((schedule) => (
+            <Grid item xs={12} sm={6} md={4} key={schedule.scheduleID}>
+              <Card
+                sx={{
+                  position: "relative",
+                  background: "linear-gradient(135deg, #FFB7C5, #92E6FF)",
+                  borderRadius: "16px",
+                  boxShadow: "0 10px 20px rgba(0, 0, 0, 0.15)",
+                  overflow: "hidden",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-5px)",
+                    boxShadow: "0 20px 30px rgba(0, 0, 0, 0.25)",
+                  },
+                }}
+              >
+                <CardContent sx={{ position: "relative", zIndex: 2, padding: 2 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: 40,
+                      height: 40,
+                      background: "linear-gradient(135deg, #FFC1A1, #FF6F61)",
+                      borderRadius: "50%",
+                      margin: "0 auto 10px",
+                      boxShadow: "0 3px 8px rgba(0, 0, 0, 0.1)",
+                    }}
+                  >
+                    <EventIcon sx={{ color: "#fff", fontSize: "1.2rem" }} />
+                  </Box>
+                  <Typography variant="h6" fontWeight="bold" textAlign="center" color="var(--text-color)" marginBottom={0.5}>
+                    {schedule.title}
+                  </Typography>
+                  <Typography variant="body2" textAlign="center" fontStyle="italic" color="var(--text-color)" marginBottom={1}>
+                    {formatDate(schedule.date)}
+                  </Typography>
+                  <Box sx={{ position: "absolute", top: 10, right: 10, display: "flex", gap: 1 }}>
+                    <IconButton onClick={() => handleEditClick(schedule)} sx={{ background: "rgba(255, 255, 255, 0.3)", color: "#FF6F61", "&:hover": { background: "#FFAB91" } }}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteClick(schedule)} sx={{ background: "rgba(255, 255, 255, 0.3)", color: "#FF6F61", "&:hover": { background: "#FFAB91" } }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))
+        )}
+      </Grid>
 
-      {/* Confirmation Modal */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle><Text variant="h6">Confirm Deletion</Text></DialogTitle>
-        <DialogContent>
-          <DialogContentText>Are you sure you want to delete this schedule?</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} variant="outlined">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmDelete} variant="danger">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ScheduleForm isOpen={isFormOpen} onClose={handleCloseForm} onSave={handleSaveSchedule} selectedSchedule={selectedSchedule} />
     </Section>
   );
 };

@@ -18,7 +18,6 @@ export const getUserIDFromToken = () => {
   }
 };
 
-
 /**
  * Fetch schedules for the logged-in user.
  */
@@ -48,13 +47,9 @@ export const fetchSchedules = async () => {
  */
 export const createSchedule = async (scheduleData) => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/api/schedules`,
-      scheduleData,
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    );
+    const response = await axios.post(`${API_BASE_URL}/api/schedules`, scheduleData, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
     return response.data;
   } catch (error) {
     console.error("Error creating schedule:", error.response?.data || error.message);
@@ -62,8 +57,24 @@ export const createSchedule = async (scheduleData) => {
   }
 };
 
-
-
+/**
+ * Update an existing schedule.
+ */
+export const updateSchedule = async (scheduleData) => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/schedules/${scheduleData.scheduleID}`,
+      scheduleData, // ✅ Directly send JSON without wrapping inside scheduleDto
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating schedule:", error.response?.data || error.message);
+    throw error;
+  }
+};
 
 /**
  * Delete a schedule.
