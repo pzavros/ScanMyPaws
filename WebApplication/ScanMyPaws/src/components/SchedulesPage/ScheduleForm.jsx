@@ -56,11 +56,9 @@ const ScheduleForm = ({ isOpen, onClose, onSave, selectedSchedule }) => {
 
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        <Typography variant="h6" fontWeight="bold">
-          {selectedSchedule ? "Edit Schedule" : "Add New Schedule"}
-        </Typography>
-      </DialogTitle>
+      {/* ✅ Fix: Remove <Typography> inside <DialogTitle> */}
+      <DialogTitle>{selectedSchedule ? "Edit Schedule" : "Add New Schedule"}</DialogTitle>
+      
       <DialogContent sx={{ backgroundColor: "var(--background-color)" }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, padding: 2 }}>
           <InputField
@@ -100,6 +98,7 @@ const ScheduleForm = ({ isOpen, onClose, onSave, selectedSchedule }) => {
           />
         </Box>
       </DialogContent>
+
       <DialogActions sx={{ padding: 2, backgroundColor: "var(--background-color)" }}>
         <Button onClick={onClose} variant="outlined">Cancel</Button>
         <Button onClick={handleSubmit} variant="primary">
@@ -111,3 +110,4 @@ const ScheduleForm = ({ isOpen, onClose, onSave, selectedSchedule }) => {
 };
 
 export default ScheduleForm;
+  

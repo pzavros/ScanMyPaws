@@ -1,9 +1,8 @@
-// Updated PetStats.js
 import React, { useEffect, useState } from "react";
-import { Box, Paper } from "@mui/material";
-import Section from "../ReusableComponents/Section";
+import { Box } from "@mui/material";
 import Text from "../ReusableComponents/Text";
-import { fetchPetStats } from "./api";
+import Section from "../ReusableComponents/Section";
+import { fetchPetStats } from "./api"; // ✅ Correct import
 import SectionTitle from "../ReusableComponents/SectionTitle";
 
 const PetStats = ({ petId }) => {
@@ -12,44 +11,27 @@ const PetStats = ({ petId }) => {
   useEffect(() => {
     const loadStats = async () => {
       if (petId) {
-        const data = await fetchPetStats(petId);
+        const data = await fetchPetStats(petId); // ✅ Ensure it calls the correct function
         setStats(data);
       }
     };
-
     loadStats();
   }, [petId]);
 
   return (
     <Section>
-      <SectionTitle mb={2}>Pet Statistics</SectionTitle>
-      <Paper
-        elevation={2}
-        sx={{
-          padding: "16px",
-          borderRadius: "12px",
-          backgroundColor: "var(--card-background)",
-          color: "var(--text-color)",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px",
-          }}
-        >
-          <Text variant="body1" fontWeight="bold">
-            Age: <span style={{ fontWeight: "normal" }}>{stats.age || "-"}</span>
-          </Text>
-          <Text variant="body1" fontWeight="bold">
-            Weight: <span style={{ fontWeight: "normal" }}>{stats.weight || "-"}</span>
-          </Text>
-          <Text variant="body1" fontWeight="bold">
-            Activity Level: <span style={{ fontWeight: "normal" }}>{stats.activity || "-"}</span>
-          </Text>
-        </Box>
-      </Paper>
+      <Box mb={3}>
+        <SectionTitle mb={1}>Pet Stats</SectionTitle>
+        {stats ? (
+          <>
+            <Text variant="body1">Age: {stats.age}</Text>
+            <Text variant="body1">Weight: {stats.weight}</Text>
+            <Text variant="body1">Activity Level: {stats.activity}</Text>
+          </>
+        ) : (
+          <Text>No stats available.</Text>
+        )}
+      </Box>
     </Section>
   );
 };

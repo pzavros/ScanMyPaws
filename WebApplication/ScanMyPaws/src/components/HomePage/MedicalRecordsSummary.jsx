@@ -1,56 +1,62 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
-import Text from "../ReusableComponents/Text";
-import Row from "../ReusableComponents/Row";
-import Card from "../ReusableComponents/Card";
+import { Box, Paper } from "@mui/material";
 import Section from "../ReusableComponents/Section";
-import { fetchMedicalRecords } from "./api";
+import Text from "../ReusableComponents/Text";
+import { fetchMedicalRecords } from "./api"; // ✅ Ensure correct import
 import SectionTitle from "../ReusableComponents/SectionTitle";
-import { formatDate } from "../ReusableComponents/dateUtils";
 
 const MedicalRecordsSummary = ({ petId }) => {
-  const [records, setRecords] = useState([]);
+  const [medicalRecords, setMedicalRecords] = useState([]);
 
   useEffect(() => {
-    const loadRecords = async () => {
+    const loadMedicalRecords = async () => {
       if (petId) {
-        try {
-          const data = await fetchMedicalRecords(petId);
-          setRecords(data);
-        } catch (error) {
-          console.error("Error fetching medical records:", error);
-        }
+        const data = await fetchMedicalRecords(petId);
+        setMedicalRecords(data);
       }
     };
-
-    loadRecords();
+    loadMedicalRecords();
   }, [petId]);
 
   return (
     <Section>
       <Box mb={3}>
         <SectionTitle mb={1}>Medical Records Summary</SectionTitle>
-        {records.length === 0 ? (
-          <Text variant="body2" color="gray">
-            No medical records available.
-          </Text>
-        ) : (
-          <Row>
-            {records.map((record) => (
-              <Card key={record.medicalRecordID}>
-                <Text variant="body1" fontWeight="bold">
-                  {record.type || "Unknown Type"}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+          }}
+        >
+          {medicalRecords.length === 0 ? (
+            <Text>No medical records found.</Text>
+          ) : (
+            medicalRecords.map((record, index) => (
+              <Paper
+                key={record.recordID || `record-${index}`} // ✅ Ensures a unique key
+                elevation={2}
+                sx={{
+                  padding: "16px",
+                  borderRadius: "12px",
+                  backgroundColor: "var(--card-background)",
+                  color: "var(--text-color)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Text variant="body1" fontWeight="bold" mb={0.5}>
+                  {record.type}
                 </Text>
-                <Text variant="body2">
-                  Date: {formatDate(record.date)}
+                <Text variant="body2">{record.description}</Text>
+                <Text variant="caption" color="gray">
+                  {new Date(record.dateCreated).toLocaleDateString()}
                 </Text>
-                <Text variant="body2">
-                  Vet: {record.vetClinicName || "N/A"}
-                </Text>
-              </Card>
-            ))}
-          </Row>
-        )}
+              </Paper>
+            ))
+          )}
+        </Box>
       </Box>
     </Section>
   );

@@ -139,5 +139,17 @@ namespace Backend.Services
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<PetStatsDto> GetPetStats(int petId)
+        {
+            var pet = await _context.PetProfiles.FindAsync(petId);
+            if (pet == null) return null;
+
+            return new PetStatsDto
+            {
+                Age = $"{pet.Age} Years",
+                Weight = "12 kg",
+                ActivityLevel = "High"
+            };
+        }
     }
 }

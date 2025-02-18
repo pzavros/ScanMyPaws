@@ -11,5 +11,6 @@ namespace Backend.Interfaces
         Task<ScheduleDto> CreateSchedule(ScheduleDto scheduleDto);
         Task<bool> UpdateSchedule(int scheduleID, ScheduleDto scheduleDto);
         Task<bool> DeleteSchedule(int scheduleID);
+        Task<IEnumerable<ScheduleDto>> GetUpcomingTasks(int userId);
     }
 }

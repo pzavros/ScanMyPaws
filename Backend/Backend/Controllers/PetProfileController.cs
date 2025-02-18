@@ -150,5 +150,14 @@ namespace Backend.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet("pet-stats/{petId}")]
+        public async Task<ActionResult<PetStatsDto>> GetPetStats(int petId)
+        {
+            var stats = await _petProfileService.GetPetStats(petId);
+            if (stats == null)
+                return NotFound();
+            return Ok(stats);
+        }
+
     }
 }

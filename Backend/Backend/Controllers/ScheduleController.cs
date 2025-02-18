@@ -66,5 +66,12 @@ namespace Backend.Controllers
             if (!success) return NotFound();
             return NoContent();
         }
+        
+        [HttpGet("user/{userId}/upcoming-tasks")]
+        public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetUpcomingTasks(int userId)
+        {
+            var tasks = await _scheduleService.GetUpcomingTasks(userId);
+            return Ok(tasks);
+        }
     }
 }

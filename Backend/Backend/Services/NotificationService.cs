@@ -1,4 +1,5 @@
 using Backend.Models;
+using Backend.Interfaces;
 using Backend.DTOs;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services
 {
-    public class NotificationService
+    public class NotificationService : INotificationService
     {
         private readonly ApplicationDbContext _context;
         private readonly IHubContext<NotificationHub> _hubContext;
@@ -85,6 +86,48 @@ namespace Backend.Services
             notification.DateModified = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;
+        }
+        
+        public async Task<IEnumerable<NotificationDto>> GetRecentNotifications(int userId)
+        {
+            return await _context.Notifications
+                .Where(n => n.UserID == userId && n.DateCreated >= DateTime.UtcNow.AddDays(-7))
+                .OrderByDescending(n => n.DateCreated)
+                .Select(n => new NotificationDto
+                {
+                    NotificationID = n.NotificationID,
+                    DateCreated = n.DateCreated,
+                    DateModified = n.DateModified,
+                    UserID = n.UserID,
+                    Title = n.Title,
+                    Message = n.Message,
+                    IsRead = n.IsRead,
+                    Type = n.Type,
+                    ReferenceID = n.ReferenceID,
+                    ScheduledTime = n.ScheduledTime
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<NotificationDto>> GetUpcomingNotifications(int userId)
+        {
+            return await _context.Notifications
+                .Where(n => n.UserID == userId && n.ScheduledTime > DateTime.UtcNow)
+                .OrderBy(n => n.ScheduledTime)
+                .Select(n => new NotificationDto
+                {
+                    NotificationID = n.NotificationID,
+                    DateCreated = n.DateCreated,
+                    DateModified = n.DateModified,
+                    UserID = n.UserID,
+                    Title = n.Title,
+                    Message = n.Message,
+                    IsRead = n.IsRead,
+                    Type = n.Type,
+                    ReferenceID = n.ReferenceID,
+                    ScheduledTime = n.ScheduledTime
+                })
+                .ToListAsync();
         }
 
     }

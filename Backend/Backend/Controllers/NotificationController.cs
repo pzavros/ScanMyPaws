@@ -48,6 +48,19 @@ namespace Backend.Controllers
             }
             return Ok(new { message = "Notification marked as read." });
         }
+        
+        [HttpGet("user/{userId}/recent")]
+        public async Task<ActionResult<IEnumerable<NotificationDto>>> GetRecentNotifications(int userId)
+        {
+            var notifications = await _notificationService.GetRecentNotifications(userId);
+            return Ok(notifications);
+        }
 
+        [HttpGet("user/{userId}/upcoming")]
+        public async Task<ActionResult<IEnumerable<NotificationDto>>> GetUpcomingNotifications(int userId)
+        {
+            var notifications = await _notificationService.GetUpcomingNotifications(userId);
+            return Ok(notifications);
+        }
     }
 }

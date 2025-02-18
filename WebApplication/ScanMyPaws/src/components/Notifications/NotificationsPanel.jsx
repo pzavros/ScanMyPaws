@@ -23,12 +23,21 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
   const loadNotifications = async () => {
     setLoading(true);
     try {
-      const { upcoming, past } = await fetchUserNotifications();
-      setUpcomingNotifications(upcoming);
-      setPastNotifications(past);
-      scheduleNotifications(upcoming);
+      const data = await fetchUserNotifications();
+      
+      if (!data || !data.upcoming || !data.past) {
+        setUpcomingNotifications([]);
+        setPastNotifications([]);
+        return;
+      }
+
+      setUpcomingNotifications(data.upcoming);
+      setPastNotifications(data.past);
+      scheduleNotifications(data.upcoming);
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
+      setUpcomingNotifications([]);
+      setPastNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -37,13 +46,13 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
   /**
    * Schedule notifications only at the right time
    */
-  const scheduleNotifications = (notifications) => {
+  const scheduleNotifications = (notifications = []) => {
     if (!("Notification" in window) || Notification.permission !== "granted") return;
 
     notifications.forEach((notif) => {
       if (!notif.isRead && notif.scheduledTime) {
         const scheduledTimestamp = new Date(notif.scheduledTime).getTime();
-        const currentTimestamp = new Date().getTime();
+        const currentTimestamp = Date.now();
 
         if (scheduledTimestamp <= currentTimestamp && !notifiedNotifications.has(notif.notificationID)) {
           triggerNotification(notif);
@@ -168,41 +177,37 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
         <Section>
           {tabIndex === 0 ? (
             // Upcoming Notifications
-            <>
-              {upcomingNotifications.length === 0 ? (
-                <Text variant="body1" align="center">No upcoming notifications.</Text>
-              ) : (
-                upcomingNotifications.map((notification) => (
-                  <Box key={notification.notificationID}
-                    onClick={() => handleNotificationClick(notification)}
-                    sx={{ padding: "12px", backgroundColor: "var(--hover-color)", borderRadius: "8px", cursor: "pointer" }}
-                  >
-                    <Text variant="body1" weight="bold">{notification.title}</Text>
-                    <Text variant="body2">{notification.message}</Text>
-                    <Text variant="caption" color="gray">
-                      {new Date(notification.dateCreated).toLocaleString()}
-                    </Text>
-                  </Box>
-                ))
-              )}
-            </>
+            upcomingNotifications.length === 0 ? (
+              <Text variant="body1" align="center">No upcoming notifications.</Text>
+            ) : (
+              upcomingNotifications.map((notification) => (
+                <Box key={notification.notificationID}
+                  onClick={() => handleNotificationClick(notification)}
+                  sx={{ padding: "12px", backgroundColor: "var(--hover-color)", borderRadius: "8px", cursor: "pointer" }}
+                >
+                  <Text variant="body1" weight="bold">{notification.title}</Text>
+                  <Text variant="body2">{notification.message}</Text>
+                  <Text variant="caption" color="gray">
+                    {new Date(notification.dateCreated).toLocaleString()}
+                  </Text>
+                </Box>
+              ))
+            )
           ) : (
             // Past Notifications
-            <>
-              {pastNotifications.length === 0 ? (
-                <Text variant="body1" align="center">No past notifications.</Text>
-              ) : (
-                pastNotifications.map((notification) => (
-                  <Box key={notification.notificationID} sx={{ padding: "12px", borderRadius: "8px" }}>
-                    <Text variant="body1" weight="bold">{notification.title}</Text>
-                    <Text variant="body2">{notification.message}</Text>
-                    <Text variant="caption" color="gray">
-                      {new Date(notification.dateCreated).toLocaleString()}
-                    </Text>
-                  </Box>
-                ))
-              )}
-            </>
+            pastNotifications.length === 0 ? (
+              <Text variant="body1" align="center">No past notifications.</Text>
+            ) : (
+              pastNotifications.map((notification) => (
+                <Box key={notification.notificationID} sx={{ padding: "12px", borderRadius: "8px" }}>
+                  <Text variant="body1" weight="bold">{notification.title}</Text>
+                  <Text variant="body2">{notification.message}</Text>
+                  <Text variant="caption" color="gray">
+                    {new Date(notification.dateCreated).toLocaleString()}
+                  </Text>
+                </Box>
+              ))
+            )
           )}
         </Section>
       )}

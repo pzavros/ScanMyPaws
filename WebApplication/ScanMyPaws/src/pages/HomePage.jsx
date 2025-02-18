@@ -5,7 +5,6 @@ import UpcomingTasks from "../components/HomePage/UpcomingTasks";
 import QuickActions from "../components/HomePage/QuickActions";
 import RecentNotifications from "../components/HomePage/RecentNotifications";
 import MedicalRecordsSummary from "../components/HomePage/MedicalRecordsSummary";
-import PlannerHighlights from "../components/HomePage/PlannerHighlights";
 import PetStats from "../components/HomePage/PetStats";
 import Page from "../components/ReusableComponents/Page";
 import LoadingIndicator from "../components/ReusableComponents/LoadingIndicator";
@@ -75,7 +74,6 @@ const HomePage = () => {
       <UpcomingTasks petId={currentPet?.petID} />
       <RecentNotifications petId={currentPet?.petID} />
       <MedicalRecordsSummary petId={currentPet?.petID} />
-      <PlannerHighlights petId={currentPet?.petID} />
       <PetStats petId={currentPet?.petID} />
       <QuickActions petId={currentPet?.petID} />
     </Page>

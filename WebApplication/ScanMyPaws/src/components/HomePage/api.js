@@ -1,8 +1,10 @@
-// Updated components/HomePage/api.js
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 
+/**
+ * Fetch pet data (Mock)
+ */
 export const fetchPetData = async () => {
   return {
     name: "Muffin",
@@ -13,13 +15,28 @@ export const fetchPetData = async () => {
   };
 };
 
+/**
+ * Fetch upcoming tasks from schedules
+ * @param {number} petId
+ * @returns {Promise<Array>}
+ */
 export const fetchUpcomingTasks = async (petId) => {
-  return [
-    { title: "Vet Visit", description: `In 2 days for pet ${petId}` },
-    { title: "Dental Care", description: "Due in 4 days" },
-  ];
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/schedules/user/${petId}/upcoming-tasks`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data || [];
+  } catch (error) {
+    console.error("Error fetching upcoming tasks:", error);
+    return [];
+  }
 };
 
+/**
+ * Fetch quick actions (Mock Data)
+ */
 export const fetchQuickActions = async () => {
   return [
     { label: "Add Weight", icon: "Add" },
@@ -28,13 +45,49 @@ export const fetchQuickActions = async () => {
   ];
 };
 
+/**
+ * Fetch recent notifications for a user
+ * @param {number} petId
+ * @returns {Promise<Array>}
+ */
 export const fetchRecentNotifications = async (petId) => {
-  return [
-    { id: 1, title: `Vet Visit Reminder for pet ${petId}`, time: "1 hour ago" },
-    { id: 2, title: "Weight Update Needed", time: "3 days ago" },
-  ];
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/notifications/user/${petId}/recent`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data || [];
+  } catch (error) {
+    console.error("Error fetching recent notifications:", error);
+    return [];
+  }
 };
 
+/**
+ * Fetch upcoming notifications for a user
+ * @param {number} petId
+ * @returns {Promise<Array>}
+ */
+export const fetchUpcomingNotifications = async (petId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/notifications/user/${petId}/upcoming`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data || [];
+  } catch (error) {
+    console.error("Error fetching upcoming notifications:", error);
+    return [];
+  }
+};
+
+/**
+ * Fetch medical records for a pet
+ * @param {number} petId
+ * @returns {Promise<Array>}
+ */
 export const fetchMedicalRecords = async (petId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/MedicalRecord/pet/${petId}`, {
@@ -42,7 +95,7 @@ export const fetchMedicalRecords = async (petId) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    console.log("Medical Records Response:", response.data); // Debug log
+    console.log("Medical Records Response:", response.data);
     return response.data || [];
   } catch (error) {
     console.error("Error fetching medical records:", error);
@@ -50,52 +103,81 @@ export const fetchMedicalRecords = async (petId) => {
   }
 };
 
+/**
+ * Fetch planner highlights for a pet
+ * @param {number} petId
+ * @returns {Promise<Array>}
+ */
+export const fetchPlannerHighlights = async (userId) => {
+  try {
+    console.log(`Fetching planner highlights for user: ${userId}`);
+    const response = await axios.get(`${API_BASE_URL}/api/schedules/user/${userId}/planner-highlights`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
 
-export const fetchPlannerHighlights = async (petId) => {
-  return [
-    { id: 1, title: `Grooming Appointment for pet ${petId}`, date: "June 10" },
-    { id: 2, title: "Dental Cleaning", date: "June 15" },
-  ];
+    console.log("Planner highlights response:", response.data);
+
+    // Ensure we return the actual data array, not the whole object
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Error fetching planner highlights:", error.response?.data || error.message);
+    return [];
+  }
 };
 
+
+
+/**
+ * Fetch pet statistics
+ * @param {number} petId
+ * @returns {Promise<Object>}
+ */
 export const fetchPetStats = async (petId) => {
-  return { age: "3 Years", weight: "12 kg", activity: "High" };
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/PetProfile/pet-stats/${petId}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response.data || {};
+  } catch (error) {
+    console.error("Error fetching pet stats:", error);
+    return {};
+  }
 };
 
+
+/**
+ * Fetch user pets
+ * @returns {Promise<Array>}
+ */
 export const fetchUserPets = async () => {
-  console.log("fetchUserPets function invoked"); // Debug log
+  console.log("fetchUserPets function invoked");
   try {
     const response = await axios.get(`${API_BASE_URL}/api/PetProfile/user`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    console.log("API Response:", response.data); // Debug log
+    console.log("API Response:", response.data);
     return response.data?.data || [];
   } catch (error) {
-    console.error("Error in fetchUserPets:", error);
+    console.error("Error fetching user pets:", error);
     return [];
   }
 };
 
-
-//delay
-// export const fetchUserPets = async () => {
-//   console.log("fetchUserPets function invoked"); // Debug log
-//   try {
-//     // Simulating a delay
-//     await new Promise((resolve) => setTimeout(resolve, 3000));
-
-//     const response = await axios.get(`${API_BASE_URL}/api/PetProfile/user`, {
-//       headers: {
-//         Authorization: `Bearer ${localStorage.getItem("token")}`,
-//       },
-//     });
-
-//     console.log("API Response:", response.data); // Debug log
-//     return response.data?.data || [];
-//   } catch (error) {
-//     console.error("Error in fetchUserPets:", error);
-//     return [];
-//   }
-// };
+/**
+ * Mark a notification as read
+ * @param {number} notificationId
+ * @returns {Promise<void>}
+ */
+export const markNotificationAsRead = async (notificationId) => {
+  try {
+    await axios.put(`${API_BASE_URL}/api/notifications/read/${notificationId}`, {}, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+  }
+};

@@ -31,31 +31,35 @@ const RecentNotifications = ({ petId }) => {
             gap: "12px",
           }}
         >
-          {notifications.map((notification) => (
-            <Paper
-              key={notification.id}
-              elevation={2}
-              sx={{
-                padding: "16px",
-                borderRadius: "12px",
-                backgroundColor: "var(--card-background)",
-                color: "var(--text-color)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-            >
-              <Text variant="body1" fontWeight="bold" mb={0.5}>
-                {notification.title}
-              </Text>
-              <Text
-                variant="body2"
-                sx={{ fontSize: "0.875rem", color: "var(--text-color)" }}
+          {notifications.length === 0 ? (
+            <Text>No recent notifications.</Text>
+          ) : (
+            notifications.map((notification, index) => (
+              <Paper
+                key={notification.notificationID || notification.id || index} // ✅ Unique key fix
+                elevation={2}
+                sx={{
+                  padding: "16px",
+                  borderRadius: "12px",
+                  backgroundColor: "var(--card-background)",
+                  color: "var(--text-color)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
               >
-                {notification.time}
-              </Text>
-            </Paper>
-          ))}
+                <Text variant="body1" fontWeight="bold" mb={0.5}>
+                  {notification.title}
+                </Text>
+                <Text
+                  variant="body2"
+                  sx={{ fontSize: "0.875rem", color: "var(--text-color)" }}
+                >
+                  {notification.time}
+                </Text>
+              </Paper>
+            ))
+          )}
         </Box>
       </Box>
     </Section>
