@@ -12,11 +12,15 @@ namespace Backend.Services
     public class PetCardService : IPetCardService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IPetCardSettingService _petCardSettingService;
 
-        public PetCardService(ApplicationDbContext context)
+
+        public PetCardService(ApplicationDbContext context, IPetCardSettingService petCardSettingService)
         {
             _context = context;
+            _petCardSettingService = petCardSettingService;
         }
+
 
         private string GenerateUniqueUrl()
         {
@@ -68,12 +72,15 @@ namespace Backend.Services
 
             _context.PetCards.Add(petCard);
 
-            // Mark the pet profile as having a card
             petProfile.IsHavingCard = true;
 
             await _context.SaveChangesAsync();
+            
+            await _petCardSettingService.CreatePetCardSettingAsync(petCard.PetID);
 
-            // Update DTO with newly generated ID and unique URL
+            petCardDto.PetCardID = petCard.PetCardID;
+            petCardDto.UniqueUrl = uniqueUrl;
+
             petCardDto.PetCardID = petCard.PetCardID;
             petCardDto.UniqueUrl = uniqueUrl;
 

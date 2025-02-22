@@ -29,7 +29,7 @@ const PetCardPage = () => {
   const handleSave = async (updatedDetails) => {
     try {
       const updatedData = await updatePetDetails(updatedDetails.petCardID, updatedDetails);
-      setPetDetails(updatedData); // Update the state with the new data
+      setPetDetails(updatedData);
     } catch (error) {
       console.error("Error updating pet details:", error);
     }

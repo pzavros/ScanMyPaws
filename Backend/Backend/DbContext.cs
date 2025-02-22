@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
+using ScanMyPaws.Models;
 
 namespace Backend
 {
@@ -20,6 +21,7 @@ namespace Backend
         public DbSet<MedicalRecordType> MedicalRecordTypes { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<PetCardSetting> PetCardSettings { get; set; }
 
 
 

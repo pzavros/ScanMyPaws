@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Box, Typography, Avatar, Grid, IconButton, InputBase } from "@mui/material";
+import { Box, Typography, Avatar, Grid, IconButton, InputBase, Checkbox } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import PetsIcon from "@mui/icons-material/Pets";
 import PhoneIcon from "@mui/icons-material/Phone";
 import HomeIcon from "@mui/icons-material/Home";
@@ -11,9 +12,23 @@ import Section from "../ReusableComponents/Section";
 const PetCard = ({ petDetails, onSave, readOnly = false }) => {
   const [form, setForm] = useState(petDetails);
   const [isEditing, setIsEditing] = useState({});
+  // State tracking which fields are visible (checked) in the read-only view.
+  const [visibleFields, setVisibleFields] = useState({
+    petName: true,
+    breedName: true,
+    sex: true,
+    age: true,
+    weight: true,
+    mobilePhone1: true,
+    mobilePhone2: true,
+    address: true,
+    alternativeContact: true,
+  });
+  // State to toggle inline visibility editing mode.
+  const [editingVisibility, setEditingVisibility] = useState(false);
 
   const handleEditToggle = (field) => {
-    if (readOnly) return; // Prevent editing in read-only mode
+    if (readOnly) return;
     setIsEditing((prev) => ({
       ...prev,
       [field]: !prev[field],
@@ -25,15 +40,32 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSave = (field) => {
+  const handleSaveField = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
-    if (onSave) onSave(form); // Trigger save callback
+    if (onSave) onSave(form);
   };
+
+  // Toggle the inline visibility editing mode.
+  const toggleVisibilityEditing = () => {
+    setEditingVisibility((prev) => !prev);
+  };
+
+  // When not in editingVisibility mode, only render fields with visibleFields[field] true.
+  const shouldRenderField = (field) => editingVisibility || visibleFields[field];
 
   const imageSrc = form.photo ? `data:image/jpeg;base64,${form.photo}` : null;
 
   return (
     <Section>
+      {/* Toggle Button for Inline Visibility Editing (only for editing users) */}
+      {!readOnly && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          <IconButton onClick={toggleVisibilityEditing}>
+            <VisibilityIcon sx={{ color: "white" }} />
+          </IconButton>
+        </Box>
+      )}
+
       {/* Header Section */}
       <Box
         sx={{
@@ -54,44 +86,72 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
             border: "4px solid white",
           }}
         />
-        <Typography variant="h4" sx={{ fontWeight: "bold", mt: 2 }}>
-          {isEditing.petName ? (
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-              <InputBase
-                name="petName"
-                value={form.petName || ""}
-                onChange={handleInputChange}
+        {/* Pet Name */}
+        {shouldRenderField("petName") && (
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Typography variant="h4" sx={{ fontWeight: "bold", mt: 2 }}>
+              {isEditing.petName ? (
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <InputBase
+                    name="petName"
+                    value={form.petName || ""}
+                    onChange={handleInputChange}
+                    sx={{
+                      fontSize: "1.5rem",
+                      textAlign: "center",
+                      borderBottom: "2px solid white",
+                      color: "white",
+                    }}
+                  />
+                  <IconButton onClick={() => handleSaveField("petName")} sx={{ color: "white", ml: 1 }}>
+                    <SaveIcon />
+                  </IconButton>
+                </Box>
+              ) : (
+                <>
+                  {form.petName || "Unnamed Pet"}
+                  {!readOnly && (
+                    <IconButton onClick={() => handleEditToggle("petName")} sx={{ color: "white", ml: 1 }}>
+                      <EditIcon />
+                    </IconButton>
+                  )}
+                </>
+              )}
+            </Typography>
+            {editingVisibility && (
+              <Checkbox
+                checked={visibleFields.petName}
+                onChange={(e) =>
+                  setVisibleFields({ ...visibleFields, petName: e.target.checked })
+                }
                 sx={{
-                  fontSize: "1.5rem",
-                  textAlign: "center",
-                  borderBottom: "2px solid white",
                   color: "white",
+                  "&.Mui-checked": { color: "white" },
                 }}
               />
-              <IconButton
-                onClick={() => handleSave("petName")}
-                sx={{ color: "white", ml: 1 }}
-              >
-                <SaveIcon />
-              </IconButton>
-            </Box>
-          ) : (
-            <>
-              {form.petName || "Unnamed Pet"}
-              {!readOnly && (
-                <IconButton
-                  onClick={() => handleEditToggle("petName")}
-                  sx={{ color: "white", ml: 1 }}
-                >
-                  <EditIcon />
-                </IconButton>
-              )}
-            </>
-          )}
-        </Typography>
-        <Typography variant="subtitle1" sx={{ fontStyle: "italic", color: "rgba(255, 255, 255, 0.8)" }}>
-          {form.breedName || "Unknown Breed"}
-        </Typography>
+            )}
+          </Box>
+        )}
+        {/* Breed Name */}
+        {shouldRenderField("breedName") && (
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Typography variant="subtitle1" sx={{ fontStyle: "italic", color: "rgba(255, 255, 255, 0.8)" }}>
+              {form.breedName || "Unknown Breed"}
+            </Typography>
+            {editingVisibility && (
+              <Checkbox
+                checked={visibleFields.breedName}
+                onChange={(e) =>
+                  setVisibleFields({ ...visibleFields, breedName: e.target.checked })
+                }
+                sx={{
+                  color: "white",
+                  "&.Mui-checked": { color: "white" },
+                }}
+              />
+            )}
+          </Box>
+        )}
       </Box>
 
       {/* Stats Section */}
@@ -101,58 +161,69 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
             { label: "Sex", name: "sex", value: form.sex, color: "#ffc107" },
             { label: "Age", name: "age", value: form.age, color: "#28a745" },
             { label: "Weight", name: "weight", value: form.weight || "N/A", color: "#17a2b8" },
-          ].map((stat, index) => (
-            <Grid item xs={4} key={index}>
-              <Box
-                sx={{
-                  textAlign: "center",
-                  backgroundColor: stat.color,
-                  color: "white",
-                  padding: 2,
-                  borderRadius: 3,
-                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
-                }}
-              >
-                <PetsIcon sx={{ mb: 1, fontSize: 30 }} />
-                <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
-                  {stat.label}
-                </Typography>
-                {isEditing[stat.name] ? (
-                  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 1 }}>
-                    <InputBase
-                      name={stat.name}
-                      value={form[stat.name]}
-                      onChange={handleInputChange}
+          ].map((stat, index) =>
+            shouldRenderField(stat.name) ? (
+              <Grid item xs={4} key={index}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    backgroundColor: stat.color,
+                    color: "white",
+                    padding: 2,
+                    borderRadius: 3,
+                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
+                  }}
+                >
+                  <PetsIcon sx={{ mb: 1, fontSize: 30 }} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
+                    {stat.label}
+                  </Typography>
+                  {isEditing[stat.name] ? (
+                    <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                      <InputBase
+                        name={stat.name}
+                        value={form[stat.name]}
+                        onChange={handleInputChange}
+                        sx={{
+                          color: "white",
+                          borderBottom: "2px solid white",
+                          textAlign: "center",
+                          fontSize: "1rem",
+                        }}
+                      />
+                      <IconButton onClick={() => handleSaveField(stat.name)} sx={{ color: "white", ml: 1 }}>
+                        <SaveIcon />
+                      </IconButton>
+                    </Box>
+                  ) : (
+                    <>
+                      <Typography sx={{ mt: 1 }}>{stat.value}</Typography>
+                      {!readOnly && (
+                        <IconButton onClick={() => handleEditToggle(stat.name)} sx={{ color: "white", mt: 1 }}>
+                          <EditIcon />
+                        </IconButton>
+                      )}
+                    </>
+                  )}
+                  {editingVisibility && (
+                    <Checkbox
+                      checked={visibleFields[stat.name]}
+                      onChange={(e) =>
+                        setVisibleFields({ ...visibleFields, [stat.name]: e.target.checked })
+                      }
                       sx={{
                         color: "white",
-                        borderBottom: "2px solid white",
-                        textAlign: "center",
-                        fontSize: "1rem",
+                        "&.Mui-checked": { color: "white" },
+                        mt: 1,
                       }}
                     />
-                    <IconButton
-                      onClick={() => handleSave(stat.name)}
-                      sx={{ color: "white", ml: 1 }}
-                    >
-                      <SaveIcon />
-                    </IconButton>
-                  </Box>
-                ) : (
-                  <>
-                    <Typography sx={{ mt: 1 }}>{stat.value}</Typography>
-                    {!readOnly && (
-                      <IconButton
-                        onClick={() => handleEditToggle(stat.name)}
-                        sx={{ color: "white", mt: 1 }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    )}
-                  </>
-                )}
-              </Box>
-            </Grid>
-          ))}
+                  )}
+                </Box>
+              </Grid>
+            ) : null
+          )}
         </Grid>
       </Box>
 
@@ -168,61 +239,77 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
             { label: "Address", name: "address", value: form.address || "N/A", icon: <HomeIcon /> },
             {
               label: "Alternative Contact",
-              name: "alternativeContactName",
+              name: "alternativeContact",
               value: `${form.alternativeContactName || "N/A"} - ${form.alternativeContactPhone || "N/A"}`,
               icon: <ContactPhoneIcon />,
             },
-          ].map((contact, index) => (
-            <Grid item xs={12} sm={6} key={index}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 2,
-                  padding: 2,
-                  background: "rgba(255, 255, 255, 0.1)",
-                  borderRadius: 3,
-                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <Box sx={{ color: "#6fd3f5" }}>{contact.icon}</Box>
-                  <Box>
-                    <Typography variant="body1" sx={{ fontWeight: "bold", color: "white" }}>
-                      {contact.label}
-                    </Typography>
-                    {isEditing[contact.name] ? (
-                      <InputBase
-                        name={contact.name}
-                        value={form[contact.name]}
-                        onChange={handleInputChange}
-                        sx={{
-                          color: "white",
-                          borderBottom: "2px solid white",
-                          fontSize: "1rem",
-                        }}
-                      />
-                    ) : (
-                      <Typography variant="body2" sx={{ color: "white" }}>
-                        {contact.value}
+          ].map((contact, index) =>
+            shouldRenderField(contact.name) ? (
+              <Grid item xs={12} sm={6} key={index}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 2,
+                    padding: 2,
+                    background: "rgba(255, 255, 255, 0.1)",
+                    borderRadius: 3,
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Box sx={{ color: "#6fd3f5" }}>{contact.icon}</Box>
+                    <Box>
+                      <Typography variant="body1" sx={{ fontWeight: "bold", color: "white" }}>
+                        {contact.label}
                       </Typography>
-                    )}
+                      {isEditing[contact.name] ? (
+                        <InputBase
+                          name={contact.name}
+                          value={form[contact.name]}
+                          onChange={handleInputChange}
+                          sx={{
+                            color: "white",
+                            borderBottom: "2px solid white",
+                            fontSize: "1rem",
+                          }}
+                        />
+                      ) : (
+                        <Typography variant="body2" sx={{ color: "white" }}>
+                          {contact.value}
+                        </Typography>
+                      )}
+                    </Box>
                   </Box>
+                  {!readOnly && (
+                    <IconButton
+                      onClick={() =>
+                        isEditing[contact.name]
+                          ? handleSaveField(contact.name)
+                          : handleEditToggle(contact.name)
+                      }
+                      sx={{ color: "white" }}
+                    >
+                      {isEditing[contact.name] ? <SaveIcon /> : <EditIcon />}
+                    </IconButton>
+                  )}
+                  {editingVisibility && (
+                    <Checkbox
+                      checked={visibleFields[contact.name]}
+                      onChange={(e) =>
+                        setVisibleFields({ ...visibleFields, [contact.name]: e.target.checked })
+                      }
+                      sx={{
+                        color: "white",
+                        "&.Mui-checked": { color: "white" },
+                      }}
+                    />
+                  )}
                 </Box>
-                {!readOnly && (
-                  <IconButton
-                    onClick={() =>
-                      isEditing[contact.name] ? handleSave(contact.name) : handleEditToggle(contact.name)
-                    }
-                    sx={{ color: "white" }}
-                  >
-                    {isEditing[contact.name] ? <SaveIcon /> : <EditIcon />}
-                  </IconButton>
-                )}
-              </Box>
-            </Grid>
-          ))}
+              </Grid>
+            ) : null
+          )}
         </Grid>
       </Box>
     </Section>
