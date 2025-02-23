@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Typography, Avatar, Grid, IconButton, InputBase, Checkbox } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Typography, Avatar, Grid, IconButton, InputBase, Checkbox, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -7,12 +7,14 @@ import PetsIcon from "@mui/icons-material/Pets";
 import PhoneIcon from "@mui/icons-material/Phone";
 import HomeIcon from "@mui/icons-material/Home";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import Section from "../ReusableComponents/Section";
+import { fetchPetCardSetting, updatePetCardSetting } from "./api";
 
 const PetCard = ({ petDetails, onSave, readOnly = false }) => {
   const [form, setForm] = useState(petDetails);
   const [isEditing, setIsEditing] = useState({});
-  // State tracking which fields are visible (checked) in the read-only view.
   const [visibleFields, setVisibleFields] = useState({
     petName: true,
     breedName: true,
@@ -26,6 +28,36 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
   });
   // State to toggle inline visibility editing mode.
   const [editingVisibility, setEditingVisibility] = useState(false);
+  // Store the PetCardSettingId so that updates can be sent to the backend.
+  const [petCardSettingId, setPetCardSettingId] = useState(null);
+
+  // Load saved visibility settings from the backend on mount
+  useEffect(() => {
+    console.log("PetCard useEffect, petDetails:", petDetails);
+    const petID = petDetails?.PetID || petDetails?.petID;
+    if (petID) {
+      fetchPetCardSetting(petID)
+        .then((data) => {
+          console.log("Fetched pet card setting:", data);
+          if (data) {
+            const settingId = data.petCardSettingId || data.PetCardSettingId;
+            setPetCardSettingId(settingId);
+            setVisibleFields({
+              petName: data.petName,
+              breedName: data.breedName,
+              sex: data.sex,
+              age: data.age,
+              weight: data.weight,
+              mobilePhone1: data.mobilePhone1,
+              mobilePhone2: data.mobilePhone2,
+              address: data.address,
+              alternativeContact: data.alternativeContact,
+            });
+          }
+        })
+        .catch((error) => console.error("Error loading pet card settings:", error));
+    }
+  }, [petDetails]);
 
   const handleEditToggle = (field) => {
     if (readOnly) return;
@@ -37,7 +69,7 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSaveField = (field) => {
@@ -46,29 +78,45 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
   };
 
   // Toggle the inline visibility editing mode.
-  const toggleVisibilityEditing = () => {
-    setEditingVisibility((prev) => !prev);
+  // When turning editing mode off, update the backend with the current visibleFields.
+  const toggleVisibilityEditing = async () => {
+    console.log("toggleVisibilityEditing called, current editingVisibility:", editingVisibility);
+    const newEditingVisibility = !editingVisibility;
+    setEditingVisibility(newEditingVisibility);
+    console.log("New editingVisibility:", newEditingVisibility);
+    if (!newEditingVisibility && petCardSettingId) {
+      const payload = {
+        petName: visibleFields.petName,
+        breedName: visibleFields.breedName,
+        sex: visibleFields.sex,
+        age: visibleFields.age,
+        weight: visibleFields.weight,
+        mobilePhone1: visibleFields.mobilePhone1,
+        mobilePhone2: visibleFields.mobilePhone2,
+        address: visibleFields.address,
+        alternativeContact: visibleFields.alternativeContact,
+      };
+      console.log("Updating pet card settings with payload:", payload);
+      try {
+        await updatePetCardSetting(petCardSettingId, payload);
+        console.log("Update API called successfully.");
+      } catch (error) {
+        console.error("Error updating pet card settings:", error);
+      }
+    }
   };
 
-  // When not in editingVisibility mode, only render fields with visibleFields[field] true.
+  // When not in editingVisibility mode, only shows fields with visibleFields[field] true.
   const shouldRenderField = (field) => editingVisibility || visibleFields[field];
 
   const imageSrc = form.photo ? `data:image/jpeg;base64,${form.photo}` : null;
 
   return (
     <Section>
-      {/* Toggle Button for Inline Visibility Editing (only for editing users) */}
-      {!readOnly && (
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-          <IconButton onClick={toggleVisibilityEditing}>
-            <VisibilityIcon sx={{ color: "white" }} />
-          </IconButton>
-        </Box>
-      )}
-
-      {/* Header Section */}
+      {/* Header Section with visibility button */}
       <Box
         sx={{
+          position: "relative",
           textAlign: "center",
           padding: 3,
           background: "linear-gradient(90deg, #6fd3f5, #42a5f5)",
@@ -76,6 +124,14 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
         }}
       >
+        <Tooltip title="Select the fields that are going to be visible." placement="top" enterTouchDelay={500}>
+          <IconButton
+            onClick={toggleVisibilityEditing}
+            sx={{ position: "absolute", top: 8, right: 8 }}
+          >
+            <VisibilityIcon sx={{ color: "white" }} />
+          </IconButton>
+        </Tooltip>
         <Avatar
           src={imageSrc}
           alt="Pet Photo"
@@ -120,9 +176,17 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
             </Typography>
             {editingVisibility && (
               <Checkbox
+                icon={
+                  <RadioButtonUncheckedIcon
+                    sx={{ fontSize: 24, transition: "all 0.3s ease" }}
+                  />
+                }
+                checkedIcon={
+                  <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease" }} />
+                }
                 checked={visibleFields.petName}
                 onChange={(e) =>
-                  setVisibleFields({ ...visibleFields, petName: e.target.checked })
+                  setVisibleFields((prev) => ({ ...prev, petName: e.target.checked }))
                 }
                 sx={{
                   color: "white",
@@ -140,9 +204,17 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
             </Typography>
             {editingVisibility && (
               <Checkbox
+                icon={
+                  <RadioButtonUncheckedIcon
+                    sx={{ fontSize: 24, transition: "all 0.3s ease" }}
+                  />
+                }
+                checkedIcon={
+                  <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease" }} />
+                }
                 checked={visibleFields.breedName}
                 onChange={(e) =>
-                  setVisibleFields({ ...visibleFields, breedName: e.target.checked })
+                  setVisibleFields((prev) => ({ ...prev, breedName: e.target.checked }))
                 }
                 sx={{
                   color: "white",
@@ -209,9 +281,17 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                   )}
                   {editingVisibility && (
                     <Checkbox
+                      icon={
+                        <RadioButtonUncheckedIcon
+                          sx={{ fontSize: 24, transition: "all 0.3s ease" }}
+                        />
+                      }
+                      checkedIcon={
+                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease" }} />
+                      }
                       checked={visibleFields[stat.name]}
                       onChange={(e) =>
-                        setVisibleFields({ ...visibleFields, [stat.name]: e.target.checked })
+                        setVisibleFields((prev) => ({ ...prev, [stat.name]: e.target.checked }))
                       }
                       sx={{
                         color: "white",
@@ -227,7 +307,7 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
         </Grid>
       </Box>
 
-      {/* Contact Information */}
+      {/* Contact Information Section */}
       <Box sx={{ mt: 4 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold", color: "white", mb: 2, textAlign: "center" }}>
           Contact Information
@@ -296,9 +376,17 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                   )}
                   {editingVisibility && (
                     <Checkbox
+                      icon={
+                        <RadioButtonUncheckedIcon
+                          sx={{ fontSize: 24, transition: "all 0.3s ease" }}
+                        />
+                      }
+                      checkedIcon={
+                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease" }} />
+                      }
                       checked={visibleFields[contact.name]}
                       onChange={(e) =>
-                        setVisibleFields({ ...visibleFields, [contact.name]: e.target.checked })
+                        setVisibleFields((prev) => ({ ...prev, [contact.name]: e.target.checked }))
                       }
                       sx={{
                         color: "white",

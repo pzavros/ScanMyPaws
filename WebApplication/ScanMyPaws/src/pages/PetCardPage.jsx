@@ -14,7 +14,7 @@ const PetCardPage = () => {
     const fetchDetails = async () => {
       try {
         const data = await fetchPetDetails(petId);
-        console.log(data);
+        console.log("Fetched pet details:", data);
         setPetDetails(data);
       } catch (error) {
         console.error("Error fetching pet details:", error);
@@ -45,7 +45,7 @@ const PetCardPage = () => {
 
   return (
     <Page>
-      {/* Pass `readOnly` as `false` explicitly */}
+      {/* Pass readOnly as false to allow editing */}
       <PetCard petDetails={petDetails} onSave={handleSave} readOnly={false} />
     </Page>
   );
