@@ -21,9 +21,14 @@ const SignInForm = () => {
     try {
       const response = await signInUser(email, password);
       setSuccess("Logged in successfully!");
-      window.location.href = "/"; // Redirect to the homepage
+      window.location.href = "/";
     } catch (err) {
-      setError(err.message || "Failed to log in.");
+      console.error("API error response:", err.response);
+      let errorMessage = "Failed to log in.";
+      if (err.response && err.response.data) {
+          errorMessage = err.response.data;
+      }
+      setError(errorMessage);
     }
   };
 
@@ -36,14 +41,14 @@ const SignInForm = () => {
         textAlign: "center",
         backgroundColor: "var(--card-background)",
         borderRadius: "16px",
-        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", // Subtle shadow
-        color: "var(--text-color)", // Adapt to dark/light mode
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        color: "var(--text-color)",
       }}
     >
       {/* Logo */}
       <Box sx={{ marginBottom: 3 }}>
         <img
-          src="https://via.placeholder.com/64" // Replace with your logo URL
+          src="https://via.placeholder.com/64"
           alt="Logo"
           style={{ width: "64px", height: "64px", margin: "0 auto", borderRadius: "50%" }}
         />
