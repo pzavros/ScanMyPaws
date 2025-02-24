@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import Page from "../components/ReusableComponents/Page";
 import LoadingIndicator from "../components/ReusableComponents/LoadingIndicator";
 import { fetchPetDetails, updatePetDetails } from "../components/PetCardPage/api";
@@ -7,8 +7,12 @@ import PetCard from "../components/PetCardPage/PetCard";
 
 const PetCardPage = () => {
   const { petId } = useParams();
+  const location = useLocation();
   const [petDetails, setPetDetails] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Determine if we are in read-only mode (public view)
+  const isPublicView = location.pathname.startsWith("/public-petcard/");
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -27,6 +31,7 @@ const PetCardPage = () => {
   }, [petId]);
 
   const handleSave = async (updatedDetails) => {
+    if (isPublicView) return; // Prevent saving in public view
     try {
       const updatedData = await updatePetDetails(updatedDetails.petCardID, updatedDetails);
       setPetDetails(updatedData);
@@ -45,8 +50,8 @@ const PetCardPage = () => {
 
   return (
     <Page>
-      {/* Pass readOnly as false to allow editing */}
-      <PetCard petDetails={petDetails} onSave={handleSave} readOnly={false} />
+      {/* Pass readOnly to control UI behavior */}
+      <PetCard petDetails={petDetails} onSave={handleSave} readOnly={isPublicView} />
     </Page>
   );
 };

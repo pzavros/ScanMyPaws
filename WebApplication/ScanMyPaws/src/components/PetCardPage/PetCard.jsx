@@ -125,12 +125,11 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
         }}
       >
         <Tooltip title="Select the fields that are going to be visible." placement="top" enterTouchDelay={500}>
-          <IconButton
-            onClick={toggleVisibilityEditing}
-            sx={{ position: "absolute", top: 8, right: 8 }}
-          >
-            <VisibilityIcon sx={{ color: "white" }} />
-          </IconButton>
+          {!readOnly && (
+            <IconButton onClick={toggleVisibilityEditing} sx={{ position: "absolute", top: 8, right: 8 }}>
+              <VisibilityIcon sx={{ color: "white" }} />
+            </IconButton>
+          )}
         </Tooltip>
         <Avatar
           src={imageSrc}
@@ -145,7 +144,7 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
         {/* Pet Name */}
         {shouldRenderField("petName") && (
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Typography variant="h4" sx={{ fontWeight: "bold", mt: 2 }}>
+            <Typography variant="h4" sx={{ fontWeight: "bold", mt: 2, color: "var(--text-color)" }}>
               {isEditing.petName ? (
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <InputBase
@@ -155,20 +154,20 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                     sx={{
                       fontSize: "1.5rem",
                       textAlign: "center",
-                      borderBottom: "2px solid white",
-                      color: "white",
+                      borderBottom: "2px solid var(--text-color)",
+                      color: "var(--text-color)",
                     }}
                   />
-                  <IconButton onClick={() => handleSaveField("petName")} sx={{ color: "white", ml: 1 }}>
-                    <SaveIcon />
+                  <IconButton onClick={() => handleSaveField("petName")} sx={{ color: "var(--text-color)", ml: 1 }}>
+                    <SaveIcon sx={{color: "var(--text-color)"}} />
                   </IconButton>
                 </Box>
               ) : (
                 <>
                   {form.petName || "Unnamed Pet"}
                   {!readOnly && (
-                    <IconButton onClick={() => handleEditToggle("petName")} sx={{ color: "white", ml: 1 }}>
-                      <EditIcon />
+                    <IconButton onClick={() => handleEditToggle("petName")} sx={{ color: "var(--text-color)", ml: 1 }}>
+                      <EditIcon sx={{color: "var(--text-color)"}} />
                     </IconButton>
                   )}
                 </>
@@ -189,8 +188,8 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                   setVisibleFields((prev) => ({ ...prev, petName: e.target.checked }))
                 }
                 sx={{
-                  color: "white",
-                  "&.Mui-checked": { color: "white" },
+                  color: "var(--text-color)",
+                  "&.Mui-checked": { color: "var(--text-color)" },
                 }}
               />
             )}
@@ -199,7 +198,7 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
         {/* Breed Name */}
         {shouldRenderField("breedName") && (
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Typography variant="subtitle1" sx={{ fontStyle: "italic", color: "rgba(255, 255, 255, 0.8)" }}>
+            <Typography variant="subtitle1" sx={{ fontStyle: "italic", color: "var(--text-color)" }}>
               {form.breedName || "Unknown Breed"}
             </Typography>
             {editingVisibility && (
@@ -217,8 +216,8 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                   setVisibleFields((prev) => ({ ...prev, breedName: e.target.checked }))
                 }
                 sx={{
-                  color: "white",
-                  "&.Mui-checked": { color: "white" },
+                  color: "var(--text-color)",
+                  "&.Mui-checked": { color: "var(--text-color)" },
                 }}
               />
             )}
@@ -242,14 +241,14 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                     flexDirection: "column",
                     alignItems: "center",
                     backgroundColor: stat.color,
-                    color: "white",
+                    color: "var(--text-color)",
                     padding: 2,
                     borderRadius: 3,
                     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
                   }}
                 >
                   <PetsIcon sx={{ mb: 1, fontSize: 30 }} />
-                  <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: "bold",color: "var(--text-color)" }}>
                     {stat.label}
                   </Typography>
                   {isEditing[stat.name] ? (
@@ -259,22 +258,22 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                         value={form[stat.name]}
                         onChange={handleInputChange}
                         sx={{
-                          color: "white",
-                          borderBottom: "2px solid white",
+                          color: "var(--text-color)",
+                          borderBottom: "2px solid var(--text-color)",
                           textAlign: "center",
                           fontSize: "1rem",
                         }}
                       />
-                      <IconButton onClick={() => handleSaveField(stat.name)} sx={{ color: "white", ml: 1 }}>
+                      <IconButton onClick={() => handleSaveField(stat.name)} sx={{ color: "var(--text-color)", ml: 1 }}>
                         <SaveIcon />
                       </IconButton>
                     </Box>
                   ) : (
                     <>
-                      <Typography sx={{ mt: 1 }}>{stat.value}</Typography>
+                      <Typography sx={{ mt: 1,color: "var(--text-color)" }}>{stat.value}</Typography>
                       {!readOnly && (
-                        <IconButton onClick={() => handleEditToggle(stat.name)} sx={{ color: "white", mt: 1 }}>
-                          <EditIcon />
+                        <IconButton onClick={() => handleEditToggle(stat.name)} sx={{color: "var(--text-color)", mt: 1 }}>
+                          <EditIcon  sx={{color: "var(--text-color)"}}/>
                         </IconButton>
                       )}
                     </>
@@ -283,19 +282,19 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                     <Checkbox
                       icon={
                         <RadioButtonUncheckedIcon
-                          sx={{ fontSize: 24, transition: "all 0.3s ease" }}
+                          sx={{ fontSize: 24, transition: "all 0.3s ease",color: "var(--text-color)" }}
                         />
                       }
                       checkedIcon={
-                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease" }} />
+                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease",color: "var(--text-color)" }} />
                       }
                       checked={visibleFields[stat.name]}
                       onChange={(e) =>
                         setVisibleFields((prev) => ({ ...prev, [stat.name]: e.target.checked }))
                       }
                       sx={{
-                        color: "white",
-                        "&.Mui-checked": { color: "white" },
+                        color: "var(--text-color)",
+                        "&.Mui-checked": { color: "var(--text-color)" },
                         mt: 1,
                       }}
                     />
@@ -309,7 +308,7 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
 
       {/* Contact Information Section */}
       <Box sx={{ mt: 4 }}>
-        <Typography variant="h6" sx={{ fontWeight: "bold", color: "white", mb: 2, textAlign: "center" }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2, textAlign: "center",color: "var(--text-color)" }}>
           Contact Information
         </Typography>
         <Grid container spacing={2} justifyContent="center">
@@ -341,7 +340,7 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                   <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                     <Box sx={{ color: "#6fd3f5" }}>{contact.icon}</Box>
                     <Box>
-                      <Typography variant="body1" sx={{ fontWeight: "bold", color: "white" }}>
+                      <Typography variant="body1" sx={{ fontWeight: "bold", color: "var(--text-color)" }}>
                         {contact.label}
                       </Typography>
                       {isEditing[contact.name] ? (
@@ -350,13 +349,13 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                           value={form[contact.name]}
                           onChange={handleInputChange}
                           sx={{
-                            color: "white",
-                            borderBottom: "2px solid white",
+                            color: "var(--text-color)",
+                            borderBottom: "2px solid var(--text-color)",
                             fontSize: "1rem",
                           }}
                         />
                       ) : (
-                        <Typography variant="body2" sx={{ color: "white" }}>
+                        <Typography variant="body2" sx={{ color: "var(--text-color)" }}>
                           {contact.value}
                         </Typography>
                       )}
@@ -369,7 +368,7 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                           ? handleSaveField(contact.name)
                           : handleEditToggle(contact.name)
                       }
-                      sx={{ color: "white" }}
+                      sx={{ color: "var(--text-color)" }}
                     >
                       {isEditing[contact.name] ? <SaveIcon /> : <EditIcon />}
                     </IconButton>
@@ -378,19 +377,19 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                     <Checkbox
                       icon={
                         <RadioButtonUncheckedIcon
-                          sx={{ fontSize: 24, transition: "all 0.3s ease" }}
+                          sx={{ fontSize: 24, transition: "all 0.3s ease",color: "var(--text-color)" }}
                         />
                       }
                       checkedIcon={
-                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease" }} />
+                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease",color: "var(--text-color)" }} />
                       }
                       checked={visibleFields[contact.name]}
                       onChange={(e) =>
                         setVisibleFields((prev) => ({ ...prev, [contact.name]: e.target.checked }))
                       }
                       sx={{
-                        color: "white",
-                        "&.Mui-checked": { color: "white" },
+                        color: "var(--text-color)",
+                        "&.Mui-checked": { color: "var(--text-color)" },
                       }}
                     />
                   )}
