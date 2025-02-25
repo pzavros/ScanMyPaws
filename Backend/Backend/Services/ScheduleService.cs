@@ -14,7 +14,7 @@ namespace Backend.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IHubContext<NotificationHub> _hubContext;
-        private readonly INotificationService _notificationService; // ✅ Use Interface
+        private readonly INotificationService _notificationService;
 
         public ScheduleService(ApplicationDbContext context, IHubContext<NotificationHub> hubContext, INotificationService notificationService)
         {
@@ -61,7 +61,7 @@ namespace Backend.Services
             {
                 UserID = scheduleDto.UserID,
                 Title = scheduleDto.Title,
-                Date = scheduleDto.Date.Date, 
+                Date = scheduleDto.Date,
                 Time = scheduleDto.Time,
                 Description = scheduleDto.Description,
                 IsCompleted = scheduleDto.IsCompleted
@@ -70,7 +70,6 @@ namespace Backend.Services
             _context.Schedules.Add(schedule);
             await _context.SaveChangesAsync();
 
-            // ✅ Send Notification
             await _notificationService.SendNotificationAsync(new NotificationDto
             {
                 UserID = schedule.UserID,
@@ -85,10 +84,18 @@ namespace Backend.Services
             return scheduleDto;
         }
 
+
+
+
         public async Task<bool> UpdateSchedule(int scheduleID, ScheduleDto scheduleDto)
         {
             var schedule = await _context.Schedules.FindAsync(scheduleID);
-            if (schedule == null) return false;
+
+            if (schedule == null)
+            {
+                Console.WriteLine($"Schedule {scheduleID} not found in DB.");
+                return false;
+            }
 
             schedule.Title = !string.IsNullOrEmpty(scheduleDto.Title) ? scheduleDto.Title : schedule.Title;
             schedule.Date = scheduleDto.Date != default ? scheduleDto.Date : schedule.Date;
@@ -97,9 +104,21 @@ namespace Backend.Services
             schedule.IsCompleted = scheduleDto.IsCompleted;
             schedule.DateModified = DateTime.UtcNow;
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                Console.WriteLine($"Saving changes for schedule {scheduleID}...");
+                await _context.SaveChangesAsync();
+                Console.WriteLine($"Schedule {scheduleID} saved.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating schedule {scheduleID}: {ex.Message}");
+                return false;
+            }
+
             return true;
         }
+
 
         public async Task<bool> DeleteSchedule(int scheduleID)
         {
@@ -122,10 +141,12 @@ namespace Backend.Services
                     UserID = s.UserID,
                     Title = s.Title,
                     Date = s.Date,
+                    Time = s.Time,
                     Description = s.Description,
                     IsCompleted = s.IsCompleted
                 })
                 .ToListAsync();
         }
+
     }
 }

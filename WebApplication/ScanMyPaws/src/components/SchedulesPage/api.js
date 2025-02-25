@@ -64,7 +64,7 @@ export const updateSchedule = async (scheduleData) => {
   try {
     const response = await axios.put(
       `${API_BASE_URL}/api/schedules/${scheduleData.scheduleID}`,
-      scheduleData, // ✅ Directly send JSON without wrapping inside scheduleDto
+      scheduleData,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }

@@ -17,7 +17,9 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventIcon from "@mui/icons-material/Event";
+import AddIcon from "@mui/icons-material/Add";
 import Section from "../ReusableComponents/Section";
+import Button from "../ReusableComponents/Button";
 import { fetchSchedules, deleteSchedule, updateSchedule } from "./api";
 import ScheduleForm from "./ScheduleForm";
 import { formatDate } from "../ReusableComponents/dateUtils";
@@ -33,23 +35,25 @@ const SchedulesList = () => {
 
   useEffect(() => {
     const loadSchedules = async () => {
-      try {
-        const data = await fetchSchedules();
-        const today = new Date();
+        try {
+            const data = await fetchSchedules();
+            const today = new Date();
 
-        const past = data.filter((schedule) => new Date(schedule.date) < today);
-        const upcoming = data.filter((schedule) => new Date(schedule.date) >= today);
+            const past = data.filter((schedule) => new Date(schedule.date) < today);
+            const upcoming = data.filter((schedule) => new Date(schedule.date) >= today);
 
-        setPastSchedules(past);
-        setUpcomingSchedules(upcoming);
-        setSchedules(data);
-      } catch (error) {
-        console.error("Error fetching schedules:", error);
-      }
+            setPastSchedules(past);
+            setUpcomingSchedules(upcoming);
+            setSchedules(data);
+        } catch (error) {
+            console.error("Error fetching schedules:", error);
+        }
     };
 
     loadSchedules();
-  }, []);
+}, []);
+
+
   const handleEditClick = (schedule) => {
     setSelectedSchedule(schedule);
     setIsFormOpen(true);
@@ -61,38 +65,24 @@ const SchedulesList = () => {
   };
 
   const handleSaveSchedule = async (updatedSchedule) => {
+    if (!updatedSchedule || !updatedSchedule.scheduleID) {
+      console.error("Invalid schedule update request:", updatedSchedule);
+      return;
+    }
+
     try {
-      const fullSchedule = {
-        scheduleID: updatedSchedule.scheduleID,
-        userID: updatedSchedule.userID,
-        title: updatedSchedule.title || selectedSchedule.title,
-        date: updatedSchedule.date ? new Date(updatedSchedule.date).toISOString() : selectedSchedule.date, // ✅ Ensure correct format
-        time: updatedSchedule.time || selectedSchedule.time,
-        description: updatedSchedule.description || selectedSchedule.description,
-        isCompleted: updatedSchedule.isCompleted !== undefined ? updatedSchedule.isCompleted : selectedSchedule.isCompleted,
-      };
-  
-      const response = await updateSchedule(fullSchedule);
+      const response = await updateSchedule(updatedSchedule);
       if (response) {
-        setSchedules((prev) =>
-          prev.map((item) => (item.scheduleID === updatedSchedule.scheduleID ? fullSchedule : item))
-        );
-  
-        setPastSchedules((prev) =>
-          prev.map((item) => (item.scheduleID === updatedSchedule.scheduleID ? fullSchedule : item))
-        );
-        setUpcomingSchedules((prev) =>
-          prev.map((item) => (item.scheduleID === updatedSchedule.scheduleID ? fullSchedule : item))
-        );
-  
-        handleCloseForm();
+        console.log(`Schedule ${updatedSchedule.scheduleID} updated successfully.`);
+
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error updating schedule:", error);
     }
   };
-  
-  
+
+
 
   const handleDeleteClick = (schedule) => {
     setSelectedSchedule(schedule);
@@ -120,6 +110,7 @@ const SchedulesList = () => {
     }
     handleClose();
   };
+
   return (
     <Section>
       {/* Title Section */}
@@ -233,7 +224,40 @@ const SchedulesList = () => {
         )}
       </Grid>
 
-      <ScheduleForm isOpen={isFormOpen} onClose={handleCloseForm} onSave={handleSaveSchedule} selectedSchedule={selectedSchedule} />
+      <ScheduleForm
+        isOpen={isFormOpen}
+        onClose={handleCloseForm}
+        onSave={handleSaveSchedule}
+        selectedSchedule={selectedSchedule}
+      />
+
+      {/* Add button (+) */}
+      <Button
+        onClick={() => {
+          setSelectedSchedule(null);
+          setIsFormOpen(true);
+        }}
+        sx={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          minWidth: "56px",
+          width: "56px",
+          height: "56px",
+          borderRadius: "50%",
+          padding: 0,
+          background:
+            "linear-gradient(90deg, rgba(255,111,97,1) 0%, rgba(255,165,97,1) 100%)",
+          color: "#fff",
+          borderRadius: "50px",
+          "&:hover": {
+            background:
+              "linear-gradient(90deg, rgba(255,165,97,1) 0%, rgba(255,111,97,1) 100%)",
+          },
+        }}
+      >
+        <AddIcon sx={{ fontSize: "2rem" }} />
+      </Button>
     </Section>
   );
 };

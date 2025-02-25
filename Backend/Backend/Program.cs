@@ -60,7 +60,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 builder.Services.AddSignalR();
-builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 var app = builder.Build();
 

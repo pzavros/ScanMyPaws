@@ -37,9 +37,26 @@ namespace Backend.Services
             _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
 
-            await _hubContext.Clients.User(notificationDto.UserID.ToString())
-                .SendAsync("ReceiveNotification", notificationDto.Title, notificationDto.Message);
+            // 🔹 Debugging logs
+            Console.WriteLine($"Notification Created: {notification.Title} for User {notification.UserID}");
+
+            try
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+                {
+                    notification.Title,
+                    notification.Message,
+                    notification.DateCreated
+                });
+
+                Console.WriteLine($"SignalR Notification Sent: {notification.Title}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending SignalR notification: {ex.Message}");
+            }
         }
+
 
 
         public async Task<Dictionary<string, List<NotificationDto>>> GetNotificationsByUser(int userId)

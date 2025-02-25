@@ -35,27 +35,48 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSchedule([FromBody] ScheduleDto scheduleDto)
         {
-            var createdSchedule = await _scheduleService.CreateSchedule(scheduleDto);
-            if (createdSchedule == null)
+            if (scheduleDto == null)
             {
-                return BadRequest("Error creating schedule.");
+                return BadRequest(new { message = "Invalid request. Schedule data is required." });
             }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var createdSchedule = await _scheduleService.CreateSchedule(scheduleDto);
+
+            if (createdSchedule == null || createdSchedule.ScheduleID == 0)
+            {
+                return BadRequest(new { message = "Schedule creation failed." });
+            }
+
             return Ok(createdSchedule);
         }
-
 
         [HttpPut("{scheduleID}")]
         public async Task<IActionResult> UpdateSchedule(int scheduleID, [FromBody] ScheduleDto scheduleDto)
         {
             if (scheduleDto == null)
             {
-                return BadRequest("Schedule data is missing.");
+                return BadRequest(new { message = "Schedule data is missing." });
             }
 
+            Console.WriteLine($"Updating schedule {scheduleID}...");
+
             var success = await _scheduleService.UpdateSchedule(scheduleID, scheduleDto);
-            if (!success) return NotFound();
-            return NoContent();
+
+            if (!success)
+            {
+                Console.WriteLine($"Schedule {scheduleID} not found.");
+                return NotFound(new { message = "Schedule not found." });
+            }
+
+            Console.WriteLine($"Schedule {scheduleID} updated successfully.");
+            return Ok(new { message = "Update successful" }); // ✅ Ensure API sends response
         }
+
 
 
 
@@ -73,5 +94,6 @@ namespace Backend.Controllers
             var tasks = await _scheduleService.GetUpcomingTasks(userId);
             return Ok(tasks);
         }
+
     }
 }
