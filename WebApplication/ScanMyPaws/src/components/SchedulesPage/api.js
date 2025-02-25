@@ -75,7 +75,6 @@ export const updateSchedule = async (scheduleData) => {
     throw error;
   }
 };
-
 /**
  * Delete a schedule.
  */

@@ -14,7 +14,7 @@ import { fetchPetCardSetting, updatePetCardSetting } from "./api";
 
 const PetCard = ({ petDetails, onSave, readOnly = false }) => {
   const [form, setForm] = useState(petDetails);
-  const [isEditing, setIsEditing] = useState({});
+  const [globalEditMode, setGlobalEditMode] = useState(false);
   const [visibleFields, setVisibleFields] = useState({
     petName: true,
     breedName: true,
@@ -31,14 +31,12 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
   // Store the PetCardSettingId so that updates can be sent to the backend.
   const [petCardSettingId, setPetCardSettingId] = useState(null);
 
-  // Load saved visibility settings from the backend on mount
+  // Load saved visibility settings from the backend on mount.
   useEffect(() => {
-    console.log("PetCard useEffect, petDetails:", petDetails);
     const petID = petDetails?.PetID || petDetails?.petID;
     if (petID) {
       fetchPetCardSetting(petID)
         .then((data) => {
-          console.log("Fetched pet card setting:", data);
           if (data) {
             const settingId = data.petCardSettingId || data.PetCardSettingId;
             setPetCardSettingId(settingId);
@@ -59,31 +57,24 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
     }
   }, [petDetails]);
 
-  const handleEditToggle = (field) => {
-    if (readOnly) return;
-    setIsEditing((prev) => ({
-      ...prev,
-      [field]: !prev[field],
-    }));
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSaveField = (field) => {
-    setIsEditing((prev) => ({ ...prev, [field]: false }));
-    if (onSave) onSave(form);
+  // Toggle global edit mode. When turning off, save changes.
+  const toggleGlobalEditMode = () => {
+    if (globalEditMode && onSave) {
+      onSave(form);
+    }
+    setGlobalEditMode(!globalEditMode);
   };
 
   // Toggle the inline visibility editing mode.
   // When turning editing mode off, update the backend with the current visibleFields.
   const toggleVisibilityEditing = async () => {
-    console.log("toggleVisibilityEditing called, current editingVisibility:", editingVisibility);
     const newEditingVisibility = !editingVisibility;
     setEditingVisibility(newEditingVisibility);
-    console.log("New editingVisibility:", newEditingVisibility);
     if (!newEditingVisibility && petCardSettingId) {
       const payload = {
         petName: visibleFields.petName,
@@ -96,24 +87,22 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
         address: visibleFields.address,
         alternativeContact: visibleFields.alternativeContact,
       };
-      console.log("Updating pet card settings with payload:", payload);
       try {
         await updatePetCardSetting(petCardSettingId, payload);
-        console.log("Update API called successfully.");
       } catch (error) {
         console.error("Error updating pet card settings:", error);
       }
     }
   };
 
-  // When not in editingVisibility mode, only shows fields with visibleFields[field] true.
+  // When not in editingVisibility mode, only show fields if visibleFields[field] is true.
   const shouldRenderField = (field) => editingVisibility || visibleFields[field];
 
   const imageSrc = form.photo ? `data:image/jpeg;base64,${form.photo}` : null;
 
   return (
     <Section>
-      {/* Header Section with visibility button */}
+      {/* Header Section with visibility and global edit buttons */}
       <Box
         sx={{
           position: "relative",
@@ -124,13 +113,20 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
         }}
       >
-        <Tooltip title="Select the fields that are going to be visible." placement="top" enterTouchDelay={500}>
-          {!readOnly && (
-            <IconButton onClick={toggleVisibilityEditing} sx={{ position: "absolute", top: 8, right: 8 }}>
-              <VisibilityIcon sx={{ color: "white" }} />
-            </IconButton>
-          )}
-        </Tooltip>
+        {!readOnly && (
+          <Box sx={{ position: "absolute", top: 8, right: 8, display: "flex", gap: 1 }}>
+            <Tooltip title="Select the fields that are going to be visible." placement="top" enterTouchDelay={500}>
+              <IconButton onClick={toggleVisibilityEditing}>
+                <VisibilityIcon sx={{ color: "white" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={globalEditMode ? "Save changes" : "Edit details"} placement="top" enterTouchDelay={500}>
+              <IconButton onClick={toggleGlobalEditMode}>
+                {globalEditMode ? <SaveIcon sx={{ color: "white" }} /> : <EditIcon sx={{ color: "white" }} />}
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )}
         <Avatar
           src={imageSrc}
           alt="Pet Photo"
@@ -145,32 +141,20 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
         {shouldRenderField("petName") && (
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Typography variant="h4" sx={{ fontWeight: "bold", mt: 2, color: "var(--text-color)" }}>
-              {isEditing.petName ? (
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <InputBase
-                    name="petName"
-                    value={form.petName || ""}
-                    onChange={handleInputChange}
-                    sx={{
-                      fontSize: "1.5rem",
-                      textAlign: "center",
-                      borderBottom: "2px solid var(--text-color)",
-                      color: "var(--text-color)",
-                    }}
-                  />
-                  <IconButton onClick={() => handleSaveField("petName")} sx={{ color: "var(--text-color)", ml: 1 }}>
-                    <SaveIcon sx={{color: "var(--text-color)"}} />
-                  </IconButton>
-                </Box>
+              {globalEditMode ? (
+                <InputBase
+                  name="petName"
+                  value={form.petName || ""}
+                  onChange={handleInputChange}
+                  sx={{
+                    fontSize: "1.5rem",
+                    textAlign: "center",
+                    borderBottom: "2px solid var(--text-color)",
+                    color: "var(--text-color)",
+                  }}
+                />
               ) : (
-                <>
-                  {form.petName || "Unnamed Pet"}
-                  {!readOnly && (
-                    <IconButton onClick={() => handleEditToggle("petName")} sx={{ color: "var(--text-color)", ml: 1 }}>
-                      <EditIcon sx={{color: "var(--text-color)"}} />
-                    </IconButton>
-                  )}
-                </>
+                form.petName || "Unnamed Pet"
               )}
             </Typography>
             {editingVisibility && (
@@ -248,45 +232,33 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                   }}
                 >
                   <PetsIcon sx={{ mb: 1, fontSize: 30 }} />
-                  <Typography variant="subtitle2" sx={{ fontWeight: "bold",color: "var(--text-color)" }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: "bold", color: "var(--text-color)" }}>
                     {stat.label}
                   </Typography>
-                  {isEditing[stat.name] ? (
-                    <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
-                      <InputBase
-                        name={stat.name}
-                        value={form[stat.name]}
-                        onChange={handleInputChange}
-                        sx={{
-                          color: "var(--text-color)",
-                          borderBottom: "2px solid var(--text-color)",
-                          textAlign: "center",
-                          fontSize: "1rem",
-                        }}
-                      />
-                      <IconButton onClick={() => handleSaveField(stat.name)} sx={{ color: "var(--text-color)", ml: 1 }}>
-                        <SaveIcon />
-                      </IconButton>
-                    </Box>
+                  {globalEditMode ? (
+                    <InputBase
+                      name={stat.name}
+                      value={form[stat.name]}
+                      onChange={handleInputChange}
+                      sx={{
+                        color: "var(--text-color)",
+                        borderBottom: "2px solid var(--text-color)",
+                        textAlign: "center",
+                        fontSize: "1rem",
+                      }}
+                    />
                   ) : (
-                    <>
-                      <Typography sx={{ mt: 1,color: "var(--text-color)" }}>{stat.value}</Typography>
-                      {!readOnly && (
-                        <IconButton onClick={() => handleEditToggle(stat.name)} sx={{color: "var(--text-color)", mt: 1 }}>
-                          <EditIcon  sx={{color: "var(--text-color)"}}/>
-                        </IconButton>
-                      )}
-                    </>
+                    <Typography sx={{ mt: 1, color: "var(--text-color)" }}>{stat.value}</Typography>
                   )}
                   {editingVisibility && (
                     <Checkbox
                       icon={
                         <RadioButtonUncheckedIcon
-                          sx={{ fontSize: 24, transition: "all 0.3s ease",color: "var(--text-color)" }}
+                          sx={{ fontSize: 24, transition: "all 0.3s ease", color: "var(--text-color)" }}
                         />
                       }
                       checkedIcon={
-                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease",color: "var(--text-color)" }} />
+                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease", color: "var(--text-color)" }} />
                       }
                       checked={visibleFields[stat.name]}
                       onChange={(e) =>
@@ -308,7 +280,7 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
 
       {/* Contact Information Section */}
       <Box sx={{ mt: 4 }}>
-        <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2, textAlign: "center",color: "var(--text-color)" }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2, textAlign: "center", color: "var(--text-color)" }}>
           Contact Information
         </Typography>
         <Grid container spacing={2} justifyContent="center">
@@ -343,7 +315,7 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                       <Typography variant="body1" sx={{ fontWeight: "bold", color: "var(--text-color)" }}>
                         {contact.label}
                       </Typography>
-                      {isEditing[contact.name] ? (
+                      {globalEditMode ? (
                         <InputBase
                           name={contact.name}
                           value={form[contact.name]}
@@ -361,27 +333,15 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
                       )}
                     </Box>
                   </Box>
-                  {!readOnly && (
-                    <IconButton
-                      onClick={() =>
-                        isEditing[contact.name]
-                          ? handleSaveField(contact.name)
-                          : handleEditToggle(contact.name)
-                      }
-                      sx={{ color: "var(--text-color)" }}
-                    >
-                      {isEditing[contact.name] ? <SaveIcon /> : <EditIcon />}
-                    </IconButton>
-                  )}
                   {editingVisibility && (
                     <Checkbox
                       icon={
                         <RadioButtonUncheckedIcon
-                          sx={{ fontSize: 24, transition: "all 0.3s ease",color: "var(--text-color)" }}
+                          sx={{ fontSize: 24, transition: "all 0.3s ease", color: "var(--text-color)" }}
                         />
                       }
                       checkedIcon={
-                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease",color: "var(--text-color)" }} />
+                        <CheckCircleIcon sx={{ fontSize: 24, transition: "all 0.3s ease", color: "var(--text-color)" }} />
                       }
                       checked={visibleFields[contact.name]}
                       onChange={(e) =>
