@@ -37,7 +37,6 @@ namespace Backend.Services
             _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
 
-            // 🔹 Debugging logs
             Console.WriteLine($"Notification Created: {notification.Title} for User {notification.UserID}");
 
             try

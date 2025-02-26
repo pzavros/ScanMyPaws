@@ -1,13 +1,37 @@
 using Microsoft.AspNetCore.SignalR;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Backend.Hubs
 {
     public class NotificationHub : Hub
     {
-        public async Task SendNotification(string userId, string title, string message)
+        private static readonly Dictionary<string, string> ConnectedUsers = new();
+
+        public override async Task OnConnectedAsync()
         {
-            await Clients.User(userId).SendAsync("ReceiveNotification", title, message);
+            var userId = Context.GetHttpContext()?.Request.Query["userId"];
+            if (!string.IsNullOrEmpty(userId))
+            {
+                ConnectedUsers[Context.ConnectionId] = userId;
+            }
+
+            await base.OnConnectedAsync();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            ConnectedUsers.Remove(Context.ConnectionId);
+            await base.OnDisconnectedAsync(exception);
+        }
+
+        public async Task SendNotificationToUser(string userId, string title, string message)
+        {
+            if (ConnectedUsers.ContainsValue(userId))
+            {
+                await Clients.User(userId).SendAsync("ReceiveNotification", new { title, message });
+            }
         }
     }
 }

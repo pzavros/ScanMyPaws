@@ -38,7 +38,6 @@ const SchedulesList = () => {
         try {
             const data = await fetchSchedules();
             const today = new Date();
-
             const past = data.filter((schedule) => new Date(schedule.date) < today);
             const upcoming = data.filter((schedule) => new Date(schedule.date) >= today);
 

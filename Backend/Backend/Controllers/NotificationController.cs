@@ -4,6 +4,7 @@ using Backend.DTOs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Interfaces;
 
 namespace Backend.Controllers
 {
@@ -11,12 +12,13 @@ namespace Backend.Controllers
     [ApiController]
     public class NotificationController : ControllerBase
     {
-        private readonly NotificationService _notificationService;
+        private readonly INotificationService _notificationService;
 
-        public NotificationController(NotificationService notificationService)
+        public NotificationController(INotificationService notificationService)
         {
             _notificationService = notificationService;
         }
+
 
         [HttpGet("{userId}")]
         public async Task<ActionResult<Dictionary<string, List<NotificationDto>>>> GetNotifications(int userId)

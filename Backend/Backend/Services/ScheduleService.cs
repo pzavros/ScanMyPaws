@@ -33,11 +33,13 @@ namespace Backend.Services
                     UserID = s.UserID,
                     Title = s.Title,
                     Date = s.Date,
+                    Time = s.Time,
                     Description = s.Description,
                     IsCompleted = s.IsCompleted
                 })
                 .ToListAsync();
         }
+
 
         public async Task<ScheduleDto> GetScheduleById(int scheduleID)
         {
