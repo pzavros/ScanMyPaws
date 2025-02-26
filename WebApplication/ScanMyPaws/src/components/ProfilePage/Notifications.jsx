@@ -24,8 +24,8 @@ const Notifications = () => {
       .build();
 
     connection.start()
-      .then(() => console.log("✅ SignalR Connected"))
-      .catch(err => console.error("❌ SignalR Connection Error:", err));
+      .then(() => console.log(" SignalR Connected"))
+      .catch(err => console.error(" SignalR Connection Error:", err));
 
     connection.on("ReceiveNotification", (title, message) => {
       setNotifications(prev => [...prev, { title, message, date: new Date().toISOString() }]);

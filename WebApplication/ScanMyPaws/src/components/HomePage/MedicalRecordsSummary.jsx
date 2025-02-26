@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Paper } from "@mui/material";
 import Section from "../ReusableComponents/Section";
 import Text from "../ReusableComponents/Text";
-import { fetchMedicalRecords } from "./api"; // ✅ Ensure correct import
+import { fetchMedicalRecords } from "./api"; 
 import SectionTitle from "../ReusableComponents/SectionTitle";
 
 const MedicalRecordsSummary = ({ petId }) => {
@@ -34,7 +34,7 @@ const MedicalRecordsSummary = ({ petId }) => {
           ) : (
             medicalRecords.map((record, index) => (
               <Paper
-                key={record.recordID || `record-${index}`} // ✅ Ensures a unique key
+                key={record.recordID || `record-${index}`} 
                 elevation={2}
                 sx={{
                   padding: "16px",

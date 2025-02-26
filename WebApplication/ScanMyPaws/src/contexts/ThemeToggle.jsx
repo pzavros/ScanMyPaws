@@ -1,7 +1,7 @@
 import React from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { Box } from "@mui/material";
-import { Brightness7, Brightness3 } from "@mui/icons-material"; // Sun and Moon Icons
+import { Brightness7, Brightness3 } from "@mui/icons-material"; 
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();

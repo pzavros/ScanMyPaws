@@ -10,7 +10,6 @@ const BottomNavbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Determine which tab is active based on the current URL path
   const getActiveTab = () => {
     switch (location.pathname) {
       case "/":
@@ -36,9 +35,9 @@ const BottomNavbar = () => {
           left: 0,
           right: 0,
           zIndex: 1000,
-          backgroundColor: "var(--background-color)", // Match page background color
-          borderTop: "none", // Remove the border to avoid the line above the navbar
-          height: "64px", // Explicit height for spacing
+          backgroundColor: "var(--background-color)",
+          borderTop: "none",
+          height: "64px", 
         }}
       >
         <BottomNavigation
@@ -63,16 +62,16 @@ const BottomNavbar = () => {
           }}
           showLabels
           sx={{
-            backgroundColor: "transparent", // Transparent to blend with the Paper
+            backgroundColor: "transparent", 
             "& .Mui-selected": {
-              color: "var(--primary-color)", // Use primary color for selected tab
-              fontWeight: "bold", // Emphasize selected tab
-              backgroundColor: "transparent !important", // Remove hover effect for the selected tab
+              color: "var(--primary-color)",
+              fontWeight: "bold", 
+              backgroundColor: "transparent !important", 
             },
             "& .MuiBottomNavigationAction-root": {
-              color: "var(--text-color)", // Default color for unselected tabs
+              color: "var(--text-color)", 
               "&:hover": {
-                backgroundColor: "transparent", // Remove hover background effect
+                backgroundColor: "transparent",
               },
             },
           }}

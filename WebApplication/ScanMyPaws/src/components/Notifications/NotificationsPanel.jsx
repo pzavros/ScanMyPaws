@@ -8,7 +8,7 @@ import Text from "../ReusableComponents/Text";
 import { fetchUserNotifications, markNotificationAsRead } from "./api";
 
 const NotificationsPanel = ({ isOpen, onClose }) => {
-  const [tabIndex, setTabIndex] = useState(0); // 0 = Upcoming, 1 = Past
+  const [tabIndex, setTabIndex] = useState(0);
   const [upcomingNotifications, setUpcomingNotifications] = useState([]);
   const [pastNotifications, setPastNotifications] = useState([]);
   const [loading, setLoading] = useState(true);

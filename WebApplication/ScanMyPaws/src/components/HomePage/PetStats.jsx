@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Text from "../ReusableComponents/Text";
 import Section from "../ReusableComponents/Section";
-import { fetchPetStats } from "./api"; // ✅ Correct import
+import { fetchPetStats } from "./api";
 import SectionTitle from "../ReusableComponents/SectionTitle";
 
 const PetStats = ({ petId }) => {
@@ -11,7 +11,7 @@ const PetStats = ({ petId }) => {
   useEffect(() => {
     const loadStats = async () => {
       if (petId) {
-        const data = await fetchPetStats(petId); // ✅ Ensure it calls the correct function
+        const data = await fetchPetStats(petId);
         setStats(data);
       }
     };

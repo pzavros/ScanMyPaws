@@ -36,14 +36,14 @@ export const fetchDogBreeds = async () => {
   
   
   export const fetchUserPets = async () => {
-    console.log("fetchUserPets function invoked"); // Debug log
+    console.log("fetchUserPets function invoked"); 
     try {
       const response = await axios.get(`${API_BASE_URL}/api/PetProfile/user`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      console.log("API Response:", response.data); // Debug log
+      console.log("API Response:", response.data);
       return response.data?.data || [];
     } catch (error) {
       console.error("Error in fetchUserPets:", error);

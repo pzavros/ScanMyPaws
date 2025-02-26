@@ -4,16 +4,16 @@ import AddIcon from "@mui/icons-material/Add";
 
 const DraggableAddPetButton = () => {
   const [position, setPosition] = useState({
-    top: window.innerHeight - 80, // Initial vertical position
-    left: window.innerWidth - 140, // Initial horizontal position
+    top: window.innerHeight - 80,
+    left: window.innerWidth - 140,
   });
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
       setPosition((prev) => ({
-        top: Math.min(prev.top, window.innerHeight - 80), // Keep within bottom boundary
-        left: Math.min(prev.left, window.innerWidth - 140), // Keep within right boundary
+        top: Math.min(prev.top, window.innerHeight - 80), 
+        left: Math.min(prev.left, window.innerWidth - 140),
       }));
     };
 
@@ -29,24 +29,23 @@ const DraggableAddPetButton = () => {
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    const buttonWidth = 140; // Button width
-    const buttonHeight = 48; // Button height
-    const margin = 16; // Minimum margin from edges
+    const buttonWidth = 140; 
+    const buttonHeight = 48; 
+    const margin = 16; 
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
 
     let newLeft = clientX - buttonWidth / 2;
     let newTop = clientY - buttonHeight / 2;
 
-    // Ensure the button stays fully visible within the viewport
+    // the button stays fully visible within the viewport
     newLeft = Math.max(margin, Math.min(newLeft, screenWidth - buttonWidth - margin));
     newTop = Math.max(margin, Math.min(newTop, screenHeight - buttonHeight - margin));
 
-    // Snap to left or right
     if (newLeft < screenWidth / 2) {
-      newLeft = margin; // Snap to left
+      newLeft = margin; 
     } else {
-      newLeft = screenWidth - buttonWidth - margin; // Snap to right
+      newLeft = screenWidth - buttonWidth - margin;
     }
 
     setPosition({ top: newTop, left: newLeft });

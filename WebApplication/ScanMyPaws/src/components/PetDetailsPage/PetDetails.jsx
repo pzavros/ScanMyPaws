@@ -10,7 +10,7 @@ import PetsIcon from "@mui/icons-material/Pets";
 
 const PetDetails = () => {
   const { petId } = useParams();
-  console.log("Pet ID from URL:", petId); // Debug log
+  console.log("Pet ID from URL:", petId);
   const navigate = useNavigate();
   const [pet, setPet] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -119,7 +119,7 @@ const PetDetails = () => {
     alignItems: "center",
     gap: 2,
     mb: 3,
-    width: "100%", // Ensures responsive width
+    width: "100%",
   }}
 >
   <Box
@@ -127,7 +127,7 @@ const PetDetails = () => {
       display: "flex",
       justifyContent: "space-around",
       width: "100%",
-      gap: 2, // Space between buttons
+      gap: 2, 
     }}
   >
     {/* Back to Pet List Button */}
@@ -141,7 +141,7 @@ const PetDetails = () => {
         fontSize: "0.75rem",
         fontWeight: "bold",
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-        flex: 1, // Equal button width
+        flex: 1, 
         "&:hover": {
           backgroundColor: "var(--secondary-color)",
         },
@@ -159,15 +159,15 @@ const PetDetails = () => {
       }
       sx={{
         background: pet?.isHavingCard
-          ? "linear-gradient(90deg, #4caf50, #81c784)" // Green gradient for "View Card"
-          : "linear-gradient(90deg, #ff6f61, #ff9671)", // Coral gradient for "Create Card"
+          ? "linear-gradient(90deg, #4caf50, #81c784)" 
+          : "linear-gradient(90deg, #ff6f61, #ff9671)", 
         color: "white",
         borderRadius: "28px",
         padding: "8px 12px",
         fontSize: "0.85rem",
         fontWeight: "bold",
-        boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.15)", // Slight shadow
-        flex: 2, // Larger width for main action button
+        boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.15)", 
+        flex: 2, 
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -195,7 +195,7 @@ const PetDetails = () => {
         fontSize: "0.75rem",
         fontWeight: "bold",
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-        flex: 1, // Equal button width
+        flex: 1, 
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -217,8 +217,8 @@ const PetDetails = () => {
         color: "var(--text-color-secondary)",
         textAlign: "center",
         maxWidth: "90%",
-        fontSize: "0.75rem", // Smaller text
-        marginTop: "8px", // Added spacing
+        fontSize: "0.75rem",
+        marginTop: "8px", 
       }}
     >
       Tap "Create Card" to generate a QR code for your pet. This card helps others return your pet if it's lost.
@@ -353,11 +353,11 @@ const PetDetails = () => {
                   menu: (base) => ({
                     ...base,
                     backgroundColor: "var(--input-background)",
-                    zIndex: 10, // Ensure dropdown menu appears on top
+                    zIndex: 10,
                   }),
                   menuPortal: (base) => ({
                     ...base,
-                    zIndex: 9999, // Extra high z-index for absolute positioning
+                    zIndex: 9999, 
                   }),
                   option: (base, state) => ({
                     ...base,
@@ -374,7 +374,7 @@ const PetDetails = () => {
                     color: "var(--text-color-secondary)",
                   }),
                 }}
-                menuPortalTarget={document.body} // Ensures dropdown is appended to the body
+                menuPortalTarget={document.body}
               />
 
               <TextField
@@ -386,7 +386,7 @@ const PetDetails = () => {
                 multiline
                 rows={4}
                 sx={{
-                  mt: 2, // Added spacing
+                  mt: 2,
                   mb: 2,
                   backgroundColor: "var(--input-background)",
                   borderRadius: "8px",

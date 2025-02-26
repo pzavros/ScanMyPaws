@@ -5,25 +5,25 @@ const steps = [
   {
     title: "Welcome to Scan My Paws",
     description: "Discover a smarter way to keep your pets safe and connected.",
-    color: "#FF6F61", // Coral background
+    color: "#FF6F61", 
     icon: "🐾",
   },
   {
     title: "Stay Connected",
     description: "Easily share your pet's information with a simple scan.",
-    color: "#FF914D", // Orange background
+    color: "#FF914D", 
     icon: "📱",
   },
   {
     title: "Keep Pets Safe",
     description: "Ensure your pets are found quickly with secure QR codes.",
-    color: "#FFD166", // Yellow background
+    color: "#FFD166",
     icon: "🛡️",
   },
   {
     title: "Let’s Get Started",
     description: "Log in and start exploring the world of Scan My Paws!",
-    color: "#06D6A0", // Green background
+    color: "#06D6A0",
     icon: "✅",
   },
 ];
@@ -33,14 +33,14 @@ const Wizard = ({ onComplete }) => {
 
   const handleNext = () => {
     if (activeStep === steps.length - 1) {
-      onComplete(); // Complete the wizard and move to login
+      onComplete(); 
     } else {
       setActiveStep((prev) => prev + 1);
     }
   };
 
   const handleSkip = () => {
-    onComplete(); // Skip the wizard
+    onComplete(); 
   };
 
   return (

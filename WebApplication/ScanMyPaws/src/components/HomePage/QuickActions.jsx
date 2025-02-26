@@ -26,14 +26,14 @@ const QuickActions = () => {
         sx={{
           padding: "16px",
           borderRadius: "12px",
-          backgroundColor: "var(--card-background)", // Consistent card background
-          color: "var(--text-color)", // Adapt text color to theme
+          backgroundColor: "var(--card-background)",
+          color: "var(--text-color)",
         }}
       >
         <Box
           display="flex"
           flexDirection="column"
-          gap={2} // Add spacing between actions
+          gap={2} 
         >
           {actions.map((action, index) => (
             <Button
@@ -43,13 +43,13 @@ const QuickActions = () => {
               sx={{
                 justifyContent: "flex-start",
                 borderRadius: "8px",
-                textTransform: "capitalize", // Make text more readable
+                textTransform: "capitalize", 
                 fontWeight: "bold",
                 padding: "12px 16px",
-                color: "var(--primary-color)", // Match primary theme color
-                borderColor: "var(--primary-color)", // Match border with theme
+                color: "var(--primary-color)", 
+                borderColor: "var(--primary-color)", 
                 "&:hover": {
-                  backgroundColor: "var(--primary-color)", // Subtle hover effect
+                  backgroundColor: "var(--primary-color)",
                   color: "var(--button-background)",
                 },
               }}

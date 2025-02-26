@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Section from "../ReusableComponents/Section";
 import { fetchUserPets } from "./api";
 import SectionTitle from "../ReusableComponents/SectionTitle";
-import Button from "../ReusableComponents/Button"; // Reusable Button
-
+import Button from "../ReusableComponents/Button"; 
 const PetList = () => {
   const [pets, setPets] = useState([]);
   const fetchCalled = useRef(false);
@@ -65,7 +64,7 @@ const PetList = () => {
                     sx={{
                       width: "100%",
                       height: 0,
-                      paddingTop: "56.25%", // Aspect ratio 16:9
+                      paddingTop: "56.25%",
                       position: "relative",
                       borderRadius: "8px",
                       overflow: "hidden",
@@ -82,7 +81,7 @@ const PetList = () => {
                         left: 0,
                         width: "100%",
                         height: "100%",
-                        objectFit: "cover", // Fills the container and removes white spaces
+                        objectFit: "cover", 
                       }}
                     />
                   </Box>

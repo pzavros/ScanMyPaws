@@ -37,13 +37,27 @@ const SchedulesList = () => {
     const loadSchedules = async () => {
         try {
             const data = await fetchSchedules();
-            const today = new Date();
-            const past = data.filter((schedule) => new Date(schedule.date) < today);
-            const upcoming = data.filter((schedule) => new Date(schedule.date) >= today);
+
+            const now = new Date();
+
+            const past = data.filter((schedule) => {
+                const scheduleDateTime = new Date(schedule.date);
+                const [hours, minutes, seconds] = schedule.time.split(":").map(Number);
+                scheduleDateTime.setHours(hours, minutes, seconds);
+                return scheduleDateTime < now;
+            });
+
+            const upcoming = data.filter((schedule) => {
+                const scheduleDateTime = new Date(schedule.date);
+                const [hours, minutes, seconds] = schedule.time.split(":").map(Number);
+                scheduleDateTime.setHours(hours, minutes, seconds);
+                return scheduleDateTime >= now;
+            });
 
             setPastSchedules(past);
             setUpcomingSchedules(upcoming);
             setSchedules(data);
+
         } catch (error) {
             console.error("Error fetching schedules:", error);
         }
@@ -51,6 +65,9 @@ const SchedulesList = () => {
 
     loadSchedules();
 }, []);
+
+
+
 
 
   const handleEditClick = (schedule) => {
@@ -65,28 +82,56 @@ const SchedulesList = () => {
 
   const handleSaveSchedule = async (updatedSchedule) => {
     if (!updatedSchedule || !updatedSchedule.scheduleID) {
-      console.error("Invalid schedule update request:", updatedSchedule);
+      console.error(" Error: Invalid schedule update request!", updatedSchedule);
       return;
     }
-
+  
+    const payload = {
+      scheduleID: updatedSchedule.scheduleID,
+      userID: updatedSchedule.userID,
+      title: updatedSchedule.title,
+      date: updatedSchedule.date,
+      time: typeof updatedSchedule.time === "string" ? updatedSchedule.time : updatedSchedule.time.toString(),
+      description: updatedSchedule.description,
+      isCompleted: updatedSchedule.isCompleted,
+    };
+  
     try {
-      const response = await updateSchedule(updatedSchedule);
-      if (response) {
-        console.log(`Schedule ${updatedSchedule.scheduleID} updated successfully.`);
-
+      console.log("Sending update request with:", payload);
+      const response = await updateSchedule(payload);
+      console.log("Update API Response:", response);
+  
+      if (response.status === 200) {
+        setSchedules((prev) =>
+          prev.map((item) =>
+            item.scheduleID === updatedSchedule.scheduleID ? updatedSchedule : item
+          )
+        );
+        handleCloseForm();
         window.location.reload();
+      } else {
+        console.error("Unexpected response from update API:", response);
       }
     } catch (error) {
-      console.error("Error updating schedule:", error);
+      console.error("Error updating schedule:", error.response?.data || error.message);
     }
   };
+  
+  
 
 
 
   const handleDeleteClick = (schedule) => {
+    if (!schedule || !schedule.scheduleID) {
+      console.error("Error: Schedule ID is undefined!", schedule);
+      return;
+    }
+    console.log(`Deleting schedule ID: ${schedule.scheduleID}`);
     setSelectedSchedule(schedule);
     setOpen(true);
   };
+  
+  
 
   const handleClose = () => {
     setOpen(false);
@@ -94,21 +139,30 @@ const SchedulesList = () => {
   };
 
   const handleConfirmDelete = async () => {
-    if (selectedSchedule) {
-      try {
-        await deleteSchedule(selectedSchedule.scheduleID);
-        setUpcomingSchedules((prev) =>
-          prev.filter((item) => item.scheduleID !== selectedSchedule.scheduleID)
-        );
-        setPastSchedules((prev) =>
-          prev.filter((item) => item.scheduleID !== selectedSchedule.scheduleID)
-        );
-      } catch (error) {
-        console.error("Error deleting schedule:", error);
-      }
+    if (!selectedSchedule || !selectedSchedule.scheduleID) {
+      console.error("Error: Trying to delete a schedule with an undefined ID");
+      return;
     }
-    handleClose();
+  
+    try {
+      console.log(`Sending DELETE request for scheduleID: ${selectedSchedule.scheduleID}`);
+      await deleteSchedule(selectedSchedule.scheduleID);
+  
+      setUpcomingSchedules((prev) => prev.filter((item) => item.scheduleID !== selectedSchedule.scheduleID));
+      setPastSchedules((prev) => prev.filter((item) => item.scheduleID !== selectedSchedule.scheduleID));
+      setSchedules((prev) => prev.filter((item) => item.scheduleID !== selectedSchedule.scheduleID));
+  
+      console.log(`Schedule ${selectedSchedule.scheduleID} deleted successfully.`);
+    } catch (error) {
+      console.error("Error deleting schedule:", error);
+    } finally {
+      handleClose();
+    }
   };
+  
+  
+  
+  
 
   return (
     <Section>
@@ -222,6 +276,22 @@ const SchedulesList = () => {
           ))
         )}
       </Grid>
+
+      {/* Delete Confirmation Dialog */}
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>Confirm Deletion</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Are you sure you want to delete this schedule? This action cannot be undone.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} variant="outlined">Cancel</Button>
+        <Button onClick={handleConfirmDelete} variant="contained" color="error">
+          Confirm
+        </Button>
+      </DialogActions>
+    </Dialog>
 
       <ScheduleForm
         isOpen={isFormOpen}

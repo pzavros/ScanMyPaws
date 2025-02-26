@@ -61,30 +61,56 @@ export const createSchedule = async (scheduleData) => {
  * Update an existing schedule.
  */
 export const updateSchedule = async (scheduleData) => {
+  if (!scheduleData || !scheduleData.scheduleID) {
+    console.error("Error: Schedule ID is missing in update request", scheduleData);
+    throw new Error("Schedule ID is required for update.");
+  }
+
   try {
     const response = await axios.put(
       `${API_BASE_URL}/api/schedules/${scheduleData.scheduleID}`,
-      scheduleData,
+      {
+        scheduleDto: {
+          scheduleID: scheduleData.scheduleID,
+          userID: scheduleData.userID,
+          title: scheduleData.title,
+          date: scheduleData.date,
+          time: scheduleData.time,
+          description: scheduleData.description,
+          isCompleted: scheduleData.isCompleted,
+        },
+      },
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
     );
-    return response.data;
+
+    return response;
   } catch (error) {
     console.error("Error updating schedule:", error.response?.data || error.message);
     throw error;
   }
 };
+
+
+
 /**
  * Delete a schedule.
  */
 export const deleteSchedule = async (scheduleID) => {
+  if (!scheduleID) {
+    console.error("Error: Schedule ID is missing in delete request");
+    throw new Error("Schedule ID is required for deletion.");
+  }
+
   try {
     await axios.delete(`${API_BASE_URL}/api/schedules/${scheduleID}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+
+    return { success: true };
   } catch (error) {
     console.error("Error deleting schedule:", error.response?.data || error.message);
     throw error;

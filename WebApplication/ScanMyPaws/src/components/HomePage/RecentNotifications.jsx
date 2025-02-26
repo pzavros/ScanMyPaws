@@ -36,7 +36,7 @@ const RecentNotifications = ({ petId }) => {
           ) : (
             notifications.map((notification, index) => (
               <Paper
-                key={notification.notificationID || notification.id || index} // ✅ Unique key fix
+                key={notification.notificationID || notification.id || index} 
                 elevation={2}
                 sx={{
                   padding: "16px",

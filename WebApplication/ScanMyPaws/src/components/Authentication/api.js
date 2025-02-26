@@ -14,8 +14,8 @@ export const signUpUser = async (userData) => {
 // Sign In API Call
 export const signInUser = async (email, password) => {
     const response = await axios.post(`${API_BASE_URL}/api/User/login`, { email, passwordHash: password });
-    localStorage.setItem("token", response.data.token); // Store token securely
-    return response.data; // Return full user data if needed
+    localStorage.setItem("token", response.data.token);
+    return response.data;
   };
   
 
@@ -41,5 +41,5 @@ export const updateUserProfile = async (profileData) => {
 // Check if User is Logged In
 export const isLoggedIn = () => {
     const token = localStorage.getItem("token");
-    return !!token; // Returns true if a token exists
+    return !!token;
 };
