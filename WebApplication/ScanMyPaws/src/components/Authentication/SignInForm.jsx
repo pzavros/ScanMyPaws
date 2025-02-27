@@ -26,7 +26,7 @@ const SignInForm = () => {
       console.error("API error response:", err.response);
       let errorMessage = "Failed to log in.";
       if (err.response && err.response.data) {
-          errorMessage = err.response.data;
+        errorMessage = err.response.data;
       }
       setError(errorMessage);
     }
@@ -39,7 +39,6 @@ const SignInForm = () => {
         maxWidth: "400px",
         margin: "0 auto",
         textAlign: "center",
-        backgroundColor: "var(--card-background)",
         borderRadius: "16px",
         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
         color: "var(--text-color)",
@@ -48,7 +47,7 @@ const SignInForm = () => {
       {/* Logo */}
       <Box sx={{ marginBottom: 3 }}>
         <img
-          src="https://via.placeholder.com/64"
+          src="media/HomePage1.jpg"
           alt="Logo"
           style={{ width: "64px", height: "64px", margin: "0 auto", borderRadius: "50%" }}
         />
@@ -133,9 +132,12 @@ const SignInForm = () => {
             fontSize: "1rem",
             height: "48px",
             borderRadius: "8px",
-            backgroundColor: "var(--primary-color)",
+            background:
+              "linear-gradient(90deg, rgba(255,111,97,1) 0%, rgba(255,165,97,1) 100%)",
+            color: "#fff",
             "&:hover": {
-              backgroundColor: "var(--secondary-color)",
+              background:
+                "linear-gradient(90deg, rgba(255,165,97,1) 0%, rgba(255,111,97,1) 100%)",
             },
           }}
         >

@@ -44,7 +44,7 @@ const ScheduleForm = ({ isOpen, onClose, onSave, selectedSchedule }) => {
       time: formData.time + ":00",
       description: formData.description,
     };
-  
+
     try {
       let updatedSchedule;
       if (selectedSchedule) {
@@ -52,21 +52,22 @@ const ScheduleForm = ({ isOpen, onClose, onSave, selectedSchedule }) => {
       } else {
         updatedSchedule = await createSchedule(scheduleData);
       }
-  
+
       if (!updatedSchedule || !updatedSchedule.scheduleID) {
         console.error("Schedule creation failed, invalid scheduleID:", updatedSchedule);
         return;
       }
-  
+
       onSave({ ...updatedSchedule, scheduleID: updatedSchedule.scheduleID });
-  
+
       setFormData({ title: "", date: "", time: "", description: "" });
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Failed to save schedule:", error);
     }
   };
-  
+
 
   return (
     <Dialog

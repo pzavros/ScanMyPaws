@@ -75,7 +75,7 @@ namespace Backend.Services
             await _notificationService.SendNotificationAsync(new NotificationDto
             {
                 UserID = schedule.UserID,
-                Title = "Upcoming Schedule",
+                Title = schedule.Title,
                 Message = $"Reminder: {schedule.Title} is scheduled on {schedule.Date.ToShortDateString()} at {schedule.Time}.",
                 Type = "Schedule Reminder",
                 ReferenceID = schedule.ScheduleID,

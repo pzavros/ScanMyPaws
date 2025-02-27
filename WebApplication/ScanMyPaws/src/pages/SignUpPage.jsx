@@ -7,11 +7,6 @@ import Text from "../components/ReusableComponents/Text";
 const SignUpPage = () => {
   return (
     <Page>
-      <Section>
-        <Text variant="h4" textAlign="center" mb={3}>
-          Sign Up
-        </Text>
-      </Section>
       <SignUpForm />
     </Page>
   );

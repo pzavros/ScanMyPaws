@@ -7,11 +7,6 @@ import Text from "../components/ReusableComponents/Text";
 const SignInPage = () => {
   return (
     <Page>
-      <Section>
-        <Text variant="h4" textAlign="center" mb={3}>
-          Sign In
-        </Text>
-      </Section>
       <SignInForm />
     </Page>
   );

@@ -28,17 +28,15 @@ const SignUpForm = () => {
     }
 
     try {
-      // API Call
       const response = await signUpUser({
         firstName,
         lastName,
         email,
-        passwordHash: password, // Ensure this key matches the backend model
+        passwordHash: password,
       });
       setSuccess("Account created successfully!");
-      setTimeout(() => navigate("/"), 2000); // Redirect after success
+      setTimeout(() => navigate("/"), 2000);
     } catch (err) {
-      // Display meaningful error messages
       setError(err || "Failed to create an account. Please try again.");
     }
   };
@@ -50,9 +48,8 @@ const SignUpForm = () => {
         maxWidth: "500px",
         margin: "0 auto",
         textAlign: "center",
-        backgroundColor: "var(--card-background)",
         borderRadius: "16px",
-        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", 
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
         color: "var(--text-color)",
       }}
     >
@@ -145,9 +142,12 @@ const SignUpForm = () => {
             fontSize: "1rem",
             height: "48px",
             borderRadius: "8px",
-            backgroundColor: "var(--primary-color)",
+            background:
+              "linear-gradient(90deg, rgba(255,111,97,1) 0%, rgba(255,165,97,1) 100%)",
+            color: "#fff",
             "&:hover": {
-              backgroundColor: "var(--secondary-color)",
+              background:
+                "linear-gradient(90deg, rgba(255,165,97,1) 0%, rgba(255,111,97,1) 100%)",
             },
           }}
         >

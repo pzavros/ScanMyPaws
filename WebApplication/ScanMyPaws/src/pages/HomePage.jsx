@@ -81,7 +81,7 @@ const HomePage = () => {
           >
             <Box
               component="img"
-              src="/media/HomePage1.jpg" // Replace with your valid image path
+              src="/media/HomePage1.jpg" 
               alt="QR Code Illustration"
               sx={{ width: { xs: 200, md: 250 }, mb: 2 }}
             />
