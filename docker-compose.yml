@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "ScanMyPaws2806"
+      ACCEPT_EULA: "Y"
+    restart: always
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+  backend:
+    build: ./backend/backend
+    container_name: backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - sqlserver
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=ScanMyPaws;User ID=sa;Password=ScanMyPaws2806;TrustServerCertificate=True;"
+    restart: always
+
+  scanmypaws:
+    build: ./webapplication/scanmypaws
+    container_name: scanmypaws
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: always
+
+  eshop:
+    build: ./eshop/eshop
+    container_name: eshop
+    ports:
+      - "4000:80"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  sqlserver_data:
