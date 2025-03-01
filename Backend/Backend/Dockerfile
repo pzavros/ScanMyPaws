@@ -9,16 +9,20 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy project files
-COPY ["Backend.csproj", "."]
+COPY ["Backend/Backend.csproj", "Backend/"]
+WORKDIR "/src/Backend"
+
 RUN dotnet restore "Backend.csproj"
 
 # Copy entire source
-COPY . .
-WORKDIR "/src"
+COPY Backend/. ./ 
+WORKDIR "/src/Backend"
+
 RUN dotnet build "Backend.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
 FROM build AS publish
+WORKDIR "/src/Backend"
 RUN dotnet publish "Backend.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Final runtime image
