@@ -8,16 +8,21 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-# Copy project files
-COPY ["Backend.csproj", "."]
+# Copy project files correctly
+COPY ["Backend/Backend/Backend.csproj", "Backend/Backend/"]
+
+WORKDIR "/src/Backend/Backend"
+
 RUN dotnet restore "Backend.csproj"
 
-# Copy entire source
-COPY . .
+# Copy entire source and build the application
+COPY Backend/Backend/. ./
+
 RUN dotnet build "Backend.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
 FROM build AS publish
+WORKDIR "/src/Backend/Backend"
 RUN dotnet publish "Backend.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Final runtime image
