@@ -14,27 +14,37 @@ services:
       - sqlserver_data:/var/opt/mssql
 
   backend:
-    build: ./backend/backend
+    build:
+      context: ./Backend/backend
+      dockerfile: Dockerfile
     container_name: backend
     ports:
       - "5000:5000"
     depends_on:
       - sqlserver
     environment:
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=ScanMyPaws;User ID=sa;Password=ScanMyPaws2806;TrustServerCertificate=True;"
+      server: "sqlserver"
+      port: "1433"
+      database: "ScanMyPaws"
+      dbuser: "sa"
+      password: "ScanMyPaws2806"
     restart: always
 
   scanmypaws:
-    build: ./webapplication/scanmypaws
+    build:
+      context: ./WebApplication/scanmypaws
     container_name: scanmypaws
     ports:
       - "3000:80"
     depends_on:
       - backend
     restart: always
+    environment:
+      - VITE_APP_API_BASE_URL=http://backend:5000
 
   eshop:
-    build: ./eshop/eshop
+    build:
+      context: ./Eshop/eshop
     container_name: eshop
     ports:
       - "4000:80"

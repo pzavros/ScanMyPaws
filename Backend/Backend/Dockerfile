@@ -1,25 +1,30 @@
-# Use the .NET SDK for building and migrations
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# Base image for runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-
-# Copy project files and restore dependencies
-COPY *.csproj ./
-RUN dotnet restore
-
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# Run migrations inside the build container
-RUN dotnet tool install --global dotnet-ef
-RUN export PATH="$PATH:/root/.dotnet/tools" && dotnet ef database update
-
-# Use the runtime image for execution
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /app/out ./
-
-# Expose API port
 EXPOSE 5000
-ENV ASPNETCORE_URLS=http://+:5000
 
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+
+# Copy project files
+COPY ["Backend.csproj", "."]
+RUN dotnet restore "Backend.csproj"
+
+# Copy entire source
+COPY . .
+WORKDIR "/src"
+RUN dotnet build "Backend.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# Publish stage
+FROM build AS publish
+RUN dotnet publish "Backend.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+# Final runtime image
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+# Entry point
 ENTRYPOINT ["dotnet", "Backend.dll"]
