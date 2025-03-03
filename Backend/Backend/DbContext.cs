@@ -22,10 +22,8 @@ namespace Backend
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<PetCardSetting> PetCardSettings { get; set; }
-
-
-
-
+        public DbSet<ChatSession> ChatSessions { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

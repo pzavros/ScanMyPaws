@@ -31,7 +31,7 @@ const PetCardPage = () => {
   }, [petId]);
 
   const handleSave = async (updatedDetails) => {
-    if (isPublicView) return; // Prevent saving in public view
+    if (isPublicView) return;
     try {
       const updatedData = await updatePetDetails(updatedDetails.petCardID, updatedDetails);
       setPetDetails(updatedData);
