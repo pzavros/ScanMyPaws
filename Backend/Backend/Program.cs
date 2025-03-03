@@ -14,7 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure the HTTP server to listen on all network interfaces
 //builder.WebHost.UseUrls("http://0.0.0.0:5000", "https://0.0.0.0:44330");
-builder.WebHost.UseUrls("http://0.0.0.0:5000");  // ✅ Force HTTP-only
+// builder.WebHost.UseUrls("http://0.0.0.0:5000", "https://0.0.0.0:5001");
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
+
 
 // Build the connection string dynamically from environment variables
 var server = builder.Configuration["server"] ?? "sqlserver";
@@ -69,6 +72,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5000);
+});
+
+
+
 var app = builder.Build();
 
 // Enable Swagger for Development & Production
@@ -81,6 +92,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 // Call the Migration Service
 DatabaseManagementService.MigrationInitialization(app);
 
+app.UseHttpsRedirection();
 //app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthentication();
