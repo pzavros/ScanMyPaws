@@ -45,7 +45,7 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
   };
 
   const handleSimulateScan = () => {
-    const simulatedCode = "2"; // Simulated QRCodeID for testing
+    const simulatedCode = "3"; // Simulated QRCodeID for testing
     setScannedCode(simulatedCode);
   };
 

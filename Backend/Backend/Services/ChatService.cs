@@ -161,6 +161,7 @@ namespace Backend.Services
                 SentAt = DateTime.UtcNow
             };
 
+            
             _context.ChatMessages.Add(message);
             await _context.SaveChangesAsync();
 
