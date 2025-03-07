@@ -20,5 +20,8 @@ namespace Backend.Interfaces
 
         // Adds a message to the session
         Task<ChatSessionDto> AddMessageToSessionAsync(int chatSessionId, string senderId, string messageContent);
+        Task<List<ChatMessageDto>> GetMessagesBySessionId(int sessionId);
+        Task<bool> SendMessage(int sessionId, ChatMessageDto messageDto);
+        
     }
 }

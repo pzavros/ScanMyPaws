@@ -63,6 +63,7 @@ const MedicalRecordsPage = React.lazy(() => import("./pages/MedicalRecordsPage")
 const SelectPetPage = React.lazy(() => import("./pages/SelectPetPage"));
 const InstructionsPage = React.lazy(() => import("./pages/InstructionsPage"));
 const SchedulesPage = React.lazy(() => import("./pages/SchedulesPage"));
+const PublicChatPage = React.lazy(() => import("./pages/PublicChatPage"));
 
 // PrivateRoute component: if not logged in, redirect to /signin.
 const PrivateRoute = ({ element }) => {
@@ -128,6 +129,7 @@ const RouterContent = () => {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/public-petcard/:uniqueUrl" element={<PublicPetCardPage />} />
+          <Route path="/chat/:sessionId" element={<PublicChatPage />} />
 
           {/* Fallback */}
           <Route path="*" element={<div>Page Not Found</div>} />
