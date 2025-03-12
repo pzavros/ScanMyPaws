@@ -6,6 +6,7 @@ import {
   Divider,
   Button,
 } from "@mui/material";
+import ChatIcon from '@mui/icons-material/Chat';
 import {
   Notifications as NotificationsIcon,
   Settings as SettingsIcon,
@@ -35,7 +36,8 @@ const SidebarDrawer = ({ isDrawerOpen, toggleDrawer }) => {
     { label: "Profile", icon: <ProfileIcon />, route: "/profile" },
     { label: "Notifications", icon: <NotificationsIcon />, route: "/notifications" },
     { label: "Medical Records", icon: <MedicalRecordsIcon />, route: "/select-pet" },
-    { label: "Schedules", icon: <SchedulesIcon />, route: "/schedules" }
+    { label: "Schedules", icon: <SchedulesIcon />, route: "/schedules" },
+    { label: "Chat", icon: <ChatIcon />, route: "/chat" },
   ];
 
   const appItems = [

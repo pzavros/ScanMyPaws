@@ -1,33 +1,61 @@
 import React, { useState, useEffect, useRef } from "react";
 import { fetchChatMessages, sendMessage } from "./api";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 import { Box, TextField, Button, Paper, Typography } from "@mui/material";
 
-const ChatComponent = ({ sessionId }) => {
+const ChatComponent = ({ sessionId, isOwner }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const chatEndRef = useRef(null);
   const [userId, setUserId] = useState(null);
+  const [connection, setConnection] = useState(null);
 
   useEffect(() => {
     const storedFinderId = sessionStorage.getItem("finderEphemeralId");
     const storedUserId = localStorage.getItem("userId");
 
-    if (!storedFinderId && !storedUserId) {
+    const currentUser = isOwner ? storedUserId : storedFinderId;
+    if (!currentUser) {
       alert("Chat session expired.");
       return;
     }
+    setUserId(currentUser);
 
-    setUserId(storedFinderId || storedUserId);
-
+    // Fetch messages initially
     fetchMessages();
-    const interval = setInterval(fetchMessages, 3000);
-    return () => clearInterval(interval);
-  }, [sessionId]);
+
+    // Setup real-time connection
+    const newConnection = new HubConnectionBuilder()
+      .withUrl(`${import.meta.env.VITE_APP_API_BASE_URL}/chatHub`)
+      .withAutomaticReconnect()
+      .build();
+
+    newConnection
+      .start()
+      .then(() => {
+        console.log("Connected to SignalR hub");
+        newConnection.invoke("JoinChatSession", sessionId);
+      })
+      .catch(err => console.error("Error starting SignalR:", err));
+
+    newConnection.on("ReceiveMessage", (updatedSession) => {
+      setMessages(updatedSession.messages || []);
+      scrollToBottom();
+    });
+
+    setConnection(newConnection);
+
+    return () => {
+      if (newConnection) {
+        newConnection.stop();
+      }
+    };
+  }, [sessionId, isOwner]);
 
   const fetchMessages = async () => {
     try {
       const chatData = await fetchChatMessages(sessionId);
-      setMessages(chatData.messages || []);
+      setMessages(chatData);
       scrollToBottom();
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -36,24 +64,23 @@ const ChatComponent = ({ sessionId }) => {
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
-  
+
     const payload = {
       senderId: userId,
       messageContent: newMessage,
     };
-  
-    console.log("Sending message to session ID:", sessionId, "with data:", payload);
-  
+
     try {
       await sendMessage(sessionId, payload);
-  
-      setMessages([...messages, { senderId: userId, messageContent: newMessage }]);
       setNewMessage("");
+
+      if (connection) {
+        await connection.invoke("SendMessage", sessionId, userId, newMessage);
+      }
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
-  
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -62,7 +89,7 @@ const ChatComponent = ({ sessionId }) => {
   return (
     <Box sx={{ width: "100%", maxWidth: "600px", margin: "auto", padding: "16px" }}>
       <Typography variant="h5" sx={{ textAlign: "center", mb: 2 }}>
-        Chat
+        {isOwner ? "Chat with the Pet Finder" : "Chat with the Pet Owner"}
       </Typography>
 
       <Paper sx={{ height: 300, overflowY: "auto", padding: 2 }}>

@@ -81,5 +81,20 @@ namespace Backend.Controllers
 
             return Ok(new { message = "Message sent successfully" });
         }
+        [HttpGet("sessions/user")]
+        public async Task<ActionResult<IEnumerable<ChatSessionDto>>> GetOwnerChatSessions()
+        {
+            var userIdClaim = User.FindFirst("UserId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { message = "User ID not found in token" });
+            }
+
+            int ownerUserId = int.Parse(userIdClaim.Value);
+            var sessions = await _chatService.GetChatSessionsByOwnerId(ownerUserId);
+    
+            return Ok(sessions);
+        }
+
     }
 }

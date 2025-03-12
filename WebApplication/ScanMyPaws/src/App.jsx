@@ -125,7 +125,7 @@ const RouterContent = () => {
           <Route path="/select-pet" element={<PrivateRoute element={<SelectPetPage />} />} />
           <Route path="/instructions" element={<PrivateRoute element={<InstructionsPage />} />} />
           <Route path="/schedules" element={<PrivateRoute element={<SchedulesPage />} />} />
-          <Route path="/chat/:sessionId" element={<ChatPage />} />
+          <Route path="/chat" element={<PrivateRoute element={<ChatPage />} />} />
 
           {/* Public Routes */}
           <Route path="/signup" element={<SignUpPage />} />

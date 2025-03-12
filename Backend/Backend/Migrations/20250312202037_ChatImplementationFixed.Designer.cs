@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250303182509_ChatImplementation")]
-    partial class ChatImplementation
+    [Migration("20250312202037_ChatImplementationFixed")]
+    partial class ChatImplementationFixed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,8 @@ namespace Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatMessageId"));
 
-                    b.Property<int>("ChatSessionId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ChatSessionId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
@@ -62,16 +62,14 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.ChatSession", b =>
                 {
-                    b.Property<int>("ChatSessionId")
+                    b.Property<Guid>("ChatSessionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatSessionId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateModified")
+                    b.Property<DateTime>("DateModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FinderEmail")

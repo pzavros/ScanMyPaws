@@ -22,5 +22,6 @@ namespace Backend.Interfaces
         Task<List<ChatMessageDto>> GetMessagesBySessionId(Guid sessionId);
 
         Task<bool> SendMessage(Guid sessionId, ChatMessageDto messageDto);
+        Task<List<ChatSessionDto>> GetChatSessionsByOwnerId(int ownerUserId);
     }
 }

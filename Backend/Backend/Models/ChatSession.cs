@@ -9,10 +9,10 @@ namespace Backend.Models
     {
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
         public DateTime DateModified { get; set; } = DateTime.UtcNow;
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         [Key]
         public Guid ChatSessionId { get; set; } = Guid.NewGuid();
-
         [Required]
         [ForeignKey("PetProfile")]
         public int PetID { get; set; }

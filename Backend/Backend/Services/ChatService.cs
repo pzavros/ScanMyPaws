@@ -168,5 +168,37 @@ namespace Backend.Services
 
             return true;
         }
+        public async Task<List<ChatSessionDto>> GetChatSessionsByOwnerId(int ownerUserId)
+        {
+            Console.WriteLine($"Querying chat sessions for ownerUserId: {ownerUserId}");
+
+            var sessions = await _context.ChatSessions
+                .Where(s => s.OwnerUserID == ownerUserId)
+                .Include(s => s.Messages) // Ensure messages are included
+                .ToListAsync();
+
+            Console.WriteLine($"Database returned {sessions.Count} sessions for ownerUserId: {ownerUserId}");
+
+            return sessions.Select(s => new ChatSessionDto
+            {
+                ChatSessionId = s.ChatSessionId,
+                PetID = s.PetID,
+                OwnerUserID = s.OwnerUserID,
+                FinderEphemeralId = s.FinderEphemeralId,
+                FinderName = s.FinderName,
+                FinderSurname = s.FinderSurname,
+                FinderEmail = s.FinderEmail,
+                DateCreated = s.DateCreated,
+                DateModified = s.DateModified,
+                Messages = s.Messages.Select(m => new ChatMessageDto
+                {
+                    ChatMessageId = m.ChatMessageId,
+                    ChatSessionId = m.ChatSessionId,
+                    SenderId = m.SenderId,
+                    MessageContent = m.MessageContent,
+                    SentAt = m.SentAt
+                }).ToList()
+            }).ToList();
+        }
     }
 }
