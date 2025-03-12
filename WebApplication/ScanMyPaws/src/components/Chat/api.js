@@ -88,4 +88,20 @@ export const fetchChatSessionByUserId = async (userId) => {
   }
 };
 
-
+export const markMessagesAsRead = async (sessionId, userId) => {
+  try {
+    await axios.post( 
+      `${API_BASE_URL}/api/chat/mark-read/${sessionId}`, 
+      { userId }, 
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(`Marked messages as read for session ${sessionId} by user ${userId}`);
+  } catch (error) {
+    console.error("Error marking messages as read:", error.response?.data || error.message);
+  }
+};

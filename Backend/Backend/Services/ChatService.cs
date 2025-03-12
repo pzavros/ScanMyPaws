@@ -140,7 +140,8 @@ namespace Backend.Services
                     ChatSessionId = m.ChatSessionId,
                     SenderId = m.SenderId,
                     MessageContent = m.MessageContent,
-                    SentAt = m.SentAt
+                    SentAt = m.SentAt,
+                    IsRead = m.IsRead
                 })
                 .ToListAsync();
 
@@ -174,7 +175,7 @@ namespace Backend.Services
 
             var sessions = await _context.ChatSessions
                 .Where(s => s.OwnerUserID == ownerUserId)
-                .Include(s => s.Messages) // Ensure messages are included
+                .Include(s => s.Messages)
                 .ToListAsync();
 
             Console.WriteLine($"Database returned {sessions.Count} sessions for ownerUserId: {ownerUserId}");
@@ -200,5 +201,26 @@ namespace Backend.Services
                 }).ToList()
             }).ToList();
         }
+        public async Task<bool> MarkMessagesAsRead(Guid chatSessionId, string userId)
+        {
+            var messages = await _context.ChatMessages
+                .Where(m => m.ChatSessionId == chatSessionId && !m.IsRead && m.SenderId != userId)
+                .ToListAsync();
+
+            if (!messages.Any())
+            {
+                return false;
+            }
+
+            foreach (var message in messages)
+            {
+                message.IsRead = true;
+            }
+
+            await _context.SaveChangesAsync();
+            return true; 
+        }
+
+
     }
 }

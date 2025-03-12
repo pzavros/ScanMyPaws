@@ -16,12 +16,10 @@ namespace Backend.Interfaces
         );
 
         Task<ChatSessionDto> GetChatSessionAsync(Guid chatSessionId);
-
         Task<ChatSessionDto> AddMessageToSessionAsync(Guid chatSessionId, string senderId, string messageContent);
-
         Task<List<ChatMessageDto>> GetMessagesBySessionId(Guid sessionId);
-
         Task<bool> SendMessage(Guid sessionId, ChatMessageDto messageDto);
         Task<List<ChatSessionDto>> GetChatSessionsByOwnerId(int ownerUserId);
+        Task<bool> MarkMessagesAsRead(Guid chatSessionId, string userId);
     }
 }

@@ -61,7 +61,7 @@ namespace Backend.Controllers
             var messages = await _chatService.GetMessagesBySessionId(sessionId);
             return Ok(new { messages });
         }
-
+        
         /// <summary>
         /// Sends a message in a chat session
         /// </summary>
@@ -94,6 +94,17 @@ namespace Backend.Controllers
             var sessions = await _chatService.GetChatSessionsByOwnerId(ownerUserId);
     
             return Ok(sessions);
+        }
+        [HttpPost("mark-read/{sessionId}")]
+        public async Task<ActionResult> MarkMessagesAsRead(Guid sessionId, [FromBody] string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest(new { message = "User ID is required." });
+            }
+
+            await _chatService.MarkMessagesAsRead(sessionId, userId);
+            return Ok(new { message = "Messages marked as read." });
         }
 
     }

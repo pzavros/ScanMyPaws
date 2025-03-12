@@ -37,6 +37,7 @@ const PublicChatPage = () => {
       console.error("Error fetching messages:", error);
     }
   };
+  
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;

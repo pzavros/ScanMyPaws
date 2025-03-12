@@ -57,10 +57,18 @@ const ChatComponent = ({ sessionId, isOwner }) => {
       const chatData = await fetchChatMessages(sessionId);
       setMessages(chatData);
       scrollToBottom();
+  
+      const userId = isOwner ? localStorage.getItem("userId") : sessionStorage.getItem("finderEphemeralId");
+      console.log("User ID:", userId);
+      console.log("HIiiiii");
+      if (userId) {
+        await markMessagesAsRead(sessionId, userId);
+      }
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
+  
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
