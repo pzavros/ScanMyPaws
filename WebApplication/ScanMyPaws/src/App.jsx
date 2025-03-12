@@ -64,6 +64,7 @@ const SelectPetPage = React.lazy(() => import("./pages/SelectPetPage"));
 const InstructionsPage = React.lazy(() => import("./pages/InstructionsPage"));
 const SchedulesPage = React.lazy(() => import("./pages/SchedulesPage"));
 const PublicChatPage = React.lazy(() => import("./pages/PublicChatPage"));
+const ChatPage = React.lazy(() => import("./pages/ChatPage"));
 
 // PrivateRoute component: if not logged in, redirect to /signin.
 const PrivateRoute = ({ element }) => {
@@ -124,6 +125,7 @@ const RouterContent = () => {
           <Route path="/select-pet" element={<PrivateRoute element={<SelectPetPage />} />} />
           <Route path="/instructions" element={<PrivateRoute element={<InstructionsPage />} />} />
           <Route path="/schedules" element={<PrivateRoute element={<SchedulesPage />} />} />
+          <Route path="/chat/:sessionId" element={<ChatPage />} />
 
           {/* Public Routes */}
           <Route path="/signup" element={<SignUpPage />} />

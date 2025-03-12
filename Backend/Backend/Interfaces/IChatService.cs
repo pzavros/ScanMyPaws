@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Backend.DTOs;
+using System.Collections.Generic;
 
 namespace Backend.Interfaces
 {
     public interface IChatService
     {
-        // Creates a new chat session for a given pet, owner, and finder data
         Task<ChatSessionDto> CreateChatSessionAsync(
             int petId,
             int ownerUserId,
@@ -15,13 +15,12 @@ namespace Backend.Interfaces
             string finderEmail
         );
 
-        // Loads a chat session by ID (including messages)
-        Task<ChatSessionDto> GetChatSessionAsync(int chatSessionId);
+        Task<ChatSessionDto> GetChatSessionAsync(Guid chatSessionId);
 
-        // Adds a message to the session
-        Task<ChatSessionDto> AddMessageToSessionAsync(int chatSessionId, string senderId, string messageContent);
-        Task<List<ChatMessageDto>> GetMessagesBySessionId(int sessionId);
-        Task<bool> SendMessage(int sessionId, ChatMessageDto messageDto);
-        
+        Task<ChatSessionDto> AddMessageToSessionAsync(Guid chatSessionId, string senderId, string messageContent);
+
+        Task<List<ChatMessageDto>> GetMessagesBySessionId(Guid sessionId);
+
+        Task<bool> SendMessage(Guid sessionId, ChatMessageDto messageDto);
     }
 }

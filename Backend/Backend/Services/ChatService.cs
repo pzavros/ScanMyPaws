@@ -29,8 +29,14 @@ namespace Backend.Services
             string finderSurname,
             string finderEmail)
         {
+            if (ownerUserId == 0) 
+            {
+                throw new ArgumentException($"OwnerUserID cannot be 0. PetID: {petId} might not have a valid owner.");
+            }
+
             var chatSession = new ChatSession
             {
+                ChatSessionId = Guid.NewGuid(), 
                 PetID = petId,
                 OwnerUserID = ownerUserId,
                 FinderEphemeralId = finderEphemeralId,
@@ -46,7 +52,7 @@ namespace Backend.Services
 
             return new ChatSessionDto
             {
-                ChatSessionId = chatSession.ChatSessionId,
+                ChatSessionId = chatSession.ChatSessionId, 
                 PetID = chatSession.PetID,
                 OwnerUserID = chatSession.OwnerUserID,
                 FinderEphemeralId = chatSession.FinderEphemeralId,
@@ -62,7 +68,7 @@ namespace Backend.Services
         /// <summary>
         /// Retrieves an existing chat session
         /// </summary>
-        public async Task<ChatSessionDto> GetChatSessionAsync(int chatSessionId)
+        public async Task<ChatSessionDto> GetChatSessionAsync(Guid chatSessionId)
         {
             var session = await _context.ChatSessions
                 .Include(s => s.Messages)
@@ -83,27 +89,26 @@ namespace Backend.Services
                 DateModified = session.DateModified,
                 Messages = session.Messages.Select(m => new ChatMessageDto
                 {
-                    ChatMessageId = m.ChatMessageId, // Ensure your model has this field
+                    ChatMessageId = m.ChatMessageId,
                     ChatSessionId = m.ChatSessionId,
                     SenderId = m.SenderId,
-                    MessageContent = m.MessageContent, // Ensure consistency with your model
+                    MessageContent = m.MessageContent,
                     SentAt = m.SentAt
                 }).ToList()
             };
         }
-        public async Task<ChatSessionDto> AddMessageToSessionAsync(int chatSessionId, string senderId, string messageContent)
+
+        /// <summary>
+        /// Adds a message to the session and returns updated chat session
+        /// </summary>
+        public async Task<ChatSessionDto> AddMessageToSessionAsync(Guid chatSessionId, string senderId, string messageContent)
         {
-            // Find the chat session
             var session = await _context.ChatSessions
-                .Include(s => s.Messages) // Ensure messages are loaded
+                .Include(s => s.Messages)
                 .FirstOrDefaultAsync(s => s.ChatSessionId == chatSessionId);
 
-            if (session == null)
-            {
-                return null; // Chat session does not exist
-            }
+            if (session == null) return null;
 
-            // Create and add the new message
             var newMessage = new ChatMessage
             {
                 ChatSessionId = chatSessionId,
@@ -113,18 +118,18 @@ namespace Backend.Services
             };
 
             _context.ChatMessages.Add(newMessage);
+            session.Messages.Add(newMessage);
             session.DateModified = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
 
-            // Return the updated chat session with messages
             return await GetChatSessionAsync(chatSessionId);
         }
-
 
         /// <summary>
         /// Fetches all messages for a given session
         /// </summary>
-        public async Task<List<ChatMessageDto>> GetMessagesBySessionId(int sessionId)
+        public async Task<List<ChatMessageDto>> GetMessagesBySessionId(Guid sessionId)
         {
             var messages = await _context.ChatMessages
                 .Where(m => m.ChatSessionId == sessionId)
@@ -145,13 +150,10 @@ namespace Backend.Services
         /// <summary>
         /// Sends a message within an existing chat session
         /// </summary>
-        public async Task<bool> SendMessage(int sessionId, ChatMessageDto messageDto)
+        public async Task<bool> SendMessage(Guid sessionId, ChatMessageDto messageDto)
         {
             var sessionExists = await _context.ChatSessions.AnyAsync(s => s.ChatSessionId == sessionId);
-            if (!sessionExists)
-            {
-                return false; // Chat session doesn't exist
-            }
+            if (!sessionExists) return false;
 
             var message = new ChatMessage
             {
@@ -161,7 +163,6 @@ namespace Backend.Services
                 SentAt = DateTime.UtcNow
             };
 
-            
             _context.ChatMessages.Add(message);
             await _context.SaveChangesAsync();
 

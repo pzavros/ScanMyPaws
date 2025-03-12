@@ -77,6 +77,7 @@ namespace Backend.Services
             return new PetProfileDto
             {
                 PetID = petProfile.PetID,
+                UserID = petProfile.UserID,
                 PetName = petProfile.PetName,
                 BreedID = petProfile.BreedID,
                 BreedName = petProfile.DogBreed?.BreedName,

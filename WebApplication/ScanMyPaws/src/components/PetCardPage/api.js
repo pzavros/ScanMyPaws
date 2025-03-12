@@ -66,11 +66,14 @@ export const updatePetCardSetting = async (petCardSettingId, settingData) => {
 };
 
 export const createChatSession = async (payload) => {
+  console.log("Sending chat session request with payload:", payload);
+
   try {
     const response = await axios.post(`${API_BASE_URL}/api/chat/session`, payload);
+    console.log("API Response:", response.data); 
     return response.data;
   } catch (error) {
-    console.error("Error creating chat session:", error);
+    console.error("Error creating chat session:", error.response?.data || error.message);
     throw error;
   }
 };

@@ -12,55 +12,77 @@ const PublicChatPage = () => {
   const chatEndRef = useRef(null);
 
   useEffect(() => {
-    // Get stored session details
     const storedFinderId = sessionStorage.getItem("finderEphemeralId");
-
+    const storedSessionId = sessionStorage.getItem("chatSessionId");
+  
     if (!storedFinderId) {
       alert("Your chat session has expired. Starting a new chat.");
-      navigate(-1); // Go back to the previous page
+      navigate(-1);
       return;
     }
-
+  
+    if (!storedSessionId) {
+      alert("No active chat session found.");
+      navigate(-1);
+      return;
+    }
+  
     setFinderEphemeralId(storedFinderId);
-
-    // Fetch messages on load
     fetchMessages();
-
-    // Polling (or use WebSockets for real-time updates)
+  
     const interval = setInterval(fetchMessages, 3000);
     return () => clearInterval(interval);
   }, [sessionId]);
+  
 
   const fetchMessages = async () => {
+    console.log("Fetching messages for Chat Session ID:", sessionId);
+  
     try {
       const chatData = await fetchChatMessages(sessionId);
-      setMessages(chatData.messages);
+      if (Array.isArray(chatData)) {
+        setMessages(chatData);
+      } else if (chatData.messages) {
+        setMessages(chatData.messages);
+      } else {
+        console.warn("Unexpected chat data format:", chatData);
+      }
+      
       scrollToBottom();
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
+  
+  
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
-
+  
     const payload = {
-        senderId: finderEphemeralId,
-        messageContent: newMessage,
+      senderId: finderEphemeralId, // Ensure this is set correctly
+      messageContent: newMessage,  // Ensure content is passed correctly
     };
-
-    console.log("Sending message payload:", payload); // Debugging
-
+  
     try {
-        const response = await sendMessage(sessionId, payload);
-        console.log("Message sent successfully:", response); // Log response
-        setNewMessage("");
-        fetchMessages();
+      await sendMessage(sessionId, payload);
+      
+      // Immediately update messages locally
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          senderId: finderEphemeralId,
+          messageContent: newMessage,
+          sentAt: new Date().toISOString(), // Add timestamp
+        },
+      ]);
+  
+      setNewMessage("");
     } catch (error) {
-        console.error("Error sending message:", error.response?.data || error.message);
+      console.error("Error sending message:", error.response?.data || error.message);
     }
-};
-
+  };
+  
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });

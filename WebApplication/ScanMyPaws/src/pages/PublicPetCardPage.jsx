@@ -4,13 +4,13 @@ import LoadingIndicator from "../components/ReusableComponents/LoadingIndicator"
 import { fetchPublicPetCard } from "../components/PetCardPage/api";
 import PetCard from "../components/PetCardPage/PetCard";
 import { Button, Box } from "@mui/material";
-import StartChatModal from "../components/PetCardPage/StartChatModal"; // Import the chat modal
+import StartChatModal from "../components/PetCardPage/StartChatModal";
 
 const PublicPetCardPage = () => {
   const { uniqueUrl } = useParams();
   const [petDetails, setPetDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [openChatModal, setOpenChatModal] = useState(false); // Modal state
+  const [openChatModal, setOpenChatModal] = useState(false); 
 
   useEffect(() => {
     const fetchDetails = async () => {
