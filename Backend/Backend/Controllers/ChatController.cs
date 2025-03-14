@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Backend.Interfaces;
 using Backend.DTOs;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.Controllers
 {
@@ -61,13 +62,27 @@ namespace Backend.Controllers
             var messages = await _chatService.GetMessagesBySessionId(sessionId);
             return Ok(new { messages });
         }
-        
+
         /// <summary>
         /// Sends a message in a chat session
         /// </summary>
+        [AllowAnonymous]
         [HttpPost("send/{sessionId}")]
         public async Task<ActionResult> SendMessage(Guid sessionId, [FromBody] ChatMessageDto messageDto)
         {
+            // If there's a token with "UserId", set that
+            var userIdClaim = User.FindFirst("UserId");
+            if (userIdClaim != null && User.Identity.IsAuthenticated)
+            {
+                messageDto.SenderId = userIdClaim.Value;
+            }
+            // Else if no token, rely on senderId from the body (e.g. ephemeral ID).
+            else if (string.IsNullOrWhiteSpace(messageDto.SenderId))
+            {
+                return BadRequest(new { message = "SenderId is required for anonymous." });
+            }
+
+            // then proceed
             if (string.IsNullOrWhiteSpace(messageDto.MessageContent))
             {
                 return BadRequest(new { message = "Message content cannot be empty" });
@@ -81,6 +96,7 @@ namespace Backend.Controllers
 
             return Ok(new { message = "Message sent successfully" });
         }
+
         [HttpGet("sessions/user")]
         public async Task<ActionResult<IEnumerable<ChatSessionDto>>> GetOwnerChatSessions()
         {
@@ -92,16 +108,20 @@ namespace Backend.Controllers
 
             int ownerUserId = int.Parse(userIdClaim.Value);
             var sessions = await _chatService.GetChatSessionsByOwnerId(ownerUserId);
-    
+
             return Ok(sessions);
         }
+
         [HttpPost("mark-read/{sessionId}")]
-        public async Task<ActionResult> MarkMessagesAsRead(Guid sessionId, [FromBody] string userId)
+        public async Task<ActionResult> MarkMessagesAsRead(Guid sessionId)
         {
-            if (string.IsNullOrEmpty(userId))
+            var userIdClaim = User.FindFirst("UserId");
+            if (userIdClaim == null)
             {
-                return BadRequest(new { message = "User ID is required." });
+                return Unauthorized(new { message = "User ID not found in token" });
             }
+
+            var userId = userIdClaim.Value;
 
             await _chatService.MarkMessagesAsRead(sessionId, userId);
             return Ok(new { message = "Messages marked as read." });

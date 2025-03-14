@@ -65,6 +65,7 @@ const InstructionsPage = React.lazy(() => import("./pages/InstructionsPage"));
 const SchedulesPage = React.lazy(() => import("./pages/SchedulesPage"));
 const PublicChatPage = React.lazy(() => import("./pages/PublicChatPage"));
 const ChatPage = React.lazy(() => import("./pages/ChatPage"));
+const OwnerChatDetailPage = React.lazy(() => import("./pages/OwnerChatDetailPage"));
 
 // PrivateRoute component: if not logged in, redirect to /signin.
 const PrivateRoute = ({ element }) => {
@@ -126,6 +127,7 @@ const RouterContent = () => {
           <Route path="/instructions" element={<PrivateRoute element={<InstructionsPage />} />} />
           <Route path="/schedules" element={<PrivateRoute element={<SchedulesPage />} />} />
           <Route path="/chat" element={<PrivateRoute element={<ChatPage />} />} />
+          <Route path="/owner-chat/:sessionId" element={<PrivateRoute element={<OwnerChatDetailPage />} />} />
 
           {/* Public Routes */}
           <Route path="/signup" element={<SignUpPage />} />

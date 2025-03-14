@@ -23,25 +23,19 @@ export const fetchChatMessages = async (sessionId) => {
   }
 };
 
-export const sendMessage = async (sessionId, messageData) => {
-  console.log("Sending message to session ID:", sessionId, "with data:", messageData);
+export const sendMessage = async (sessionId, messageContent, senderId) => {
+  const payload = {
+    senderId,
+    messageContent,
+  };
 
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/api/chat/send/${sessionId}`,
-      messageData,
-      { headers: { "Content-Type": "application/json" } }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error sending message:", error.response?.data || error.message);
-    throw error;
-  }
+  const response = await axios.post(
+    `${API_BASE_URL}/api/chat/send/${sessionId}`,
+    payload
+  );
+
+  return response.data;
 };
-
-
-
-
 
 export const createChatSession = async (payload) => {
   try {
@@ -81,18 +75,18 @@ export const fetchChatSessionByUserId = async (userId) => {
       return null;
     }
 
-    return response.data[0]; 
+    return response.data[0];
   } catch (error) {
     console.error("Error fetching chat session by user ID:", error);
     return null;
   }
 };
 
-export const markMessagesAsRead = async (sessionId, userId) => {
+export const markMessagesAsRead = async (sessionId) => {
   try {
-    await axios.post( 
-      `${API_BASE_URL}/api/chat/mark-read/${sessionId}`, 
-      { userId }, 
+    await axios.post(
+      `${API_BASE_URL}/api/chat/mark-read/${sessionId}`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -100,7 +94,7 @@ export const markMessagesAsRead = async (sessionId, userId) => {
         },
       }
     );
-    console.log(`Marked messages as read for session ${sessionId} by user ${userId}`);
+    console.log(`Marked messages as read for session ${sessionId}`);
   } catch (error) {
     console.error("Error marking messages as read:", error.response?.data || error.message);
   }

@@ -37,32 +37,30 @@ const PublicChatPage = () => {
       console.error("Error fetching messages:", error);
     }
   };
-  
+
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
-
-    const payload = {
-      senderId: finderEphemeralId,
-      messageContent: newMessage,
-    };
-
+  
+    // Ensure the Finder ID is available
+    const senderId = sessionStorage.getItem("finderEphemeralId");
+  
+    if (!senderId) {
+      console.error("Finder ID is missing. Chat session may have expired.");
+      return;
+    }
+  
+    console.log("Finder sending message with senderId:", senderId);
+  
     try {
-      await sendMessage(sessionId, payload);
-      setMessages(prevMessages => [
-        ...prevMessages,
-        {
-          senderId: finderEphemeralId,
-          messageContent: newMessage,
-          sentAt: new Date().toLocaleTimeString(),
-        },
-      ]);
+      await sendMessage(sessionId, newMessage, senderId);
       setNewMessage("");
-      scrollToBottom();
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error(error);
     }
   };
+  
+
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });

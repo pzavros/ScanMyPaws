@@ -31,7 +31,7 @@ const ChatSessionList = ({ chatSessions, onDelete }) => {
                 return (
                     <ListItem
                         key={session.chatSessionId}
-                        onClick={() => navigate(`/chat/${session.chatSessionId}`)}
+                        onClick={() => navigate(`/owner-chat/${session.chatSessionId}`)}
                         onContextMenu={(e) => {
                             e.preventDefault();
                             handleLongPress(session.chatSessionId);
