@@ -22,7 +22,7 @@ const ChatSessionList = ({ chatSessions }) => {
     return session.messages.some(
       (msg) => msg.senderId === finderId && msg.isRead === false
     );
-  };
+  };  
 
   // Handle right-click ("long press") to select a chat (for potential deletion).
   const handleLongPress = (sessionId, e) => {
@@ -106,4 +106,4 @@ const ChatSessionList = ({ chatSessions }) => {
   );
 };
 
-export default ChatSessionList;
+export default ChatSessionList; 

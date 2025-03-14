@@ -197,7 +197,8 @@ namespace Backend.Services
                     ChatSessionId = m.ChatSessionId,
                     SenderId = m.SenderId,
                     MessageContent = m.MessageContent,
-                    SentAt = m.SentAt
+                    SentAt = m.SentAt,
+                    IsRead = m.IsRead
                 }).ToList()
             }).ToList();
         }
