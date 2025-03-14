@@ -9,10 +9,12 @@ import {
   Box,
   Typography,
   Avatar,
+  Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { deleteChatSession } from "./api"; // <--- Make sure you import the delete function
 
-const ChatSessionList = ({ chatSessions }) => {
+const ChatSessionList = ({ chatSessions, onDeleted }) => {
   const navigate = useNavigate();
   const [selectedChats, setSelectedChats] = useState([]);
 
@@ -22,9 +24,9 @@ const ChatSessionList = ({ chatSessions }) => {
     return session.messages.some(
       (msg) => msg.senderId === finderId && msg.isRead === false
     );
-  };  
+  };
 
-  // Handle right-click ("long press") to select a chat (for potential deletion).
+  // Handle right-click ("long press") to select or deselect a chat
   const handleLongPress = (sessionId, e) => {
     e.preventDefault();
     setSelectedChats((prev) =>
@@ -34,76 +36,120 @@ const ChatSessionList = ({ chatSessions }) => {
     );
   };
 
+  const handleDeleteSelected = async () => {
+    if (selectedChats.length === 0) return;
+  
+    if (!window.confirm("Are you sure you want to delete these chats?")) {
+      return;
+    }
+  
+    try {
+      // Delete them in parallel:
+      await Promise.all(selectedChats.map(id => deleteChatSession(id)));
+  
+      alert("Deleted successfully.");
+      setSelectedChats([]);
+      // Optionally re-fetch your list
+      onDeleted?.();
+    } catch (error) {
+      console.error("Failed to delete chats:", error);
+    }
+  };
+
   return (
-    <List
-      sx={{
-        width: "100%",
-        bgcolor: "background.paper",
-        borderRadius: 2,
-        boxShadow: 1,
-        overflow: "hidden",
-      }}
-    >
-      {chatSessions.map((session) => {
-        const finderName = session.finderName || "Unknown";
-        const finderSurname = session.finderSurname || "User";
+    <Box sx={{ position: "relative", width: "100%" }}>
+      {/* Conditionally show a "Delete" button if anything is selected */}
+      {selectedChats.length > 0 && (
+        <Box sx={{ textAlign: "right", mb: 1 }}>
+          <Button variant="contained" color="error" onClick={handleDeleteSelected}>
+            Delete Selected
+          </Button>
+        </Box>
+      )}
 
-        // Are there any unread from the finder?
-        const hasUnread = hasUnreadFinderMessages(session);
+      <List
+        sx={{
+          width: "100%",
+          bgcolor: "background.paper",
+          borderRadius: 2,
+          boxShadow: 1,
+          overflow: "hidden",
+        }}
+      >
+        {chatSessions.map((session) => {
+          const finderName = session.finderName || "Unknown";
+          const finderSurname = session.finderSurname || "User";
 
-        return (
-          <ListItem
-            key={session.chatSessionId}
-            onClick={() => navigate(`/owner-chat/${session.chatSessionId}`)}
-            onContextMenu={(e) => handleLongPress(session.chatSessionId, e)}
-            sx={{
-              cursor: "pointer",
-              mb: 1,
-              borderRadius: 2,
-              // If selected, gray background. Else if has unread, tinted. Otherwise default.
-              backgroundColor: selectedChats.includes(session.chatSessionId)
-                ? "lightgray"
-                : hasUnread
-                ? "#fff5f5" // a very soft red highlight
-                : "inherit",
-              borderLeft: hasUnread
-                ? "4px solid #f44336" // MUI's red[500]
-                : "4px solid transparent",
-              "&:hover": { backgroundColor: "#f7f7f7" },
-            }}
-          >
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: hasUnread ? "error.main" : "primary.main" }}>
-                {finderName.charAt(0).toUpperCase()}
-              </Avatar>
-            </ListItemAvatar>
+          // Are there any unread from the finder?
+          const hasUnread = hasUnreadFinderMessages(session);
+          const isSelected = selectedChats.includes(session.chatSessionId);
 
-            <ListItemText
-              primary={
-                <Typography fontWeight={hasUnread ? "bold" : "normal"}>
-                  Chat with {finderName} {finderSurname}
-                </Typography>
-              }
-              secondary={
-                hasUnread
-                  ? "New unread messages from finder"
-                  : "All finder messages are read"
-              }
-            />
+          return (
+            <ListItem
+              key={session.chatSessionId}
+              onClick={() => {
+                // If in "selection mode" (long pressed at least once) and we click the item,
+                // we can also toggle selection. Or navigate if we want. It's up to you.
+                if (selectedChats.length > 0) {
+                  // toggle selection on normal click
+                  setSelectedChats((prev) =>
+                    isSelected
+                      ? prev.filter((id) => id !== session.chatSessionId)
+                      : [...prev, session.chatSessionId]
+                  );
+                } else {
+                  // Normal navigation
+                  navigate(`/owner-chat/${session.chatSessionId}`);
+                }
+              }}
+              onContextMenu={(e) => handleLongPress(session.chatSessionId, e)}
+              sx={{
+                cursor: "pointer",
+                mb: 1,
+                borderRadius: 2,
+                backgroundColor: isSelected
+                  ? "lightgray"
+                  : hasUnread
+                  ? "#fff5f5"
+                  : "inherit",
+                borderLeft: hasUnread
+                  ? "4px solid #f44336"
+                  : "4px solid transparent",
+                "&:hover": { backgroundColor: "#f7f7f7" },
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar sx={{ bgcolor: hasUnread ? "error.main" : "primary.main" }}>
+                  {finderName.charAt(0).toUpperCase()}
+                </Avatar>
+              </ListItemAvatar>
 
-            {/* Optionally show a Badge if you want a dot on the right side */}
-            <ListItemSecondaryAction>
-              {hasUnread && (
-                <Badge color="error" variant="dot" overlap="circular">
-                  <Box sx={{ width: 24, height: 24 }} />
-                </Badge>
-              )}
-            </ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
-    </List>
+              <ListItemText
+                primary={
+                  <Typography fontWeight={hasUnread ? "bold" : "normal"}>
+                    Chat with {finderName} {finderSurname}
+                  </Typography>
+                }
+                secondary={
+                  hasUnread
+                    ? "New unread messages from finder"
+                    : "All finder messages are read"
+                }
+              />
+
+              <ListItemSecondaryAction>
+                {hasUnread && (
+                  <Badge color="error" variant="dot" overlap="circular">
+                    <Box sx={{ width: 24, height: 24 }} />
+                  </Badge>
+                )}
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
+      </List>
+    </Box>
   );
 };
 
-export default ChatSessionList; 
+export default ChatSessionList;

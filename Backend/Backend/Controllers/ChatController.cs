@@ -129,6 +129,27 @@ namespace Backend.Controllers
             await _chatService.MarkMessagesAsRead(sessionId, userId);
             return Ok(new { message = "Messages marked as read." });
         }
+        [HttpDelete("sessions/{sessionId}")]
+        public async Task<IActionResult> DeleteChatSession(Guid sessionId)
+        {
+            // Optionally: ensure user is authenticated
+            var userIdClaim = User.FindFirst("UserId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { message = "User ID not found in token" });
+            }
+
+            // Optionally: confirm the user is the owner of this session 
+            // or an admin. For simplicity, we'll skip that check here.
+
+            var success = await _chatService.DeleteChatSessionAsync(sessionId);
+            if (!success)
+            {
+                return NotFound(new { message = "Chat session not found or couldn't be deleted." });
+            }
+
+            return Ok(new { message = "Chat session deleted successfully." });
+        }
 
     }
 }

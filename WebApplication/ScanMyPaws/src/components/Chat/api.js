@@ -134,3 +134,22 @@ export const sendOwnerMessage = async (sessionId, messageContent) => {
 
   return response.data;
 };
+
+
+export const deleteChatSession = async (sessionId) => {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/api/chat/sessions/${sessionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting chat session:", error);
+    throw error;
+  }
+};
+

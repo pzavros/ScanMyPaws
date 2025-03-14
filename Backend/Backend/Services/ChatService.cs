@@ -221,6 +221,26 @@ namespace Backend.Services
             await _context.SaveChangesAsync();
             return true; 
         }
+        public async Task<bool> DeleteChatSessionAsync(Guid sessionId)
+        {
+            // Load the session, including its messages
+            var session = await _context.ChatSessions
+                .Include(s => s.Messages)
+                .FirstOrDefaultAsync(s => s.ChatSessionId == sessionId);
+
+            if (session == null) 
+                return false; // session not found
+
+            // Remove all messages
+            _context.ChatMessages.RemoveRange(session.Messages);
+
+            // Remove the session itself
+            _context.ChatSessions.Remove(session);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
 
 
     }

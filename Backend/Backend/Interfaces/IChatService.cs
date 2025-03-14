@@ -21,5 +21,6 @@ namespace Backend.Interfaces
         Task<bool> SendMessage(Guid sessionId, ChatMessageDto messageDto);
         Task<List<ChatSessionDto>> GetChatSessionsByOwnerId(int ownerUserId);
         Task<bool> MarkMessagesAsRead(Guid chatSessionId, string userId);
+        Task<bool> DeleteChatSessionAsync(Guid sessionId);
     }
 }

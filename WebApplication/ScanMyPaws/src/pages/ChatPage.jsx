@@ -1,5 +1,4 @@
 // ChatPage.jsx
-
 import React, { useEffect, useState } from "react";
 import { fetchOwnerChatSessions } from "../components/Chat/api";
 import Page from "../components/ReusableComponents/Page";
@@ -9,15 +8,12 @@ import { Box, Typography } from "@mui/material";
 const ChatPage = () => {
   const [chatSessions, setChatSessions] = useState([]);
 
-  // Expose this so we can call it anywhere
   const loadChatSessions = async () => {
     try {
       const sessions = await fetchOwnerChatSessions();
-      if (Array.isArray(sessions)) {
-        setChatSessions(sessions);
-      }
+      setChatSessions(sessions);
     } catch (error) {
-      console.error("Error loading chat sessions:", error);
+      console.error(error);
     }
   };
 
@@ -37,8 +33,10 @@ const ChatPage = () => {
             No chat sessions found.
           </Typography>
         ) : (
-          // Pass down the sessions AND a callback to re-fetch them
-          <ChatSessionList chatSessions={chatSessions} refreshSessions={loadChatSessions} />
+          <ChatSessionList
+            chatSessions={chatSessions}
+            onDeleted={loadChatSessions} // <--- so the list can refresh
+          />
         )}
       </Box>
     </Page>
