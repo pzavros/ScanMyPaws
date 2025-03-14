@@ -12,7 +12,7 @@ namespace Backend.Models
         [ForeignKey("ChatSession")]
         public Guid ChatSessionId { get; set; }
 
-        public string SenderId { get; set; }
+        public string? SenderId { get; set; }
 
         public string MessageContent { get; set; }
 

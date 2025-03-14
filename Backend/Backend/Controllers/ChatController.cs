@@ -70,22 +70,24 @@ namespace Backend.Controllers
         [HttpPost("send/{sessionId}")]
         public async Task<ActionResult> SendMessage(Guid sessionId, [FromBody] ChatMessageDto messageDto)
         {
-            // If there's a token with "UserId", set that
+            // If the user is logged in, override SenderId from token.
             var userIdClaim = User.FindFirst("UserId");
             if (userIdClaim != null && User.Identity.IsAuthenticated)
             {
                 messageDto.SenderId = userIdClaim.Value;
             }
-            // Else if no token, rely on senderId from the body (e.g. ephemeral ID).
-            else if (string.IsNullOrWhiteSpace(messageDto.SenderId))
+            else
             {
-                return BadRequest(new { message = "SenderId is required for anonymous." });
+                // If not logged in (anonymous), then we rely on the body for senderId.
+                if (string.IsNullOrWhiteSpace(messageDto.SenderId))
+                {
+                    return BadRequest(new { message = "SenderId is required for anonymous user." });
+                }
             }
 
-            // then proceed
             if (string.IsNullOrWhiteSpace(messageDto.MessageContent))
             {
-                return BadRequest(new { message = "Message content cannot be empty" });
+                return BadRequest(new { message = "Message content cannot be empty." });
             }
 
             var success = await _chatService.SendMessage(sessionId, messageDto);
@@ -96,6 +98,7 @@ namespace Backend.Controllers
 
             return Ok(new { message = "Message sent successfully" });
         }
+
 
         [HttpGet("sessions/user")]
         public async Task<ActionResult<IEnumerable<ChatSessionDto>>> GetOwnerChatSessions()

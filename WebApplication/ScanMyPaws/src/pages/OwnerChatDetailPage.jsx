@@ -1,10 +1,10 @@
 // /pages/OwnerChatDetailPage.jsx
-
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { fetchChatMessages, sendMessage, markMessagesAsRead } from "../components/Chat/api";
+import { fetchChatMessages, sendOwnerMessage, markMessagesAsRead } from "../components/Chat/api";
 import { Box, Typography, TextField, Button, Paper } from "@mui/material";
 import Page from "../components/ReusableComponents/Page";
+
 
 const OwnerChatDetailPage = () => {
   const { sessionId } = useParams();
@@ -39,15 +39,15 @@ const OwnerChatDetailPage = () => {
     if (!newMessage.trim()) return;
   
     try {
-      await sendMessage(sessionId, newMessage);
+      await sendOwnerMessage(sessionId, newMessage);
       setNewMessage("");
+      loadMessages();
     } catch (error) {
       console.error(error);
     }
   };
   
   
-
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };

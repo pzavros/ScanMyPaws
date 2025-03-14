@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { fetchChatMessages, sendMessage } from "../components/Chat/api";
 import { Box, Typography, TextField, Button, Paper } from "@mui/material";
 import Page from "../components/ReusableComponents/Page";
+import { sendFinderMessage } from "../components/Chat/api";
 
 const PublicChatPage = () => {
   const { sessionId } = useParams();
@@ -42,18 +43,15 @@ const PublicChatPage = () => {
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
   
-    // Ensure the Finder ID is available
     const senderId = sessionStorage.getItem("finderEphemeralId");
-  
     if (!senderId) {
-      console.error("Finder ID is missing. Chat session may have expired.");
+      console.error("Finder ID is missing.");
       return;
     }
   
-    console.log("Finder sending message with senderId:", senderId);
-  
+    // Now call the finder function
     try {
-      await sendMessage(sessionId, newMessage, senderId);
+      await sendFinderMessage(sessionId, newMessage, senderId);
       setNewMessage("");
     } catch (error) {
       console.error(error);

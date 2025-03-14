@@ -99,3 +99,38 @@ export const markMessagesAsRead = async (sessionId) => {
     console.error("Error marking messages as read:", error.response?.data || error.message);
   }
 };
+
+// Existing: for the Finder (anonymous user)
+export const sendFinderMessage = async (sessionId, messageContent, senderId) => {
+  const payload = {
+    senderId,       // ephemeral ID for the finder
+    messageContent,
+  };
+
+  // No Authorization header, because finder is anonymous
+  const response = await axios.post(
+    `${API_BASE_URL}/api/chat/send/${sessionId}`,
+    payload
+  );
+  return response.data;
+};
+
+// New: for the Owner (logged in)
+export const sendOwnerMessage = async (sessionId, messageContent) => {
+  const payload = {
+    // No senderId in the body; the controller will set it from the token
+    messageContent,
+  };
+
+  const response = await axios.post(
+    `${API_BASE_URL}/api/chat/send/${sessionId}`,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Must have token
+      },
+    }
+  );
+
+  return response.data;
+};
