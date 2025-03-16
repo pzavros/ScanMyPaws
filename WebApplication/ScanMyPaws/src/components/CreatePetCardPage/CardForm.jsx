@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   TextField,
-  Button,
   Typography,
   Box,
   CircularProgress,
@@ -10,6 +9,7 @@ import {
   Modal,
 } from "@mui/material";
 import Confetti from "react-confetti";
+import Button from "../ReusableComponents/Button"; 
 import { fetchPetDetails, createPetCard } from "./api";
 
 const CardForm = ({ petId }) => {
@@ -32,6 +32,45 @@ const CardForm = ({ petId }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [operationSuccess, setOperationSuccess] = useState(false);
+
+  // Reusable TextField style for both light & dark
+  const textFieldStyle = {
+    backgroundColor: "var(--input-background)",
+    borderRadius: "8px",
+
+    // Label color
+    label: { color: "var(--text-color)" },
+
+    // Single-line input color
+    input: { color: "var(--text-color)" },
+
+    // Ensure textarea in dark mode also uses the correct color
+    "& .MuiOutlinedInput-input": {
+      color: "var(--text-color)",
+    },
+
+    "& .MuiOutlinedInput-multiline": {
+      color: "var(--text-color) !important",
+    },
+
+    "& .MuiInputBase-inputMultiline": {
+      color: "var(--text-color) !important",
+    },
+
+    // Outline border overrides
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "var(--input-border-color)",
+      },
+      "&:hover fieldset": {
+        borderColor: "var(--secondary-color)",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "var(--primary-color)",
+      },
+    },
+  };
+
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -123,7 +162,9 @@ const CardForm = ({ petId }) => {
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+      <Box
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}
+      >
         <CircularProgress />
         <Typography sx={{ ml: 2 }}>Loading pet details...</Typography>
       </Box>
@@ -149,7 +190,7 @@ const CardForm = ({ petId }) => {
           textAlign: "center",
           mb: 3,
           fontWeight: "bold",
-          color: "var(--text-color)",
+          color: "var(--primary-color)",
         }}
       >
         Create Pet Card for {petDetails?.petName}
@@ -158,33 +199,34 @@ const CardForm = ({ petId }) => {
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       {successMessage && <Alert severity="success">{successMessage}</Alert>}
 
+      {/* Read-Only Fields */}
       <TextField
         label="Pet Name"
         value={petDetails?.petName || ""}
         fullWidth
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Breed"
         value={petDetails?.breedName || ""}
         fullWidth
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Age"
         value={petDetails?.age || "N/A"}
         fullWidth
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Sex"
         value={petDetails?.sex || "N/A"}
         fullWidth
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Special Notes"
@@ -193,9 +235,10 @@ const CardForm = ({ petId }) => {
         multiline
         rows={3}
         InputProps={{ readOnly: true }}
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
 
+      {/* Editable Fields */}
       <TextField
         label="Full Name *"
         name="fullName"
@@ -203,7 +246,7 @@ const CardForm = ({ petId }) => {
         onChange={handleChange}
         fullWidth
         required
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Mobile Phone 1 *"
@@ -212,7 +255,7 @@ const CardForm = ({ petId }) => {
         onChange={handleChange}
         fullWidth
         required
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Mobile Phone 2"
@@ -220,7 +263,7 @@ const CardForm = ({ petId }) => {
         value={formData.mobilePhone2}
         onChange={handleChange}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Address *"
@@ -229,7 +272,7 @@ const CardForm = ({ petId }) => {
         onChange={handleChange}
         fullWidth
         required
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Alternative Contact Name"
@@ -237,7 +280,7 @@ const CardForm = ({ petId }) => {
         value={formData.alternativeContactName}
         onChange={handleChange}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Alternative Contact Phone"
@@ -245,7 +288,7 @@ const CardForm = ({ petId }) => {
         value={formData.alternativeContactPhone}
         onChange={handleChange}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Important Information"
@@ -255,7 +298,7 @@ const CardForm = ({ petId }) => {
         multiline
         rows={3}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
       <TextField
         label="Additional Info"
@@ -265,27 +308,32 @@ const CardForm = ({ petId }) => {
         multiline
         rows={4}
         fullWidth
-        InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        sx={textFieldStyle}
       />
 
+      {/* Submit Button */}
       <Button
-        variant="contained"
-        color="primary"
         type="submit"
         fullWidth
         disabled={progress > 0 && progress < 100}
         sx={{
           fontSize: "1rem",
-          padding: "12px",
+          height: "48px",
           borderRadius: "8px",
-          backgroundColor: "var(--primary-color)",
-          "&:hover": { backgroundColor: "var(--primary-color-hover)" },
+          background:
+            "linear-gradient(90deg, rgba(255,111,97,1) 0%, rgba(255,165,97,1) 100%)",
+          color: "#fff",
+          "&:hover": {
+            background:
+              "linear-gradient(90deg, rgba(255,165,97,1) 0%, rgba(255,111,97,1) 100%)",
+          },
         }}
       >
         Generate Pet Card
       </Button>
 
-      <Modal open={isModalOpen} onClose={() => {}}>
+      {/* Modal */}
+      <Modal open={isModalOpen} onClose={() => { }}>
         <Box
           sx={{
             display: "flex",
@@ -293,6 +341,7 @@ const CardForm = ({ petId }) => {
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: "var(--card-background)",
+            color: "var(--text-color)",
             borderRadius: 4,
             padding: 4,
             width: 300,
@@ -300,17 +349,17 @@ const CardForm = ({ petId }) => {
             mt: 10,
           }}
         >
-          <Typography sx={{ color: "var(--text-color)" }}>
+          <Typography>
             {operationSuccess ? "Success!" : "Processing..."}
           </Typography>
           <LinearProgress variant="determinate" value={progress} sx={{ width: "100%", my: 2 }} />
           {operationSuccess ? (
             <Button
               variant="contained"
-              onClick={() => window.location.href = `/petcard/${petId}`}
+              onClick={() => (window.location.href = `/petcard/${petId}`)}
               sx={{
-                backgroundColor: "var(--primary-color)",
-                "&:hover": { backgroundColor: "var(--primary-color-hover)" },
+                backgroundColor: "var(--button-background)",
+                "&:hover": { backgroundColor: "var(--button-hover-background)" },
               }}
             >
               View Card

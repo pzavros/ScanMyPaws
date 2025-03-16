@@ -113,123 +113,118 @@ const PetDetails = () => {
   return (
     <Section>
       <Box
-  sx={{
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 2,
-    mb: 3,
-    width: "100%",
-  }}
->
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "space-around",
-      width: "100%",
-      gap: 2, 
-    }}
-  >
-    {/* Back to Pet List Button */}
-    <Button
-      onClick={() => navigate("/pets")}
-      sx={{
-        backgroundColor: "var(--primary-color)",
-        color: "white",
-        borderRadius: "20px",
-        padding: "6px 10px",
-        fontSize: "0.75rem",
-        fontWeight: "bold",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-        flex: 1, 
-        "&:hover": {
-          backgroundColor: "var(--secondary-color)",
-        },
-      }}
-    >
-      Back
-    </Button>
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+          mb: 3,
+          width: "100%",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            width: "100%",
+            gap: 2,
+          }}
+        >
+          {/* Back to Pet List Button */}
+          <Button
+            onClick={() => navigate("/pets")}
+            sx={{
+              backgroundColor: "var(--primary-color)",
+              color: "white",
+              borderRadius: "20px",
+              padding: "6px 10px",
+              fontSize: "0.75rem",
+              fontWeight: "bold",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+              flex: 1,
+              "&:hover": {
+                backgroundColor: "var(--secondary-color)",
+              },
+            }}
+          >
+            Back
+          </Button>
 
-    {/* Create or View Pet Card Button */}
-    <Button
-      onClick={() =>
-        pet?.isHavingCard
-          ? navigate(`/petcard/${petId}`)
-          : navigate(`/createpetcard/${petId}`)
-      }
-      sx={{
-        background: pet?.isHavingCard
-          ? "linear-gradient(90deg, #4caf50, #81c784)" 
-          : "linear-gradient(90deg, #ff6f61, #ff9671)", 
-        color: "white",
-        borderRadius: "28px",
-        padding: "8px 12px",
-        fontSize: "0.85rem",
-        fontWeight: "bold",
-        boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.15)", 
-        flex: 2, 
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 1,
-        "&:hover": {
-          background: pet?.isHavingCard
-            ? "linear-gradient(90deg, #81c784, #4caf50)"
-            : "linear-gradient(90deg, #ff9671, #ff6f61)",
-          boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
-        },
-      }}
-    >
-      <PetsIcon sx={{ fontSize: "1.1rem" }} />
-      {pet?.isHavingCard ? "View Card" : "Create Card"}
-    </Button>
+          {/* Create or View Pet Card Button */}
+          <Button
+            onClick={() =>
+              pet?.isHavingCard
+                ? navigate(`/petcard/${petId}`)
+                : navigate(`/createpetcard/${petId}`)
+            }
+            sx={{
+              background: pet?.isHavingCard
+                ? "linear-gradient(90deg, #4caf50, #81c784)"
+                : "linear-gradient(90deg, #ff6f61, #ff9671)",
+              color: "white",
+              borderRadius: "28px",
+              padding: "8px 12px",
+              fontSize: "0.85rem",
+              fontWeight: "bold",
+              boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.15)",
+              flex: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+              "&:hover": {
+                background: pet?.isHavingCard
+                  ? "linear-gradient(90deg, #81c784, #4caf50)"
+                  : "linear-gradient(90deg, #ff9671, #ff6f61)",
+                boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
+              },
+            }}
+          >
+            <PetsIcon sx={{ fontSize: "1.1rem" }} />
+            {pet?.isHavingCard ? "View Card" : "Create Card"}
+          </Button>
 
-    {/* Edit Button */}
-    <Button
-      onClick={handleEditToggle}
-      sx={{
-        backgroundColor: "var(--primary-color)",
-        color: "white",
-        borderRadius: "20px",
-        padding: "6px 10px",
-        fontSize: "0.75rem",
-        fontWeight: "bold",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-        flex: 1, 
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        "&:hover": {
-          backgroundColor: "var(--secondary-color)",
-        },
-      }}
-    >
-      <EditIcon sx={{ fontSize: "1.1rem" }} />
-      Edit
-    </Button>
-  </Box>
+          {/* Edit Button */}
+          <Button
+            onClick={handleEditToggle}
+            sx={{
+              backgroundColor: "var(--primary-color)",
+              color: "white",
+              borderRadius: "20px",
+              padding: "6px 10px",
+              fontSize: "0.75rem",
+              fontWeight: "bold",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              "&:hover": {
+                backgroundColor: "var(--secondary-color)",
+              },
+            }}
+          >
+            <EditIcon sx={{ fontSize: "1.1rem" }} />
+            Edit
+          </Button>
+        </Box>
 
-  {/* Explanation Text for Create Pet Card */}
-  {!pet?.isHavingCard && (
-    <Typography
-      variant="body2"
-      sx={{
-        color: "var(--text-color-secondary)",
-        textAlign: "center",
-        maxWidth: "90%",
-        fontSize: "0.75rem",
-        marginTop: "8px", 
-      }}
-    >
-      Tap "Create Card" to generate a QR code for your pet. This card helps others return your pet if it's lost.
-    </Typography>
-  )}
-</Box>
-
-
-
-
-
+        {/* Explanation Text for Create Pet Card */}
+        {!pet?.isHavingCard && (
+          <Typography
+            variant="body2"
+            sx={{
+              color: "var(--text-color-secondary)",
+              textAlign: "center",
+              maxWidth: "90%",
+              fontSize: "0.75rem",
+              marginTop: "8px",
+            }}
+          >
+            Tap "Create Card" to generate a QR code for your pet. This card helps others return your pet if it's lost.
+          </Typography>
+        )}
+      </Box>
       <Card
         sx={{
           maxWidth: 800,
@@ -357,7 +352,7 @@ const PetDetails = () => {
                   }),
                   menuPortal: (base) => ({
                     ...base,
-                    zIndex: 9999, 
+                    zIndex: 9999,
                   }),
                   option: (base, state) => ({
                     ...base,

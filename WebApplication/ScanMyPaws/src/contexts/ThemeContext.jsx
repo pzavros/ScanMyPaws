@@ -12,6 +12,7 @@ export const ThemeProvider = ({ children }) => {
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    window.location.reload();
   };
 
   return (

@@ -6,7 +6,7 @@ import { ThemeProvider as MUIThemeProvider, createTheme } from '@mui/material/st
 import './index.css';
 import './i18n.js';
 
-const theme = createTheme(); // Create the MUI theme directly here
+const theme = createTheme();
 
 createRoot(document.getElementById('root')).render(
     <MUIThemeProvider theme={theme}>
