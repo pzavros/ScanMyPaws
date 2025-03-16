@@ -103,14 +103,15 @@ const App = () => {
 const RouterContent = () => {
   const location = useLocation();
 
-  // Hide TopNavbar on auth pages and on public pet card pages.
+  // Hide TopNavbar on auth pages, public pet cards, and public chat pages.
   const hideNavPages = ["/signin", "/signup"];
   const isPublicPetCard = location.pathname.startsWith("/public-petcard/");
-  const shouldHideNav = hideNavPages.includes(location.pathname.toLowerCase()) || isPublicPetCard;
+  const isPublicChat = location.pathname.startsWith("/chat/"); // ✅ Hide for public chat (finder)
+  const shouldHideNav = hideNavPages.includes(location.pathname.toLowerCase()) || isPublicPetCard || isPublicChat;
 
   return (
     <>
-      {!shouldHideNav && <TopNavbar />}
+      {!shouldHideNav && <TopNavbar />} {/* ✅ Hides navbar for public chat */}
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           {/* Protected Routes */}
@@ -133,7 +134,7 @@ const RouterContent = () => {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/public-petcard/:uniqueUrl" element={<PublicPetCardPage />} />
-          <Route path="/chat/:sessionId" element={<PublicChatPage />} />
+          <Route path="/chat/:sessionId" element={<PublicChatPage />} /> {/* Public Chat */}
 
           {/* Fallback */}
           <Route path="*" element={<div>Page Not Found</div>} />

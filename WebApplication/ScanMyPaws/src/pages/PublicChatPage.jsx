@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchChatMessages, sendMessage } from "../components/Chat/api";
+import { fetchChatMessages, sendFinderMessage } from "../components/Chat/api";
 import { Box, Typography, TextField, Button, Paper } from "@mui/material";
-import Page from "../components/ReusableComponents/Page";
-import { sendFinderMessage } from "../components/Chat/api";
 
 const PublicChatPage = () => {
   const { sessionId } = useParams();
@@ -11,7 +9,8 @@ const PublicChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [finderEphemeralId, setFinderEphemeralId] = useState(null);
-  const chatEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
+  const isSendingMessage = useRef(false);
 
   useEffect(() => {
     const storedFinderId = sessionStorage.getItem("finderEphemeralId");
@@ -31,80 +30,94 @@ const PublicChatPage = () => {
   const fetchMessages = async () => {
     try {
       const chatData = await fetchChatMessages(sessionId);
-      console.log("Fetched Messages:", chatData);
       setMessages(chatData);
-      scrollToBottom();
+
+      if (isSendingMessage.current) {
+        scrollToBottom();
+        isSendingMessage.current = false;
+      }
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
 
-
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
-  
+
     const senderId = sessionStorage.getItem("finderEphemeralId");
     if (!senderId) {
       console.error("Finder ID is missing.");
       return;
     }
-  
-    // Now call the finder function
+
     try {
+      isSendingMessage.current = true;
       await sendFinderMessage(sessionId, newMessage, senderId);
       setNewMessage("");
+      fetchMessages();
     } catch (error) {
       console.error(error);
     }
   };
-  
-
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    chatContainerRef.current?.scrollTo({
+      top: chatContainerRef.current.scrollHeight,
+      behavior: "smooth",
+    });
   };
 
   return (
-    <Page>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+        maxWidth: "600px",
+        margin: "auto",
+        backgroundColor: "var(--background-color)",
+        color: "var(--text-color)",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+      }}
+    >
+      {/* Chat Title */}
       <Box
         sx={{
-          maxWidth: "600px",
-          margin: "auto",
-          padding: "16px",
+          padding: "12px",
+          textAlign: "center",
           backgroundColor: "var(--background-color)",
-          color: "var(--text-color)",
-          minHeight: "80vh",
-          display: "flex",
-          flexDirection: "column",
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-          borderRadius: "8px",
         }}
       >
-        <Typography variant="h5" sx={{ textAlign: "center", mb: 2 }}>
-          Chat with the Pet Owner
-        </Typography>
+        <Typography variant="h5">Chat with the Owner</Typography>
+      </Box>
 
-        <Paper
-          sx={{
-            flex: 1,
-            padding: 2,
-            overflowY: "auto",
-            backgroundColor: "var(--card-background)",
-            borderRadius: "8px",
-            maxHeight: "50vh",
-          }}
-        >
-          {messages.length === 0 ? (
-            <Typography variant="body2" sx={{ textAlign: "center", opacity: 0.6 }}>
-              No messages yet.
-            </Typography>
-          ) : (
-            messages.map((msg, index) => (
+      {/* Scrollable Messages Container */}
+      <Box
+        ref={chatContainerRef}
+        sx={{
+          flex: 1,
+          padding: "16px",
+          overflowY: "auto",
+          backgroundColor: "var(--card-background)",
+          borderRadius: "8px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {messages.length === 0 ? (
+          <Typography variant="body2" sx={{ textAlign: "center", opacity: 0.6 }}>
+            No messages yet.
+          </Typography>
+        ) : (
+          messages.map((msg, index) => {
+            const isFinder = msg.senderId === finderEphemeralId;
+            return (
               <Box
                 key={index}
                 sx={{
                   display: "flex",
-                  flexDirection: msg.senderId === finderEphemeralId ? "row-reverse" : "row",
+                  flexDirection: isFinder ? "row-reverse" : "row",
                   alignItems: "center",
                   mb: 1,
                 }}
@@ -112,37 +125,80 @@ const PublicChatPage = () => {
                 <Paper
                   sx={{
                     padding: "8px 12px",
-                    borderRadius: "10px",
-                    backgroundColor:
-                      msg.senderId === finderEphemeralId
-                        ? "var(--button-background)"
-                        : "var(--input-background)",
-                    color: msg.senderId === finderEphemeralId ? "#fff" : "var(--text-color)",
+                    borderRadius: "16px",
+                    backgroundColor: isFinder ? "#1976d2" : "#e0e0e0",
+                    color: isFinder ? "#fff" : "#000",
+                    maxWidth: "75%",
+                    wordBreak: "break-word",
+                    boxShadow: "2px 2px 5px rgba(0,0,0,0.1)",
                   }}
                 >
-                  {msg.messageContent}
+                  <Typography variant="body1">{msg.messageContent}</Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "block",
+                      textAlign: "right",
+                      opacity: 0.7,
+                      fontSize: "0.75rem",
+                      marginTop: "4px",
+                    }}
+                  >
+                    {new Date(msg.sentAt).toLocaleTimeString()}
+                  </Typography>
                 </Paper>
               </Box>
-            ))
-          )}
-          <div ref={chatEndRef}></div>
-        </Paper>
-
-        <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Type your message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            sx={{ backgroundColor: "var(--input-background)" }}
-          />
-          <Button variant="contained" onClick={handleSendMessage}>
-            Send
-          </Button>
-        </Box>
+            );
+          })
+        )}
       </Box>
-    </Page>
+
+      {/* Fixed Input Field */}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          display: "flex",
+          gap: 1,
+          padding: "10px",
+          backgroundColor: "var(--background-color)",
+          borderTop: "1px solid #ddd",
+          zIndex: 1000,
+        }}
+      >
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Type your message..."
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          sx={{
+            backgroundColor: "var(--input-background)",
+            borderRadius: "25px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "25px",
+              paddingLeft: "12px",
+            },
+          }}
+        />
+        <Button
+          variant="contained"
+          onClick={handleSendMessage}
+          sx={{
+            borderRadius: "50px",
+            padding: "12px 20px",
+            backgroundColor: "#1976d2",
+            "&:hover": {
+              backgroundColor: "#1565c0",
+            },
+          }}
+        >
+          Send
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

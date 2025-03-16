@@ -103,7 +103,7 @@ export const markMessagesAsRead = async (sessionId) => {
 // Existing: for the Finder (anonymous user)
 export const sendFinderMessage = async (sessionId, messageContent, senderId) => {
   const payload = {
-    senderId,       // ephemeral ID for the finder
+    senderId,  
     messageContent,
   };
 
@@ -118,7 +118,6 @@ export const sendFinderMessage = async (sessionId, messageContent, senderId) => 
 // New: for the Owner (logged in)
 export const sendOwnerMessage = async (sessionId, messageContent) => {
   const payload = {
-    // No senderId in the body; the controller will set it from the token
     messageContent,
   };
 
@@ -127,7 +126,7 @@ export const sendOwnerMessage = async (sessionId, messageContent) => {
     payload,
     {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Must have token
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }
   );
