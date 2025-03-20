@@ -66,6 +66,7 @@ const SchedulesPage = React.lazy(() => import("./pages/SchedulesPage"));
 const PublicChatPage = React.lazy(() => import("./pages/PublicChatPage"));
 const ChatPage = React.lazy(() => import("./pages/ChatPage"));
 const OwnerChatDetailPage = React.lazy(() => import("./pages/OwnerChatDetailPage"));
+const SettingsPage = React.lazy(() => import("./pages/SettingsPage"));
 
 // PrivateRoute component: if not logged in, redirect to /signin.
 const PrivateRoute = ({ element }) => {
@@ -106,12 +107,12 @@ const RouterContent = () => {
   // Hide TopNavbar on auth pages, public pet cards, and public chat pages.
   const hideNavPages = ["/signin", "/signup"];
   const isPublicPetCard = location.pathname.startsWith("/public-petcard/");
-  const isPublicChat = location.pathname.startsWith("/chat/"); // ✅ Hide for public chat (finder)
+  const isPublicChat = location.pathname.startsWith("/chat/");
   const shouldHideNav = hideNavPages.includes(location.pathname.toLowerCase()) || isPublicPetCard || isPublicChat;
 
   return (
     <>
-      {!shouldHideNav && <TopNavbar />} {/* ✅ Hides navbar for public chat */}
+      {!shouldHideNav && <TopNavbar />}
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           {/* Protected Routes */}
@@ -129,6 +130,7 @@ const RouterContent = () => {
           <Route path="/schedules" element={<PrivateRoute element={<SchedulesPage />} />} />
           <Route path="/chat" element={<PrivateRoute element={<ChatPage />} />} />
           <Route path="/owner-chat/:sessionId" element={<PrivateRoute element={<OwnerChatDetailPage />} />} />
+          <Route path="/settings" element={<PrivateRoute element={<SettingsPage />} />} />
 
           {/* Public Routes */}
           <Route path="/signup" element={<SignUpPage />} />
