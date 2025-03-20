@@ -72,18 +72,30 @@ namespace Backend.Services
                 FailedLoginAttempts = user.FailedLoginAttempts
             };
         }
-
-
-
         public async Task<UserDto> UpdateUserProfile(UserDto userDto)
         {
+            if (userDto == null)
+            {
+                throw new ArgumentNullException(nameof(userDto), "User data cannot be null.");
+            }
+
             var user = await _context.Users.FindAsync(userDto.UserID);
             if (user == null) return null;
 
             user.FirstName = userDto.FirstName;
             user.LastName = userDto.LastName;
             user.PhoneNumber = userDto.PhoneNumber;
-            user.DateOfBirth = userDto.DateOfBirth;
+
+            // Handle dateOfBirth correctly
+            if (userDto.DateOfBirth.HasValue)
+            {
+                user.DateOfBirth = userDto.DateOfBirth.Value;
+            }
+            else
+            {
+                user.DateOfBirth = null; // Avoid errors when it's empty
+            }
+
             user.Gender = userDto.Gender;
             user.Address = userDto.Address;
             user.City = userDto.City;
@@ -91,12 +103,11 @@ namespace Backend.Services
             user.Country = userDto.Country;
             user.ZipCode = userDto.ZipCode;
 
-            user.DateModified = DateTime.Now;
+            user.DateModified = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
             return userDto;
         }
-
         public async Task<bool> DeactivateUser(int userId)
         {
             var user = await _context.Users.FindAsync(userId);

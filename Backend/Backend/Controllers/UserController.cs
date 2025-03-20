@@ -88,14 +88,37 @@ namespace Backend.Controllers
         }
 
         [HttpPut("profile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] UserDto userDto)
+        [Consumes("application/json")] // Ensure JSON format
+        public async Task<IActionResult> UpdateProfile([FromBody] UserDto? userDto)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            userDto.UserID = userId;
+            if (userDto == null)
+            {
+                return BadRequest(new { message = "Invalid request, userDto is missing or incorrectly formatted." });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                return Unauthorized("UserID claim is missing from the token.");
+            }
+
+            if (!int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized("Invalid UserID format in the token.");
+            }
+
+            userDto.UserID = userId; // Assign userId from the JWT token
 
             var updatedUser = await _userService.UpdateUserProfile(userDto);
             if (updatedUser == null)
+            {
                 return NotFound(new { message = "User not found." });
+            }
 
             return Ok(updatedUser);
         }

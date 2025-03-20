@@ -28,10 +28,37 @@ export const fetchUserProfile = async () => {
 // Update User Profile
 export const updateUserProfile = async (userData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/api/User/profile`, userData, getAuthHeader());
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("User is not authenticated. Token missing.");
+    }
+
+    // Ensure dateOfBirth is sent correctly
+    if (!userData.dateOfBirth || userData.dateOfBirth.trim() === "") {
+      userData.dateOfBirth = null;
+    } else {
+      const parsedDate = new Date(userData.dateOfBirth);
+      if (!isNaN(parsedDate.getTime())) {
+        userData.dateOfBirth = parsedDate.toISOString();
+      } else {
+        userData.dateOfBirth = null;
+      }
+    }
+
+    const response = await axios.put(
+      `${API_BASE_URL}/api/User/profile`,
+      JSON.stringify(userData),
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Ensure token is sent
+        },
+      }
+    );
+
     return response.data;
   } catch (error) {
-    console.error("Error updating user profile:", error);
+    console.error("Error updating user profile:", error.response?.data || error.message);
     throw error;
   }
 };
