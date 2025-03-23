@@ -7,6 +7,8 @@ public class PetProfileDto
     public string? BreedName { get; set; }
     public string? UniqueUrl { get; set; }
     public int? Age { get; set; }
+    public int? Weight { get; set; }
+    public string? Size { get; set; }
     public bool IsTransferred { get; set; }
     public bool IsActive { get; set; }
     public bool IsDeleted { get; set; }

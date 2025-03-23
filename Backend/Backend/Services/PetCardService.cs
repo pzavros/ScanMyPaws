@@ -67,7 +67,8 @@ namespace Backend.Services
                 SpecialNotes = petCardDto.SpecialNotes,
                 Photo = petCardDto.Photo,
                 Weight = petCardDto.Weight,
-                UniqueUrl = uniqueUrl
+                UniqueUrl = uniqueUrl,
+                Size = petCardDto.Size,
             };
 
             _context.PetCards.Add(petCard);

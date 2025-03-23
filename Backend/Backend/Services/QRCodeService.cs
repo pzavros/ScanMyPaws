@@ -6,6 +6,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services
 {
@@ -99,11 +100,41 @@ namespace Backend.Services
             if (qrCode == null || qrCode.IsScannedForFirstTime == true)
                 return false;
 
-            qrCode.IsScannedForFirstTime = true;
-            qrCode.DateModified = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        
+        public async Task<bool> ScanQRCodeByData(string data)
+        {
+            var qrCode = await _context.QRCodes
+                .FirstOrDefaultAsync(q => q.QRCodeData == data);
+
+            if (qrCode == null)
+                throw new Exception("QR code not found.");
+
+            if (qrCode.IsScannedForFirstTime == true)
+                throw new Exception("This QR code has already been used.");
 
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<QRCodeDto> GetQRCodeByData(string qrCodeData)
+        {
+            var qrCode = await _context.QRCodes.FirstOrDefaultAsync(q => q.QRCodeData == qrCodeData);
+            if (qrCode == null) return null;
+
+            return new QRCodeDto
+            {
+                QRCodeID = qrCode.QRCodeID,
+                QRCodeData = qrCode.QRCodeData,
+                QRCodeImage = qrCode.QRCodeImage,
+                IsScannedForFirstTime = qrCode.IsScannedForFirstTime,
+                IsActive = qrCode.IsActive,
+                IsDeleted = qrCode.IsDeleted,
+                DateGenerated = qrCode.DateGenerated,
+                PetProfileID = qrCode.PetProfileID
+            };
+        }
+
     }
 }

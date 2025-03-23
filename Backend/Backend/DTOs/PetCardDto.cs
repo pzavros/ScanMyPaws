@@ -21,5 +21,6 @@ namespace Backend.Dtos
         public string? SpecialNotes { get; set; }
         public byte[]? Photo { get; set; }
         public double? Weight { get; set; }
+        public string? Size { get; set; }
     }
 }

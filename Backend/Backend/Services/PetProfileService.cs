@@ -47,7 +47,9 @@ namespace Backend.Services
                 Sex = petProfileDto.Sex,
                 Photo = petProfileDto.Photo,
                 SpecialNotes = petProfileDto.SpecialNotes,
-                UniqueUrl = uniqueUrl // Save only the unique segment
+                UniqueUrl = uniqueUrl,
+                Weight = petProfileDto.Weight,
+                Size = petProfileDto.Size,
             };
 
             _context.PetProfiles.Add(petProfile);
@@ -86,7 +88,9 @@ namespace Backend.Services
                 SpecialNotes = petProfile.SpecialNotes,
                 Photo = petProfile.Photo,
                 IsHavingCard = petProfile.IsHavingCard,
-                UniqueUrl = petProfile.UniqueUrl // Include the unique URL
+                UniqueUrl = petProfile.UniqueUrl,
+                Weight = petProfile.Weight,
+                Size = petProfile.Size
             };
         }
 
@@ -113,7 +117,9 @@ namespace Backend.Services
                     BreedName = pet.DogBreed != null ? pet.DogBreed.BreedName : null,
                     Age = pet.Age,
                     Sex = pet.Sex,
-                    SpecialNotes = pet.SpecialNotes
+                    SpecialNotes = pet.SpecialNotes,
+                    Weight = pet.Weight,
+                    Size = pet.Size
                 })
                 .ToListAsync();
         }
@@ -128,7 +134,8 @@ namespace Backend.Services
             petProfile.Age = petProfileDto.Age;
             petProfile.Sex = petProfileDto.Sex;
             petProfile.SpecialNotes = petProfileDto.SpecialNotes;
-
+            petProfile.Weight = petProfileDto.Weight;
+            petProfile.Size = petProfileDto.Size;
             if (petProfileDto.Photo != null)
             {
                 petProfile.Photo = petProfileDto.Photo;

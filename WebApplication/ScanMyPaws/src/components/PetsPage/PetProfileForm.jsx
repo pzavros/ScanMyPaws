@@ -4,6 +4,8 @@ import InputField from "../ReusableComponents/InputField";
 import Section from "../ReusableComponents/Section";
 import { createPetProfile, fetchDogBreeds } from "./api";
 import Select from "react-select";
+import { getQRCodeIdByData } from "./api";
+
 
 const PetProfileForm = ({ qrCodeId, onSuccess }) => {
     const [form, setForm] = useState({
@@ -11,8 +13,11 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
         breedId: null,
         age: "",
         sex: "",
+        weight: "",
+        size: "",
         specialNotes: "",
     });
+
     const [image, setImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [breeds, setBreeds] = useState([]);
@@ -50,34 +55,49 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
 
         setError("");
         setImage(file);
-        setImagePreview(URL.createObjectURL(file)); 
+        setImagePreview(URL.createObjectURL(file));
     };
 
     const handleRemoveImage = () => {
-        setImage(null); 
+        setImage(null);
         setImagePreview(null);
     };
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
         setSuccess("");
 
+        // Validation, required fields
+        if (
+            !form.petName ||
+            !form.breedId ||
+            !form.age ||
+            !form.sex ||
+            !form.weight ||
+            !form.size ||
+            !image
+        ) {
+            setError("Please fill in all required fields and upload a photo.");
+            return;
+        }
+
         try {
-            // Prepare form data
+            const qrCodeIdFromData = await getQRCodeIdByData(qrCodeId);
+
             const formData = new FormData();
             formData.append("petName", form.petName);
             formData.append("breedId", form.breedId);
             formData.append("age", form.age);
             formData.append("sex", form.sex);
             formData.append("specialNotes", form.specialNotes);
-            formData.append("qrCodeId", qrCodeId);
+            formData.append("qrCodeId", qrCodeIdFromData);
+            formData.append("weight", form.weight);
+            formData.append("size", form.size);
+            formData.append("Photo", image);
 
-            if (image) {
-                formData.append("Photo", image); 
-            }
-
-            // Call API with form data
             await createPetProfile(formData);
             setSuccess("Pet profile created successfully!");
             onSuccess();
@@ -85,6 +105,8 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
             setError(err.response?.data || "Failed to create pet profile.");
         }
     };
+
+
 
     return (
         <Section
@@ -134,7 +156,7 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                     styles={{
                         control: (provided, state) => ({
                             ...provided,
-                            backgroundColor: "var(--input-background)", 
+                            backgroundColor: "var(--input-background)",
                             color: "var(--text-color)",
                             borderColor: state.isFocused ? "var(--primary-color)" : "var(--input-border-color)",
                             boxShadow: state.isFocused ? "0 0 0 2px var(--primary-color)" : "none",
@@ -145,7 +167,7 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                         menu: (provided) => ({
                             ...provided,
                             backgroundColor: "var(--input-background)",
-                            color: "var(--text-color)", 
+                            color: "var(--text-color)",
                             borderRadius: "8px",
                             zIndex: 9999,
                         }),
@@ -167,7 +189,6 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                     }}
                 />
             </Box>
-
             {/* Age Field */}
             <InputField
                 name="age"
@@ -175,29 +196,136 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                 type="number"
                 value={form.age}
                 onChange={handleChange}
+                required
                 fullWidth
+                inputProps={{ min: 0 }}
+                helperText="Please enter your pet's age in years."
                 sx={{
                     mb: 2,
                     input: { color: "var(--text-color)", backgroundColor: "var(--input-background)" },
                 }}
             />
-
-            {/* Sex Field */}
+            {/* Sex Dropdown */}
+            <Typography variant="body1" sx={{ mt: 2, mb: 1 }}>
+                Select Gender *
+            </Typography>
+            <Box sx={{ mb: 3 }}>
+                <Select
+                    options={[
+                        { value: "Male", label: "Male" },
+                        { value: "Female", label: "Female" },
+                    ]}
+                    value={form.sex ? { value: form.sex, label: form.sex } : null}
+                    onChange={(selectedOption) =>
+                        setForm((prev) => ({ ...prev, sex: selectedOption?.value || "" }))
+                    }
+                    placeholder="Select Gender"
+                    isClearable
+                    styles={{
+                        control: (provided, state) => ({
+                            ...provided,
+                            backgroundColor: "var(--input-background)",
+                            color: "var(--text-color)",
+                            borderColor: state.isFocused ? "var(--primary-color)" : "var(--input-border-color)",
+                            boxShadow: state.isFocused ? "0 0 0 2px var(--primary-color)" : "none",
+                            "&:hover": { borderColor: "var(--primary-color-hover)" },
+                            borderRadius: "8px",
+                            padding: "4px",
+                        }),
+                        menu: (provided) => ({
+                            ...provided,
+                            backgroundColor: "var(--input-background)",
+                            color: "var(--text-color)",
+                            borderRadius: "8px",
+                            zIndex: 9999,
+                        }),
+                        option: (provided, state) => ({
+                            ...provided,
+                            backgroundColor: state.isFocused ? "var(--primary-color)" : "var(--input-background)",
+                            color: state.isFocused ? "white" : "var(--text-color)",
+                            padding: "8px",
+                            "&:hover": { backgroundColor: "var(--primary-color-hover)", color: "white" },
+                        }),
+                        placeholder: (provided) => ({
+                            ...provided,
+                            color: "var(--text-color-secondary)",
+                        }),
+                        singleValue: (provided) => ({
+                            ...provided,
+                            color: "var(--text-color)",
+                        }),
+                    }}
+                />
+            </Box>
             <InputField
-                name="sex"
-                label="Sex"
-                value={form.sex}
+                name="weight"
+                label="Weight (kg)"
+                type="number"
+                value={form.weight}
                 onChange={handleChange}
+                required
+                inputProps={{ min: 0 }}
                 fullWidth
                 sx={{
                     mb: 2,
                     input: { color: "var(--text-color)", backgroundColor: "var(--input-background)" },
                 }}
             />
-
+            <Typography variant="body1" sx={{ mt: 2, mb: 1 }}>
+                Select Pet Size *
+            </Typography>
+            <Box sx={{ mb: 3 }}>
+                <Select
+                    options={[
+                        { value: "Small", label: "Small" },
+                        { value: "Medium", label: "Medium" },
+                        { value: "Large", label: "Large" },
+                    ]}
+                    value={form.size ? { value: form.size, label: form.size } : null}
+                    onChange={(selectedOption) =>
+                        setForm((prev) => ({ ...prev, size: selectedOption?.value || "" }))
+                    }
+                    placeholder="Select Pet Size"
+                    isClearable
+                    styles={{
+                        control: (provided, state) => ({
+                            ...provided,
+                            backgroundColor: "var(--input-background)",
+                            color: "var(--text-color)",
+                            borderColor: state.isFocused ? "var(--primary-color)" : "var(--input-border-color)",
+                            boxShadow: state.isFocused ? "0 0 0 2px var(--primary-color)" : "none",
+                            "&:hover": { borderColor: "var(--primary-color-hover)" },
+                            borderRadius: "8px",
+                            padding: "4px",
+                        }),
+                        menu: (provided) => ({
+                            ...provided,
+                            backgroundColor: "var(--input-background)",
+                            color: "var(--text-color)",
+                            borderRadius: "8px",
+                            zIndex: 9999,
+                        }),
+                        option: (provided, state) => ({
+                            ...provided,
+                            backgroundColor: state.isFocused ? "var(--primary-color)" : "var(--input-background)",
+                            color: state.isFocused ? "white" : "var(--text-color)",
+                            padding: "8px",
+                            "&:hover": { backgroundColor: "var(--primary-color-hover)", color: "white" },
+                        }),
+                        placeholder: (provided) => ({
+                            ...provided,
+                            color: "var(--text-color-secondary)",
+                        }),
+                        singleValue: (provided) => ({
+                            ...provided,
+                            color: "var(--text-color)",
+                        }),
+                    }}
+                />
+            </Box>
             {/* Photo Upload Field */}
             <Typography variant="body1" sx={{ mt: 2, mb: 1 }}>
-                Upload Photo
+                Upload Photo *
             </Typography>
             <Box
                 sx={{
@@ -284,14 +412,14 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                     padding: "12px",
                     borderRadius: "8px",
                     background:
-                      "linear-gradient(90deg, rgba(255,111,97,1) 0%, rgba(255,165,97,1) 100%)",
+                        "linear-gradient(90deg, rgba(255,111,97,1) 0%, rgba(255,165,97,1) 100%)",
                     color: "#fff",
                     textTransform: "none",
                     fontWeight: "bold",
                     borderRadius: "50px",
                     "&:hover": {
-                      background:
-                        "linear-gradient(90deg, rgba(255,165,97,1) 0%, rgba(255,111,97,1) 100%)",
+                        background:
+                            "linear-gradient(90deg, rgba(255,165,97,1) 0%, rgba(255,111,97,1) 100%)",
                     },
                 }}
             >

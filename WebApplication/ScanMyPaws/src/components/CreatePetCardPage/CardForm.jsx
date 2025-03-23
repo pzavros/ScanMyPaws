@@ -9,7 +9,7 @@ import {
   Modal,
 } from "@mui/material";
 import Confetti from "react-confetti";
-import Button from "../ReusableComponents/Button"; 
+import Button from "../ReusableComponents/Button";
 import { fetchPetDetails, createPetCard } from "./api";
 
 const CardForm = ({ petId }) => {
@@ -22,6 +22,7 @@ const CardForm = ({ petId }) => {
     alternativeContactPhone: "",
     importantInformation: "",
     additionalInfo: "",
+    specialNotes: "",
   });
 
   const [petDetails, setPetDetails] = useState(null);
@@ -132,6 +133,8 @@ const CardForm = ({ petId }) => {
         sex: petDetails.sex,
         specialNotes: petDetails.specialNotes,
         photo: petDetails.photo,
+        weight: petDetails.weight,
+        size: petDetails.size
       };
 
       const simulateProgress = () => {
@@ -229,15 +232,29 @@ const CardForm = ({ petId }) => {
         sx={textFieldStyle}
       />
       <TextField
-        label="Special Notes"
-        value={petDetails?.specialNotes || "N/A"}
+        label="Weight"
+        value={petDetails?.weight || "N/A"}
         fullWidth
-        multiline
-        rows={3}
         InputProps={{ readOnly: true }}
         sx={textFieldStyle}
       />
-
+      <TextField
+        label="Size"
+        value={petDetails?.size || "N/A"}
+        fullWidth
+        InputProps={{ readOnly: true }}
+        sx={textFieldStyle}
+      />
+      <TextField
+        label="Special Notes"
+        name="specialNotes"
+        value={formData.specialNotes || ""}
+        onChange={handleChange}
+        fullWidth
+        multiline
+        rows={3}
+        sx={textFieldStyle}
+      />
       {/* Editable Fields */}
       <TextField
         label="Full Name *"

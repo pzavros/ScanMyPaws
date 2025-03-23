@@ -1,54 +1,64 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, Alert, Typography, Card } from "@mui/material";
 import Section from "../ReusableComponents/Section";
-import { scanQRCode } from "./api";
+import { scanQRCodeByData } from "./api";
 import Webcam from "react-webcam";
 import jsQR from "jsqr";
-import Button from "../ReusableComponents/Button"; 
+import Button from "../ReusableComponents/Button";
 
 const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
   const [qrError, setQrError] = useState("");
   const [scannedCode, setScannedCode] = useState(null);
   const webcamRef = useRef(null);
 
+  // 1. Use a ref to store the interval ID
+  const scanIntervalRef = useRef(null);
+
+  // This function checks the webcam feed and attempts to decode a QR code
   const captureAndDecode = () => {
-    const canvas = document.createElement("canvas");
-    const video = webcamRef.current?.video;
-
-    if (!video) return;
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, canvas.width, canvas.height);
-
-    if (code) {
-      setScannedCode(code.data);
-      clearInterval(scanInterval); // Stop scanning once a QR code is detected
-    }
-  };
-
-  const handleSubmit = async () => {
     try {
-      if (!scannedCode) {
-        setQrError("No QR code detected.");
-        return;
+      const video = webcamRef.current?.video;
+      if (!video) return;
+
+      if (video.videoWidth <= 0 || video.videoHeight <= 0) return;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+      if (code) {
+        // Store the entire string instead of parseInt
+        setScannedCode(code.data);
+
+        // Stop scanning
+        if (scanIntervalRef.current) {
+          clearInterval(scanIntervalRef.current);
+        }
       }
-      await scanQRCode(scannedCode);
-      onScanSuccess(scannedCode);
     } catch (error) {
-      setQrError(error.message || "An error occurred while validating the QR Code.");
+      console.error("QR scanning error:", error);
+      setQrError("An error occurred while scanning the QR code.");
     }
   };
 
-  const handleSimulateScan = () => {
-    const simulatedCode = "2"; // Simulated QRCodeID for testing
-    setScannedCode(simulatedCode);
-  };
 
+  // 2. Start scanning at an interval once the component mounts
+  useEffect(() => {
+    scanIntervalRef.current = setInterval(captureAndDecode, 1000);
+
+    return () => {
+      if (scanIntervalRef.current) {
+        clearInterval(scanIntervalRef.current);
+      }
+    };
+  }, []);
+
+  // Ask for camera access when the component mounts
   useEffect(() => {
     async function requestCameraAccess() {
       try {
@@ -59,6 +69,29 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
     }
     requestCameraAccess();
   }, []);
+
+  const handleSubmit = async () => {
+    if (!scannedCode) {
+      setQrError("No QR code detected.");
+      return;
+    }
+    try {
+      await scanQRCodeByData(scannedCode);
+      onScanSuccess(scannedCode);
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Error while validating the QR Code.";
+      setQrError(errorMessage);
+    }
+  };
+
+
+
+  // For testing only – do NOT use in production
+  const handleSimulateScan = () => {
+    const simulatedId = 2;
+    setScannedCode(simulatedId);
+  };
 
   return (
     <Section>
@@ -120,11 +153,7 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
             maxWidth: 600,
           }}
         >
-          {scannedCode && (
-            <Button onClick={handleSubmit}>
-              Submit
-            </Button>
-          )}
+          {scannedCode && <Button onClick={handleSubmit}>Submit</Button>}
           <Button onClick={handleSimulateScan} variant="outlined">
             Simulate QR Code Scan
           </Button>

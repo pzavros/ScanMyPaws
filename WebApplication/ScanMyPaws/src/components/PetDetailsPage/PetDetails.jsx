@@ -31,6 +31,8 @@ const PetDetails = () => {
         setForm({
           ...petDetails,
           breed: petDetails.breedID,
+          weight: petDetails.weight || "",
+          size: petDetails.size || ""
         });
         setImagePreview(
           petDetails.photo ? `data:image/jpeg;base64,${petDetails.photo}` : null
@@ -79,6 +81,8 @@ const PetDetails = () => {
       payload.append("Age", form.age);
       payload.append("BreedID", form.breed);
       payload.append("Sex", form.sex);
+      payload.append("Weight", form.weight);
+      payload.append("Size", form.size);
       payload.append("SpecialNotes", form.specialNotes);
 
       if (form.photo instanceof File) {
@@ -371,6 +375,58 @@ const PetDetails = () => {
                 }}
                 menuPortalTarget={document.body}
               />
+              <TextField
+                label="Weight (kg)"
+                name="weight"
+                value={form.weight}
+                onChange={handleInputChange}
+                fullWidth
+                type="number"
+                sx={{
+                  mb: 2,
+                  backgroundColor: "var(--input-background)",
+                  borderRadius: "8px",
+                  input: { color: "var(--text-color)" },
+                  label: { color: "var(--text-color)" },
+                }}
+              />
+              <Typography
+                variant="body1"
+                sx={{ mb: 1, color: "var(--text-color)" }}
+              >
+                Select Pet Size
+              </Typography>
+              <Select
+                options={[
+                  { value: "Small", label: "Small" },
+                  { value: "Medium", label: "Medium" },
+                  { value: "Large", label: "Large" }
+                ]}
+                value={form.size ? { value: form.size, label: form.size } : null}
+                onChange={(selectedOption) =>
+                  setForm((prev) => ({ ...prev, size: selectedOption?.value || "" }))
+                }
+                placeholder="Select Pet Size"
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    backgroundColor: "var(--input-background)",
+                    borderRadius: "8px",
+                    marginBottom: "16px",
+                  }),
+                  singleValue: (base) => ({ ...base, color: "white" }),
+                  menu: (base) => ({ ...base, backgroundColor: "var(--input-background)", zIndex: 10 }),
+                  option: (base, state) => ({
+                    ...base,
+                    color: state.isSelected ? "var(--primary-color)" : "white",
+                    backgroundColor: state.isSelected ? "var(--secondary-color)" : "var(--input-background)",
+                    "&:hover": {
+                      backgroundColor: "var(--primary-color-hover)",
+                    },
+                  }),
+                  placeholder: (base) => ({ ...base, color: "var(--text-color-secondary)" }),
+                }}
+              />
 
               <TextField
                 label="Special Notes"
@@ -423,6 +479,16 @@ const PetDetails = () => {
               <Box sx={{ mb: 2 }}>
                 <Typography variant="body1" sx={{ color: "var(--text-color)" }}>
                   Sex: {pet.sex || "N/A"}
+                </Typography>
+              </Box>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body1" sx={{ color: "var(--text-color)" }}>
+                  Weight: {pet.weight ? `${pet.weight} kg` : "N/A"}
+                </Typography>
+              </Box>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body1" sx={{ color: "var(--text-color)" }}>
+                  Size: {pet.size || "N/A"}
                 </Typography>
               </Box>
               <Box>

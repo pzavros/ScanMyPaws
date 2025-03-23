@@ -59,5 +59,40 @@ namespace Backend.Controllers
 
             return Ok(new { message = "QR Code scanned successfully." });
         }
+        
+        [HttpPut("scanByData")]
+        public async Task<IActionResult> ScanQRCodeByData([FromBody] ScanDataRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.QrData))
+                return BadRequest(new { message = "Missing QR code data." });
+
+            try
+            {
+                var success = await _qrCodeService.ScanQRCodeByData(request.QrData);
+                return Ok(new { message = "QR Code scanned successfully." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+        
+        [HttpGet("id-by-data")]
+        public async Task<IActionResult> GetQRCodeIdByData([FromQuery] string data)
+        {
+            if (string.IsNullOrEmpty(data))
+                return BadRequest(new { message = "QR Code data is required." });
+
+            var qrCode = await _qrCodeService.GetQRCodeByData(data);
+            if (qrCode == null)
+                return NotFound(new { message = "QR Code not found." });
+
+            return Ok(new { qrCodeId = qrCode.QRCodeID });
+        }
+        
+        public class ScanDataRequest
+        {
+            public string QrData { get; set; }
+        }
     }
 }

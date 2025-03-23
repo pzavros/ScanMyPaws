@@ -9,5 +9,7 @@ namespace Backend.Interfaces
         Task<QRCodeDto> GetQRCodeById(int qrCodeId);
         Task<bool> DeactivateQRCode(int qrCodeId);
         Task<bool> ScanQRCode(int qrCodeId);
+        Task<bool> ScanQRCodeByData(string data);
+        Task<QRCodeDto> GetQRCodeByData(string qrCodeData);
     }
 }
