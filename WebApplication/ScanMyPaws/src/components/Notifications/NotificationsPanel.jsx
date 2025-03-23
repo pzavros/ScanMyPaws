@@ -6,6 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Section from "../ReusableComponents/Section";
 import Text from "../ReusableComponents/Text";
 import { fetchUserNotifications, markNotificationAsRead } from "./api";
+import useSignalR from "../../hooks/useSignalR";
 
 const NotificationsPanel = ({ isOpen, onClose }) => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -13,12 +14,43 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
   const [pastNotifications, setPastNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notifiedNotifications, setNotifiedNotifications] = useState(new Set());
+  const realTimeNotifications = useSignalR();
 
   useEffect(() => {
     if (isOpen) {
       loadNotifications();
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+  }, []);  
+
+  useEffect(() => {
+    realTimeNotifications.forEach((notif) => {
+      const alreadyExists = upcomingNotifications.some(
+        (n) =>
+          n.title === notif.title &&
+          n.message === notif.message &&
+          new Date(n.dateCreated).toISOString() === new Date(notif.dateCreated).toISOString()
+      );
+  
+      if (!alreadyExists) {
+        setUpcomingNotifications((prev) => [notif, ...prev]);
+  
+        // Optional: Show browser toast
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification(notif.title, {
+            body: notif.message,
+            icon: "/favicon.ico",
+          });
+        }
+      }
+    });
+  }, [realTimeNotifications]);
+  
 
   const loadNotifications = async () => {
     setLoading(true);

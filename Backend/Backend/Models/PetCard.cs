@@ -50,5 +50,6 @@ namespace Backend.Models
         public byte[]? Photo { get; set; }
         public double? Weight { get; set; }
         public string? Size { get; set; }
+        public string? LastLocationFound { get; set; } 
     }
 }

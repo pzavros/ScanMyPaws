@@ -77,3 +77,18 @@ export const createChatSession = async (payload) => {
     throw error;
   }
 };
+
+export const submitLocation = async (petCardID, finderName, finderContact, location) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/PetLocation`, {
+      petCardID,
+      finderName,
+      finderContact,
+      location,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting location:", error);
+    throw error;
+  }
+};

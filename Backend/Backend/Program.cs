@@ -46,6 +46,7 @@ builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IPetCardSettingService, PetCardSettingService>();
+builder.Services.AddScoped<IPetLocationService, PetLocationService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddSignalR();
 

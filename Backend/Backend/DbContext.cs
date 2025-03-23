@@ -24,7 +24,7 @@ namespace Backend
         public DbSet<PetCardSetting> PetCardSettings { get; set; }
         public DbSet<ChatSession> ChatSessions { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
-
+        public DbSet<PetLocationHistory> PetLocationHistories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Predefine statuses

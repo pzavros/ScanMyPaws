@@ -4,6 +4,7 @@ using Backend;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250323184611_PetLocationHistory")]
+    partial class PetLocationHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1404,9 +1407,6 @@ namespace Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("LastLocationFound")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("MobilePhone1")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1450,45 +1450,6 @@ namespace Backend.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("PetCards");
-                });
-
-            modelBuilder.Entity("Backend.Models.PetLocationHistory", b =>
-                {
-                    b.Property<int>("PetLocationHistoryID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PetLocationHistoryID"));
-
-                    b.Property<DateTime>("DateFound")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FinderContact")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FinderName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("Longitude")
-                        .HasColumnType("float");
-
-                    b.Property<int>("PetCardID")
-                        .HasColumnType("int");
-
-                    b.HasKey("PetLocationHistoryID");
-
-                    b.HasIndex("PetCardID");
-
-                    b.ToTable("PetLocationHistories");
                 });
 
             modelBuilder.Entity("Backend.Models.PetProfile", b =>
@@ -1887,17 +1848,6 @@ namespace Backend.Migrations
                     b.Navigation("PetProfile");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Backend.Models.PetLocationHistory", b =>
-                {
-                    b.HasOne("Backend.Models.PetCard", "PetCard")
-                        .WithMany()
-                        .HasForeignKey("PetCardID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PetCard");
                 });
 
             modelBuilder.Entity("Backend.Models.PetProfile", b =>
