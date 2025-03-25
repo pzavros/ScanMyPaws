@@ -78,13 +78,15 @@ export const createChatSession = async (payload) => {
   }
 };
 
-export const submitLocation = async (petCardID, finderName, finderContact, location) => {
+export const submitLocation = async (petCardID, finderName, finderContact, location, latitude, longitude) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/api/PetLocation`, {
       petCardID,
       finderName,
       finderContact,
       location,
+      latitude,
+      longitude,
     });
     return response.data;
   } catch (error) {

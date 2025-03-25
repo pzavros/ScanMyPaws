@@ -26,7 +26,7 @@ const PetStats = ({ petId }) => {
           <>
             <Text variant="body1">Age: {stats.age}</Text>
             <Text variant="body1">Weight: {stats.weight}</Text>
-            <Text variant="body1">Activity Level: {stats.activity}</Text>
+            <Text variant="body1">Size: {stats.size}</Text>
           </>
         ) : (
           <Text>No stats available.</Text>

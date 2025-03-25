@@ -36,5 +36,20 @@ namespace Backend.Controllers
                 return StatusCode(500, "An internal server error occurred.");
             }
         }
+        [HttpGet("history/{petId}")]
+        public async Task<IActionResult> GetLocationHistoryByPetId(int petId)
+        {
+            try
+            {
+                var history = await _petLocationService.GetLocationHistoryByPetIdAsync(petId);
+                return Ok(history);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching location history: {ex.Message}");
+                return StatusCode(500, "An error occurred while retrieving location history.");
+            }
+        }
+
     }
 }

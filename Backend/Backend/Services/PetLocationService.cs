@@ -3,6 +3,7 @@ using Backend.Interfaces;
 using Backend.Models;
 using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services
 {
@@ -64,5 +65,18 @@ namespace Backend.Services
 
             return history;
         }
+        public async Task<List<PetLocationHistory>> GetLocationHistoryByPetIdAsync(int petId)
+        {
+            var petCard = await _context.PetCards.FirstOrDefaultAsync(pc => pc.PetID == petId);
+
+            if (petCard == null)
+                throw new Exception($"No PetCard found for PetID {petId}");
+
+            return await _context.PetLocationHistories
+                .Where(h => h.PetCardID == petCard.PetCardID)
+                .OrderByDescending(h => h.DateFound)
+                .ToListAsync();
+        }
+
     }
 }

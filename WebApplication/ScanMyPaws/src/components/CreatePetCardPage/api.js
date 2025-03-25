@@ -11,7 +11,6 @@ export const fetchPetDetails = async (petId) => {
       const response = await axios.get(`${API_BASE_URL}/api/PetProfile/${petId}`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching pet details:", error);
       throw error;
     }
   };
@@ -30,7 +29,6 @@ export const fetchPetDetails = async (petId) => {
       );
       return response.data;
     } catch (error) {
-      console.error("Error creating pet card:", error);
       throw error;
     }
   };

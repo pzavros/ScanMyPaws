@@ -77,8 +77,9 @@ namespace Backend.Services
                 }).ToListAsync();
 
             var upcoming = allNotifications
-                .Where(n => n.ScheduledTime.HasValue && n.ScheduledTime > now && !n.IsRead)
+                .Where(n => (!n.ScheduledTime.HasValue || n.ScheduledTime > now) && !n.IsRead)
                 .ToList();
+
 
             var past = allNotifications
                 .Where(n => n.IsRead || (n.ScheduledTime.HasValue && n.ScheduledTime <= now))

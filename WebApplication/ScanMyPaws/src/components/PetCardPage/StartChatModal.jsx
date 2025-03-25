@@ -9,6 +9,7 @@ import {
   Button,
   Box,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { createChatSession } from "./api";
 
@@ -17,10 +18,11 @@ function StartChatModal({ open, onClose, petId }) {
   const [finderSurname, setFinderSurname] = useState("");
   const [finderEmail, setFinderEmail] = useState("");
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleStartChat = async () => {
     if (!finderName.trim() || !finderSurname.trim()) {
-      alert("Please enter your first name and surname to start the chat.");
+      alert("Please enter your first name and surname.");
       return;
     }
 
@@ -32,16 +34,9 @@ function StartChatModal({ open, onClose, petId }) {
         finderEmail,
       });
 
-      console.log("Chat Session Response:", response);
-
       if (response.chatSessionId) {
-        // Store finderEphemeralId and chatSessionId for use in chat
         sessionStorage.setItem("finderEphemeralId", response.finderEphemeralId);
-        console.log("Generated Chat Session ID:", response.chatSessionId);
         sessionStorage.setItem("chatSessionId", response.chatSessionId);
-
-
-        // Redirect to PublicChatPage
         navigate(`/chat/${response.chatSessionId}`);
       } else {
         alert("Failed to start chat. Please try again.");
@@ -52,7 +47,6 @@ function StartChatModal({ open, onClose, petId }) {
     }
   };
 
-
   const handleClose = () => {
     onClose();
     setFinderName("");
@@ -61,8 +55,15 @@ function StartChatModal({ open, onClose, petId }) {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Start Chat with Pet Owner</DialogTitle>
+    <Dialog open={open} onClose={handleClose} PaperProps={{
+      sx: {
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary,
+        borderRadius: 3,
+        p: 2,
+      }
+    }}>
+      <DialogTitle sx={{ fontWeight: "bold" }}>Start Chat with Pet Owner</DialogTitle>
       <DialogContent>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
           <Typography variant="body2">
@@ -74,6 +75,7 @@ function StartChatModal({ open, onClose, petId }) {
             variant="outlined"
             value={finderName}
             onChange={(e) => setFinderName(e.target.value)}
+            fullWidth
           />
 
           <TextField
@@ -81,6 +83,7 @@ function StartChatModal({ open, onClose, petId }) {
             variant="outlined"
             value={finderSurname}
             onChange={(e) => setFinderSurname(e.target.value)}
+            fullWidth
           />
 
           <TextField
@@ -89,15 +92,16 @@ function StartChatModal({ open, onClose, petId }) {
             variant="outlined"
             value={finderEmail}
             onChange={(e) => setFinderEmail(e.target.value)}
+            fullWidth
           />
         </Box>
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose} color="error">
+        <Button onClick={handleClose} color="error" variant="outlined">
           Cancel
         </Button>
-        <Button onClick={handleStartChat} variant="contained" color="primary">
+        <Button onClick={handleStartChat} variant="contained">
           Start Chat
         </Button>
       </DialogActions>

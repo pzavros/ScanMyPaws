@@ -3,17 +3,30 @@ import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 
 /**
- * Fetch pet data (Mock)
+ * Fetch  pet data
  */
-export const fetchPetData = async () => {
-  return {
-    name: "Muffin",
-    age: 3,
-    breed: "Tabby",
-    gender: "Male",
-    imageUrl: "https://via.placeholder.com/100",
-  };
+export const fetchPetData = async (petId) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`${API_BASE_URL}/api/petprofile/pet-stats/${petId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const { age, weight, size } = response.data;
+
+    return {
+      age,
+      weight,
+      size
+    };
+  } catch (error) {
+    console.error("Failed to fetch pet data:", error);
+    return null;
+  }
 };
+
 
 /**
  * Fetch upcoming tasks from schedules
@@ -29,7 +42,6 @@ export const fetchUpcomingTasks = async (petId) => {
     });
     return response.data || [];
   } catch (error) {
-    console.error("Error fetching upcoming tasks:", error);
     return [];
   }
 };
@@ -59,7 +71,6 @@ export const fetchRecentNotifications = async (petId) => {
     });
     return response.data || [];
   } catch (error) {
-    console.error("Error fetching recent notifications:", error);
     return [];
   }
 };
@@ -78,7 +89,6 @@ export const fetchUpcomingNotifications = async (petId) => {
     });
     return response.data || [];
   } catch (error) {
-    console.error("Error fetching upcoming notifications:", error);
     return [];
   }
 };
@@ -95,10 +105,8 @@ export const fetchMedicalRecords = async (petId) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    console.log("Medical Records Response:", response.data);
     return response.data || [];
   } catch (error) {
-    console.error("Error fetching medical records:", error);
     return [];
   }
 };
@@ -110,17 +118,12 @@ export const fetchMedicalRecords = async (petId) => {
  */
 export const fetchPlannerHighlights = async (userId) => {
   try {
-    console.log(`Fetching planner highlights for user: ${userId}`);
     const response = await axios.get(`${API_BASE_URL}/api/schedules/user/${userId}/planner-highlights`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
 
-    console.log("Planner highlights response:", response.data);
-
-    // Ensure we return the actual data array, not the whole object
     return response.data?.data || [];
   } catch (error) {
-    console.error("Error fetching planner highlights:", error.response?.data || error.message);
     return [];
   }
 };
@@ -139,7 +142,6 @@ export const fetchPetStats = async (petId) => {
     });
     return response.data || {};
   } catch (error) {
-    console.error("Error fetching pet stats:", error);
     return {};
   }
 };
@@ -150,17 +152,14 @@ export const fetchPetStats = async (petId) => {
  * @returns {Promise<Array>}
  */
 export const fetchUserPets = async () => {
-  console.log("fetchUserPets function invoked");
   try {
     const response = await axios.get(`${API_BASE_URL}/api/PetProfile/user`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    console.log("API Response:", response.data);
     return response.data?.data || [];
   } catch (error) {
-    console.error("Error fetching user pets:", error);
     return [];
   }
 };
@@ -178,6 +177,6 @@ export const markNotificationAsRead = async (notificationId) => {
       },
     });
   } catch (error) {
-    console.error("Error marking notification as read:", error);
+    throw error;
   }
 };

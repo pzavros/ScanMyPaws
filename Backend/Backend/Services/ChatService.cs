@@ -13,10 +13,14 @@ namespace Backend.Services
     {
         private readonly ApplicationDbContext _context;
 
-        public ChatService(ApplicationDbContext context)
+        private readonly INotificationService _notificationService;
+
+        public ChatService(ApplicationDbContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
+
 
         /// <summary>
         /// Creates a new chat session
@@ -32,8 +36,17 @@ namespace Backend.Services
             if (ownerUserId == 0) 
             {
                 throw new ArgumentException($"OwnerUserID cannot be 0. PetID: {petId} might not have a valid owner.");
-            }
+            }   
 
+            await _notificationService.SendNotificationAsync(new NotificationDto
+            {
+                UserID = ownerUserId,
+                Title = "New Chat Started",
+                Message = $"A person named {finderName} {finderSurname} has started a chat about your pet.",
+                Type = "ChatStarted",
+                ReferenceID = petId
+            });
+            
             var chatSession = new ChatSession
             {
                 ChatSessionId = Guid.NewGuid(), 
