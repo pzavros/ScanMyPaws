@@ -212,6 +212,27 @@ const PetDetails = () => {
             Edit
           </Button>
         </Box>
+        <Button
+          onClick={() => navigate(`/petlocationhistory/${petId}`)}
+          sx={{
+            backgroundColor: "var(--primary-color)",
+            color: "white",
+            borderRadius: "20px",
+            padding: "6px 10px",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            "&:hover": {
+              backgroundColor: "var(--secondary-color)",
+            },
+          }}
+        >
+          Location History
+        </Button>
 
         {/* Explanation Text for Create Pet Card */}
         {!pet?.isHavingCard && (

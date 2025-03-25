@@ -155,8 +155,8 @@ namespace Backend.Services
             return new PetStatsDto
             {
                 Age = $"{pet.Age} Years",
-                Weight = "12 kg",
-                ActivityLevel = "High"
+                Weight = $"{pet.Weight} kg",
+                Size = pet.Size
             };
         }
     }
