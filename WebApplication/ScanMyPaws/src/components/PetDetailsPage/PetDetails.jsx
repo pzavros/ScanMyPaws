@@ -213,7 +213,7 @@ const PetDetails = () => {
           </Button>
         </Box>
         <Button
-          onClick={() => navigate(`/petlocationhistory/${petId}`)}
+          onClick={() => navigate(`/pet-location-history/${petId}`)}
           sx={{
             backgroundColor: "var(--primary-color)",
             color: "white",

@@ -45,37 +45,59 @@ const PublicPetCardPage = () => {
       <PetCard petDetails={petDetails} readOnly />
 
       {/* Buttons */}
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 3, gap: 2 }}>
-        {/* Start Chat button */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 2,
+          mt: 3,
+          mb: 3,
+          flexWrap: "wrap",
+          px: 2,
+        }}
+      >
+        {/* Start Chat Button */}
         <Button
-          variant="contained"
-          color="secondary"
           onClick={() => setOpenChatModal(true)}
           sx={{
-            fontSize: "1rem",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 6px rgba(0,0,0,0.2)",
+            background: "linear-gradient(to right, #00c6ff, #0072ff)",
+            color: "#fff",
+            fontWeight: "bold",
+            padding: "12px 24px",
+            borderRadius: "12px",
+            boxShadow: "0px 6px 12px rgba(0, 114, 255, 0.3)",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              background: "linear-gradient(to right, #0072ff, #00c6ff)",
+              boxShadow: "0px 8px 16px rgba(0, 114, 255, 0.4)",
+            },
           }}
         >
           Start Chat
         </Button>
 
-        {/* Send Location button */}
+        {/* Send Location Button */}
         <Button
-          variant="contained"
-          color="primary"
           onClick={() => setOpenLocationModal(true)}
           sx={{
-            fontSize: "1rem",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 6px rgba(0,0,0,0.2)",
+            background: "linear-gradient(to right, #ff6f61, #ff9478)",
+            color: "#fff",
+            fontWeight: "bold",
+            padding: "12px 24px",
+            borderRadius: "12px",
+            boxShadow: "0px 6px 12px rgba(255, 111, 97, 0.3)",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              background: "linear-gradient(to right, #ff9478, #ff6f61)",
+              boxShadow: "0px 8px 16px rgba(255, 111, 97, 0.4)",
+            },
           }}
         >
           Send Location
         </Button>
       </Box>
+
 
       {/* Start Chat Modal */}
       <StartChatModal

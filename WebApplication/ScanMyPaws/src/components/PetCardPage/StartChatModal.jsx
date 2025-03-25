@@ -1,16 +1,6 @@
 import React, { useState } from "react";
+import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  Box,
-  Typography,
-  useTheme,
-} from "@mui/material";
 import { createChatSession } from "./api";
 
 function StartChatModal({ open, onClose, petId }) {
@@ -18,7 +8,6 @@ function StartChatModal({ open, onClose, petId }) {
   const [finderSurname, setFinderSurname] = useState("");
   const [finderEmail, setFinderEmail] = useState("");
   const navigate = useNavigate();
-  const theme = useTheme();
 
   const handleStartChat = async () => {
     if (!finderName.trim() || !finderSurname.trim()) {
@@ -48,64 +37,76 @@ function StartChatModal({ open, onClose, petId }) {
   };
 
   const handleClose = () => {
-    onClose();
     setFinderName("");
     setFinderSurname("");
     setFinderEmail("");
+    onClose();
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} PaperProps={{
-      sx: {
-        backgroundColor: theme.palette.background.paper,
-        color: theme.palette.text.primary,
-        borderRadius: 3,
-        p: 2,
-      }
-    }}>
-      <DialogTitle sx={{ fontWeight: "bold" }}>Start Chat with Pet Owner</DialogTitle>
-      <DialogContent>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
-          <Typography variant="body2">
-            Please enter your details before starting the chat:
-          </Typography>
+    <Modal open={open} onClose={handleClose}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          bgcolor: "var(--card-background)",
+          boxShadow: 24,
+          borderRadius: 2,
+          p: 4,
+          minWidth: 320,
+          color: "var(--text-color)",
+        }}
+      >
+        <Typography variant="h5" sx={{ mb: 2, textAlign: "center" }}>
+          Start Chat with Pet Owner
+        </Typography>
 
-          <TextField
-            label="First Name"
-            variant="outlined"
-            value={finderName}
-            onChange={(e) => setFinderName(e.target.value)}
-            fullWidth
-          />
+        <Typography variant="body2" sx={{ mb: 2 }}>
+          Please enter your details before starting the chat:
+        </Typography>
 
-          <TextField
-            label="Surname"
-            variant="outlined"
-            value={finderSurname}
-            onChange={(e) => setFinderSurname(e.target.value)}
-            fullWidth
-          />
+        <TextField
+          fullWidth
+          label="First Name"
+          value={finderName}
+          onChange={(e) => setFinderName(e.target.value)}
+          sx={{ mb: 2 }}
+          InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        />
+        <TextField
+          fullWidth
+          label="Surname"
+          value={finderSurname}
+          onChange={(e) => setFinderSurname(e.target.value)}
+          sx={{ mb: 2 }}
+          InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        />
+        <TextField
+          fullWidth
+          label="Email (optional)"
+          type="email"
+          value={finderEmail}
+          onChange={(e) => setFinderEmail(e.target.value)}
+          sx={{ mb: 3 }}
+          InputLabelProps={{ style: { color: "var(--text-color)" } }}
+        />
 
-          <TextField
-            label="Email (optional)"
-            type="email"
-            variant="outlined"
-            value={finderEmail}
-            onChange={(e) => setFinderEmail(e.target.value)}
-            fullWidth
-          />
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
+          <Button variant="outlined" color="error" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleStartChat}
+            sx={{ backgroundColor: "var(--primary-color)", color: "white" }}
+          >
+            Start Chat
+          </Button>
         </Box>
-      </DialogContent>
-
-      <DialogActions>
-        <Button onClick={handleClose} color="error" variant="outlined">
-          Cancel
-        </Button>
-        <Button onClick={handleStartChat} variant="contained">
-          Start Chat
-        </Button>
-      </DialogActions>
-    </Dialog>
+      </Box>
+    </Modal>
   );
 }
 
