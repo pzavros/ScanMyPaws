@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import * as signalR from "@microsoft/signalr";
 
+const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
+
 const useSignalR = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl(`${import.meta.env.VITE_APP_API_BASE_URL}/notificationHub`, {
+      .withUrl(`${API_BASE_URL}/notificationHub`, {
         transport: signalR.HttpTransportType.WebSockets,
+        withCredentials: true 
       })
       .withAutomaticReconnect()
       .build();
+
 
     connection.start()
       .then(() => console.log("SignalR Connected"))
