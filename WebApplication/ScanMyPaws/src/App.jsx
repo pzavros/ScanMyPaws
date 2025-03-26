@@ -27,7 +27,6 @@ const isLoggedIn = () => {
   let token = localStorage.getItem("token");
   if (!token) return false;
 
-  // Remove "Bearer " prefix if present.
   if (token.startsWith("Bearer ")) {
     token = token.slice(7);
   }
@@ -105,7 +104,7 @@ const App = () => {
 const RouterContent = () => {
   const location = useLocation();
 
-  // Hide TopNavbar on auth pages, public pet cards, and public chat pages.
+  // Hide TopNavbar on auth pages, public pages.
   const hideNavPages = ["/signin", "/signup"];
   const isPublicPetCard = location.pathname.startsWith("/public-petcard/");
   const isPublicChat = location.pathname.startsWith("/chat/");

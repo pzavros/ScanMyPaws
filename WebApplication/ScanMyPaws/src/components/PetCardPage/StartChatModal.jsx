@@ -72,7 +72,11 @@ function StartChatModal({ open, onClose, petId }) {
           label="First Name"
           value={finderName}
           onChange={(e) => setFinderName(e.target.value)}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2, input: {
+              color: "var(--text-color)"
+            },
+          }}
           InputLabelProps={{ style: { color: "var(--text-color)" } }}
         />
         <TextField
@@ -80,7 +84,11 @@ function StartChatModal({ open, onClose, petId }) {
           label="Surname"
           value={finderSurname}
           onChange={(e) => setFinderSurname(e.target.value)}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2, input: {
+              color: "var(--text-color)"
+            },
+          }}
           InputLabelProps={{ style: { color: "var(--text-color)" } }}
         />
         <TextField
@@ -89,7 +97,11 @@ function StartChatModal({ open, onClose, petId }) {
           type="email"
           value={finderEmail}
           onChange={(e) => setFinderEmail(e.target.value)}
-          sx={{ mb: 3 }}
+          sx={{
+            mb: 3, input: {
+              color: "var(--text-color)"
+            },
+          }}
           InputLabelProps={{ style: { color: "var(--text-color)" } }}
         />
 

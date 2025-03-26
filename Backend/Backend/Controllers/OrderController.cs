@@ -20,7 +20,6 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDto orderDto)
         {
-            // Log the payload for debugging
             Console.WriteLine($"Received payload: {System.Text.Json.JsonSerializer.Serialize(orderDto)}");
 
             if (!ModelState.IsValid)
@@ -50,9 +49,5 @@ namespace Backend.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
-
-
-
-
     }
 }

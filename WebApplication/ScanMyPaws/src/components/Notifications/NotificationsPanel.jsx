@@ -40,7 +40,6 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
       if (!alreadyExists) {
         setUpcomingNotifications((prev) => [notif, ...prev]);
   
-        // Optional: Show browser toast
         if ("Notification" in window && Notification.permission === "granted") {
           new Notification(notif.title, {
             body: notif.message,
@@ -75,9 +74,6 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
     }
   };
 
-  /**
-   * Schedule notifications only at the right time
-   */
   const scheduleNotifications = (notifications = []) => {
     if (!("Notification" in window) || Notification.permission !== "granted") return;
 
@@ -97,9 +93,6 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
     });
   };
 
-  /**
-   * Show browser notification
-   */
   const triggerNotification = (notif) => {
     if (!notifiedNotifications.has(notif.notificationID)) {
       new Notification(notif.title, {
@@ -111,9 +104,6 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
     }
   };
 
-  /**
-   * Mark a notification as read and move it to past notifications
-   */
   const handleNotificationClick = async (notification) => {
     try {
       await markNotificationAsRead(notification.notificationID);
@@ -129,9 +119,6 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
     }
   };
 
-  /**
-   * Mark all notifications as read
-   */
   const markAllAsRead = async () => {
     try {
       await Promise.all(
@@ -150,9 +137,6 @@ const NotificationsPanel = ({ isOpen, onClose }) => {
     }
   };
 
-  /**
-   * Handle tab change between Upcoming and Past
-   */
   const handleTabChange = (event, newIndex) => {
     setTabIndex(newIndex);
   };

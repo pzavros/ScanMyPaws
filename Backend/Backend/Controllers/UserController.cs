@@ -88,7 +88,7 @@ namespace Backend.Controllers
         }
 
         [HttpPut("profile")]
-        [Consumes("application/json")] // Ensure JSON format
+        [Consumes("application/json")]
         public async Task<IActionResult> UpdateProfile([FromBody] UserDto? userDto)
         {
             if (userDto == null)
@@ -112,7 +112,7 @@ namespace Backend.Controllers
                 return Unauthorized("Invalid UserID format in the token.");
             }
 
-            userDto.UserID = userId; // Assign userId from the JWT token
+            userDto.UserID = userId;
 
             var updatedUser = await _userService.UpdateUserProfile(userDto);
             if (updatedUser == null)
@@ -132,7 +132,7 @@ namespace Backend.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("UserID", user.UserID.ToString()), // Explicitly add UserID claim
+                    new Claim("UserID", user.UserID.ToString()),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Name, user.FirstName ?? "User")
                 }),

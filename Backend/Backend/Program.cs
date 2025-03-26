@@ -54,14 +54,18 @@ builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
-            policy
-                .WithOrigins("http://localhost:5173", "https://localhost:5173")
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials()
+        policy
+            .WithOrigins(
+                "http://localhost:5173", 
+                "https://localhost:5173",
+                "http://localhost:5175",       
+                "https://scanmypaws.com"       
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
     );
 });
-
 
 // Add JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -108,7 +112,7 @@ app.UseAuthorization();
 // Map Routes & Hubs
 app.MapControllers();
 
-// Map your SignalR hubs
+// Map SignalR hubs
 app.MapHub<ChatHub>("/chatHub");
 app.MapHub<NotificationHub>("/notificationHub");
 

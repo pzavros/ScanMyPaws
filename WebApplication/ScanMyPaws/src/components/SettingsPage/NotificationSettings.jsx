@@ -1,4 +1,3 @@
-// /components/SettingsPage/NotificationSettings.jsx
 import React, { useState } from "react";
 import { Box, Typography, Divider, Switch, FormControlLabel } from "@mui/material";
 import Section from "../ReusableComponents/Section";

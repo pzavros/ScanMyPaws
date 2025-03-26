@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box, Alert, Typography, Card } from "@mui/material";
+import { Box, Alert, Typography, Card, TextField } from "@mui/material";
 import Section from "../ReusableComponents/Section";
-import { scanQRCodeByData } from "./api";
+import { scanQRCodeByData, getQRCodeById } from "./api";
 import Webcam from "react-webcam";
 import jsQR from "jsqr";
 import Button from "../ReusableComponents/Button";
@@ -9,9 +9,11 @@ import Button from "../ReusableComponents/Button";
 const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
   const [qrError, setQrError] = useState("");
   const [scannedCode, setScannedCode] = useState(null);
+  const [manualQRCode, setManualQRCode] = useState("");
+  const [showSimulate, setShowSimulate] = useState(false);
   const webcamRef = useRef(null);
 
-  // 1. Use a ref to store the interval ID
+  // Use a ref to store the interval ID
   const scanIntervalRef = useRef(null);
 
   // This function checks the webcam feed and attempts to decode a QR code
@@ -32,7 +34,7 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
       const code = jsQR(imageData.data, canvas.width, canvas.height);
 
       if (code) {
-        // Store the entire string instead of parseInt
+        // Store the entire string
         setScannedCode(code.data);
 
         // Stop scanning
@@ -47,7 +49,7 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
   };
 
 
-  // 2. Start scanning at an interval once the component mounts
+  // Start scanning at once the component mounts
   useEffect(() => {
     scanIntervalRef.current = setInterval(captureAndDecode, 1000);
 
@@ -84,15 +86,39 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
       setQrError(errorMessage);
     }
   };
-
-
-
-  // For testing only – do NOT use in production
-  const handleSimulateScan = () => {
-    const simulatedId = 2;
-    setScannedCode(simulatedId);
+  
+  // For testing only – this will be removed for production
+  const handleSimulateScan = async () => {
+    setQrError("");
+  
+    if (!manualQRCode) {
+      setQrError("Please enter a QR Code ID to simulate.");
+      return;
+    }
+  
+    const parsedId = parseInt(manualQRCode);
+    if (isNaN(parsedId)) {
+      setQrError("QR Code ID must be a number.");
+      return;
+    }
+  
+    try {
+      const qrCodeDto = await getQRCodeById(parsedId);
+      const qrData = qrCodeDto.qrCodeData;
+  
+      if (!qrData) {
+        setQrError("QR Code Data not found.");
+        return;
+      }
+  
+      setScannedCode(qrData);
+  
+    } catch (error) {
+      setQrError("Failed to fetch QR Code data.");
+    }
   };
-
+  
+  
   return (
     <Section>
       <Box
@@ -143,6 +169,7 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
           />
         </Card>
 
+        {/* Production-style buttons */}
         <Box
           sx={{
             display: "flex",
@@ -153,13 +180,48 @@ const QRCodeScanner = ({ onScanSuccess, onCancel }) => {
             maxWidth: 600,
           }}
         >
-          {scannedCode && <Button onClick={handleSubmit}>Submit</Button>}
-          <Button onClick={handleSimulateScan} variant="outlined">
-            Simulate QR Code Scan
-          </Button>
-          <Button onClick={onCancel} variant="outlined">
+          <Button onClick={onCancel} variant="outlined" color="secondary">
             Cancel
           </Button>
+
+          {scannedCode && (
+            <Button onClick={handleSubmit} color="primary">
+              Submit
+            </Button>
+          )}
+        </Box>
+
+        {/* Simulate mode */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+            width: "100%",
+            maxWidth: 600,
+            mt: 2,
+          }}
+        >
+          <Button
+            onClick={() => setShowSimulate((prev) => !prev)}
+            variant="outlined"
+          >
+            Simulate QR Code Scan
+          </Button>
+
+          {showSimulate && (
+            <>
+              <TextField
+                label="QR Code ID"
+                variant="outlined"
+                value={manualQRCode}
+                onChange={(e) => setManualQRCode(e.target.value)}
+                sx={{ width: "100%" }}
+              />
+              <Button onClick={handleSimulateScan}>Submit Simulated Code</Button>
+            </>
+          )}
         </Box>
 
         {scannedCode && (

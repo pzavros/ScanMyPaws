@@ -33,7 +33,6 @@ export const updateUserProfile = async (userData) => {
       throw new Error("User is not authenticated. Token missing.");
     }
 
-    // Ensure dateOfBirth is sent correctly
     if (!userData.dateOfBirth || userData.dateOfBirth.trim() === "") {
       userData.dateOfBirth = null;
     } else {
@@ -51,7 +50,7 @@ export const updateUserProfile = async (userData) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Ensure token is sent
+          Authorization: `Bearer ${token}`, 
         },
       }
     );

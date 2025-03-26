@@ -32,7 +32,6 @@ export const fetchPublicPetCard = async (uniqueUrl) => {
   }
 };
 
-// Create a PetCardSetting for a given pet (usually called during pet card creation)
 export const createPetCardSetting = async (petId) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/api/PetCardSetting/${petId}`);

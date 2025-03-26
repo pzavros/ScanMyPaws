@@ -7,7 +7,6 @@ export const fetchPetLocationHistory = async (petId) => {
     const response = await axios.get(`${API_BASE_URL}/api/PetLocation/history/${petId}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching pet location history:", error);
     return [];
   }
 };

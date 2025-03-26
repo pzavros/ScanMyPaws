@@ -1,4 +1,3 @@
-// /components/SettingsPage/LanguageSettings.jsx
 import React, { useState } from "react";
 import { Box, Typography, Divider, MenuItem, Select } from "@mui/material";
 import Section from "../ReusableComponents/Section";

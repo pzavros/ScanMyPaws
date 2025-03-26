@@ -22,8 +22,6 @@ export const updatePetDetails = async (petId, petDetails) => {
     }
   };
   
-
-// Fetch Dog Breeds
 export const fetchDogBreeds = async () => {
     const response = await axios.get(`${API_BASE_URL}/api/DogBreed`);
     return response.data;

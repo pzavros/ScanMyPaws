@@ -83,7 +83,7 @@ const OwnerChatDetailPage = () => {
         }}
       >
 
-        {/* 🟢 Scrollable Messages Container */}
+        {/* Messages Container */}
         <Box
           ref={chatContainerRef}
           sx={{
@@ -144,7 +144,7 @@ const OwnerChatDetailPage = () => {
           )}
         </Box>
 
-        {/* 🟢 Fixed Input Field at Bottom */}
+        {/* Messages Input Field */}
         <Box
           sx={{
             position: "fixed",

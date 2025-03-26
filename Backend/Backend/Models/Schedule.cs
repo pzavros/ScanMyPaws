@@ -11,8 +11,6 @@ namespace Backend.Models
 
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
         public DateTime DateModified { get; set; } = DateTime.UtcNow;
-
-        // 🔹 Relation to User
         [Required]
         public int UserID { get; set; }
         

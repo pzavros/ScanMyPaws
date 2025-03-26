@@ -70,7 +70,6 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
         setError("");
         setSuccess("");
 
-        // Validation, required fields
         if (
             !form.petName ||
             !form.breedId ||
@@ -350,8 +349,6 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                     {imagePreview ? "Change Photo" : "Click to upload a photo"}
                 </label>
             </Box>
-
-            {/* Display the image preview if available */}
             {imagePreview && (
                 <Box sx={{ position: "relative", textAlign: "center", mb: 3 }}>
                     <img
@@ -364,7 +361,6 @@ const PetProfileForm = ({ qrCodeId, onSuccess }) => {
                             borderRadius: "8px",
                         }}
                     />
-                    {/* Add the "X" button */}
                     <Button
                         variant="contained"
                         color="error"

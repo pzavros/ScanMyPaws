@@ -1,4 +1,3 @@
-// ChatPage.jsx
 import React, { useEffect, useState } from "react";
 import { fetchOwnerChatSessions } from "../components/Chat/api";
 import Page from "../components/ReusableComponents/Page";
@@ -35,7 +34,7 @@ const ChatPage = () => {
         ) : (
           <ChatSessionList
             chatSessions={chatSessions}
-            onDeleted={loadChatSessions} // <--- so the list can refresh
+            onDeleted={loadChatSessions}
           />
         )}
       </Box>

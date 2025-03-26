@@ -45,7 +45,6 @@ const CardForm = ({ petId }) => {
     // Single-line input color
     input: { color: "var(--text-color)" },
 
-    // Ensure textarea in dark mode also uses the correct color
     "& .MuiOutlinedInput-input": {
       color: "var(--text-color)",
     },

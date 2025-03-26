@@ -13,23 +13,23 @@ const InputField = ({ name, label, placeholder, value, onChange, ...props }) => 
       variant="outlined"
       InputLabelProps={{
         style: {
-          color: "var(--text-color)", // Ensures the label color adapts to dark mode
+          color: "var(--text-color)",
         },
       }}
       sx={{
         "& .MuiOutlinedInput-root": {
           "& fieldset": {
-            borderColor: "var(--border-color)", // Adapt border color to theme
+            borderColor: "var(--border-color)",
           },
           "&:hover fieldset": {
-            borderColor: "var(--primary-color)", // Highlight border on hover
+            borderColor: "var(--primary-color)",
           },
           "&.Mui-focused fieldset": {
-            borderColor: "var(--primary-color)", // Highlight border on focus
+            borderColor: "var(--primary-color)",
           },
         },
         input: {
-          color: "var(--text-color)", // Ensures the input text color adapts to dark mode
+          color: "var(--text-color)",
         },
       }}
       {...props}

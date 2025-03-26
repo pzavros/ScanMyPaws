@@ -108,7 +108,7 @@ const MedicalRecordsList = ({ records = [], onRecordSelect, onEdit, onDelete }) 
             xs={12}
             sm={6}
             md={4}
-            key={record.medicalRecordID || `${record.typeID}-${index}`} // Ensure a unique key
+            key={record.medicalRecordID || `${record.typeID}-${index}`}
           >
             <Card
               sx={{

@@ -26,12 +26,10 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
     address: true,
     alternativeContact: true,
   });
-  // State to toggle inline visibility editing mode.
   const [editingVisibility, setEditingVisibility] = useState(false);
-  // Store the PetCardSettingId so that updates can be sent to the backend.
   const [petCardSettingId, setPetCardSettingId] = useState(null);
 
-  // Load saved visibility settings from the backend on mount.
+  // Load saved visibility settings from the backend
   useEffect(() => {
     const petID = petDetails?.PetID || petDetails?.petID;
     if (petID) {
@@ -95,14 +93,13 @@ const PetCard = ({ petDetails, onSave, readOnly = false }) => {
     }
   };
 
-  // When not in editingVisibility mode, only show fields if visibleFields[field] is true.
   const shouldRenderField = (field) => editingVisibility || visibleFields[field];
 
   const imageSrc = form.photo ? `data:image/jpeg;base64,${form.photo}` : null;
 
   return (
     <Section>
-      {/* Header Section with visibility and global edit buttons */}
+      {/* Header Section with visibility and edit buttons */}
       <Box
         sx={{
           position: "relative",

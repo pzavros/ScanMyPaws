@@ -71,7 +71,11 @@ function SendLocationModal({ open, onClose, petCardID }) {
           label="Your Name"
           value={finderName}
           onChange={(e) => setFinderName(e.target.value)}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2, input: {
+              color: "var(--text-color)"
+            },
+          }}
           InputLabelProps={{ style: { color: "var(--text-color)" } }}
         />
         <TextField
@@ -79,7 +83,11 @@ function SendLocationModal({ open, onClose, petCardID }) {
           label="Contact Info"
           value={finderContact}
           onChange={(e) => setFinderContact(e.target.value)}
-          sx={{ mb: 2 }}
+          sx={{
+            mb: 2, input: {
+              color: "var(--text-color)"
+            },
+          }}
           InputLabelProps={{ style: { color: "var(--text-color)" } }}
         />
 
@@ -87,8 +95,14 @@ function SendLocationModal({ open, onClose, petCardID }) {
           <TextField
             fullWidth
             label="Location Found"
+            disabled
             value={location}
             onChange={(e) => setLocation(e.target.value)}
+            sx={{
+              input: {
+                color: "var(--text-color)"
+              },
+            }}
             InputLabelProps={{ style: { color: "var(--text-color)" } }}
           />
           <Button

@@ -74,11 +74,8 @@ namespace Backend.Controllers
             }
 
             Console.WriteLine($"Schedule {scheduleID} updated successfully.");
-            return Ok(new { message = "Update successful" }); // ✅ Ensure API sends response
+            return Ok(new { message = "Update successful" });
         }
-
-
-
 
         [HttpDelete("{scheduleID}")]
         public async Task<IActionResult> DeleteSchedule(int scheduleID)
@@ -94,6 +91,5 @@ namespace Backend.Controllers
             var tasks = await _scheduleService.GetUpcomingTasks(userId);
             return Ok(tasks);
         }
-
     }
 }

@@ -28,7 +28,6 @@ export const fetchPetProfile = async (petId) => {
   return response.data;
 };
 
-// Fetch Dog Breeds
 export const fetchDogBreeds = async () => {
   const response = await axios.get(`${API_BASE_URL}/api/DogBreed`);
   return response.data;
@@ -70,4 +69,9 @@ export const getQRCodeIdByData = async (qrCodeData) => {
     { params: { data: qrCodeData } }
   );
   return response.data.qrCodeId;
+};
+
+export const getQRCodeById = async (id) => {
+  const response = await axios.get(`${API_BASE_URL}/api/QrCode/${id}`);
+  return response.data;
 };

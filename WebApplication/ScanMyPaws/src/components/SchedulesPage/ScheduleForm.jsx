@@ -75,7 +75,6 @@ const ScheduleForm = ({ isOpen, onClose, onSave, selectedSchedule }) => {
       onClose={onClose}
       maxWidth="sm"
       fullWidth
-      // Apply a dark background + white text to the entire dialog
       sx={{
         "& .MuiPaper-root": {
           backgroundColor: "var(--background-color)",

@@ -43,7 +43,7 @@ const PetList = () => {
               key={pet.petID}
               xs={12}
               sm={6}
-              md={4} // 3 columns on desktops
+              md={4}
             >
               <Paper
                 elevation={2}

@@ -1,4 +1,3 @@
-// src/Components/ReusableComponents/LoadingSpinner.jsx
 import React from 'react';
 import { CircularProgress, Box } from '@mui/material';
 

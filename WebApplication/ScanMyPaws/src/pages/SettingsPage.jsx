@@ -1,4 +1,3 @@
-// /Pages/SettingsPage.jsx
 import React from "react";
 import Page from "../components/ReusableComponents/Page";
 import ThemeToggle from "../components/SettingsPage/ThemeToggle";

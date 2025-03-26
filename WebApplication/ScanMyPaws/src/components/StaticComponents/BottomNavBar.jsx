@@ -89,7 +89,7 @@ const BottomNavbar = () => {
       {/* Add padding to prevent overlap */}
       <div
         style={{
-          paddingBottom: "64px", // Same height as the navbar
+          paddingBottom: "64px",
         }}
       />
     </>

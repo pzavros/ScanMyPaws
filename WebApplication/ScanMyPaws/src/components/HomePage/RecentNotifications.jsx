@@ -1,4 +1,3 @@
-// Updated RecentNotifications.js
 import React, { useEffect, useState } from "react";
 import { Box, Paper } from "@mui/material";
 import Section from "../ReusableComponents/Section";

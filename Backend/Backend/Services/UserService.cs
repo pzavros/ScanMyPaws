@@ -86,14 +86,13 @@ namespace Backend.Services
             user.LastName = userDto.LastName;
             user.PhoneNumber = userDto.PhoneNumber;
 
-            // Handle dateOfBirth correctly
             if (userDto.DateOfBirth.HasValue)
             {
                 user.DateOfBirth = userDto.DateOfBirth.Value;
             }
             else
             {
-                user.DateOfBirth = null; // Avoid errors when it's empty
+                user.DateOfBirth = null;
             }
 
             user.Gender = userDto.Gender;

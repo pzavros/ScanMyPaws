@@ -11,7 +11,6 @@ const PetCardPage = () => {
   const [petDetails, setPetDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Determine if we are in read-only mode (public view)
   const isPublicView = location.pathname.startsWith("/public-petcard/");
 
   useEffect(() => {
@@ -50,7 +49,6 @@ const PetCardPage = () => {
 
   return (
     <Page>
-      {/* Pass readOnly to control UI behavior */}
       <PetCard petDetails={petDetails} onSave={handleSave} readOnly={isPublicView} />
     </Page>
   );

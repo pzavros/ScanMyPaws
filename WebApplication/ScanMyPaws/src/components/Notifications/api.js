@@ -9,7 +9,7 @@ const getUserIDFromToken = () => {
   const token = localStorage.getItem("token");
   if (!token) return null;
   try {
-    const payload = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
+    const payload = JSON.parse(atob(token.split(".")[1]));
     return payload.UserID || null;
   } catch (error) {
     return null;

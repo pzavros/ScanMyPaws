@@ -99,10 +99,10 @@ const ChatSessionList = ({ chatSessions, onDeleted }) => {
                 backgroundColor: isSelected
                   ? "var(--input-background)"
                   : hasUnread
-                  ? "rgba(255, 87, 87, 0.1)" // Subtle red background for unread messages
+                  ? "rgba(255, 87, 87, 0.1)"
                   : "inherit",
                 borderLeft: hasUnread
-                  ? "4px solid rgba(244, 67, 54, 0.7)" // Adjusted red for dark mode
+                  ? "4px solid rgba(244, 67, 54, 0.7)" 
                   : "4px solid transparent",
                 "&:hover": {
                   backgroundColor: "var(--divider-color)",

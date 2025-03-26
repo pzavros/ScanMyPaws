@@ -6,7 +6,7 @@ const Text = ({
   variant = 'body1',
   align = 'left',
   gutterBottom = false,
-  color = 'var(--text-color)', // Default color to the theme variable
+  color = 'var(--text-color)',
   ...props
 }) => {
   return (

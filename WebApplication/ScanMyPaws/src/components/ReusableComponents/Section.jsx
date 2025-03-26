@@ -1,4 +1,3 @@
-// src/Components/ReusableComponents/Section.jsx
 import React from 'react';
 import { Box } from '@mui/material';
 

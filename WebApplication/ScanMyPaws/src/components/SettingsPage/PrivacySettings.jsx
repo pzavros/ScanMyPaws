@@ -1,4 +1,3 @@
-// /components/SettingsPage/PrivacySettings.jsx
 import React, { useState } from "react";
 import { Box, Typography, Divider, Switch, Button } from "@mui/material";
 import Section from "../ReusableComponents/Section";

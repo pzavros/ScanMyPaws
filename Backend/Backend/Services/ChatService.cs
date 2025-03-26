@@ -242,7 +242,7 @@ namespace Backend.Services
                 .FirstOrDefaultAsync(s => s.ChatSessionId == sessionId);
 
             if (session == null) 
-                return false; // session not found
+                return false;
 
             // Remove all messages
             _context.ChatMessages.RemoveRange(session.Messages);

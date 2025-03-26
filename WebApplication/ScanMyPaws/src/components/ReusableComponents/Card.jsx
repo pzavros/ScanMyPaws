@@ -4,7 +4,7 @@ import { Box, Paper, Typography } from '@mui/material';
 const Card = ({
   children,
   padding = '16px',
-  elevation = 4, // Slightly higher default elevation for more depth
+  elevation = 4, 
   header = null,
   footer = null,
   ...props
@@ -18,12 +18,12 @@ const Card = ({
         backgroundColor: 'var(--card-background)',
         color: 'var(--text-color)',
         mb: 2,
-        borderRadius: '16px', // Increased roundness for a smoother look
-        overflow: 'hidden', // Ensures child elements stay within the rounded corners
-        transition: 'transform 0.2s ease, box-shadow 0.2s ease', // Smooth transition for hover
+        borderRadius: '16px',
+        overflow: 'hidden', 
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease', 
         '&:hover': {
-          transform: 'translateY(-4px)', // Subtle lift effect on hover
-          boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.15)', // Stronger shadow on hover
+          transform: 'translateY(-4px)', 
+          boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.15)', 
         },
       }}
       {...props}

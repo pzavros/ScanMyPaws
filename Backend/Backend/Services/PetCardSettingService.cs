@@ -23,8 +23,6 @@ namespace Backend.Services
             var petCardSetting = new PetCardSetting
             {
                 PetId = petId,
-                // Defaults are already set to true in the model,
-                // but you can explicitly assign them if desired.
                 PetName = true,
                 BreedName = true,
                 Sex = true,

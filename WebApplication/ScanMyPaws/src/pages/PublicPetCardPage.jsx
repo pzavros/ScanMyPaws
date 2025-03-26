@@ -12,10 +12,8 @@ const PublicPetCardPage = () => {
   const [petDetails, setPetDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Chat modal state
   const [openChatModal, setOpenChatModal] = useState(false);
 
-  // Location modal state (this is what you were missing!)
   const [openLocationModal, setOpenLocationModal] = useState(false);
 
   useEffect(() => {
