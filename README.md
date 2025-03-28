@@ -10,10 +10,8 @@ Panayiotis Zavros
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#tools">Development tools</a></li>
-      </ul>
     </li>
+    <li><a href="#tools">Development tools</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
     </li>
