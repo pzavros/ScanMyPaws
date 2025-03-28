@@ -147,7 +147,6 @@ const HomePage = () => {
       <RecentNotifications petId={currentPet?.petID} />
       <MedicalRecordsSummary petId={currentPet?.petID} />
       <PetStats petId={currentPet?.petID} />
-      <QuickActions petId={currentPet?.petID} />
     </Page>
   );
 };

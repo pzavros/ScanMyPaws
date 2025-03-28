@@ -59,8 +59,6 @@ const ChatComponent = ({ sessionId, isOwner }) => {
       scrollToBottom();
   
       const userId = isOwner ? localStorage.getItem("userId") : sessionStorage.getItem("finderEphemeralId");
-      console.log("User ID:", userId);
-      console.log("HIiiiii");
       if (userId) {
         await markMessagesAsRead(sessionId, userId);
       }

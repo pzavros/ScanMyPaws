@@ -247,7 +247,7 @@ const CardForm = ({ petId }) => {
       <TextField
         label="Special Notes"
         name="specialNotes"
-        value={formData.specialNotes || ""}
+        value={petDetails?.specialNotes || ""}
         onChange={handleChange}
         fullWidth
         multiline

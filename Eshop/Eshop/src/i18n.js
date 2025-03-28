@@ -9,7 +9,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
-    debug: false, // This removes outputs in the console
+    debug: false,
     backend: {
       loadPath: '/locales/{{lng}}.json'
     },

@@ -88,7 +88,7 @@ export const markMessagesAsRead = async (sessionId) => {
   }
 };
 
-// Existing: for the Finder (anonymous user)
+// Existing for the Finder (anonymous user)
 export const sendFinderMessage = async (sessionId, messageContent, senderId) => {
   const payload = {
     senderId,  
@@ -103,7 +103,7 @@ export const sendFinderMessage = async (sessionId, messageContent, senderId) => 
   return response.data;
 };
 
-// New: for the Owner (logged in)
+// New for the Owner (logged in)
 export const sendOwnerMessage = async (sessionId, messageContent) => {
   const payload = {
     messageContent,

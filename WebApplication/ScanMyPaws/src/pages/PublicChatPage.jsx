@@ -139,12 +139,12 @@ const PublicChatPage = () => {
                     sx={{
                       display: "block",
                       textAlign: "right",
-                      opacity: 0.7,
+                      opacity: 0.6,
                       fontSize: "0.75rem",
                       marginTop: "4px",
                     }}
                   >
-                    {new Date(msg.sentAt).toLocaleTimeString()}
+                    {msg.sentAt}
                   </Typography>
                 </Paper>
               </Box>

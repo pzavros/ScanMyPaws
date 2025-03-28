@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API URL
-const API_BASE_URL = 'https://localhost:44330/api/QrCode';
+const API_BASE_URL = 'http://localhost:5000/api/QrCode';
 
 export const generateQRCode = async () => {
   try {

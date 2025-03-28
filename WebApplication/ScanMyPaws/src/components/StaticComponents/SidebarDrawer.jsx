@@ -34,7 +34,6 @@ const SidebarDrawer = ({ isDrawerOpen, toggleDrawer }) => {
 
   const accountItems = [
     { label: "Profile", icon: <ProfileIcon />, route: "/profile" },
-    { label: "Notifications", icon: <NotificationsIcon />, route: "/notifications" },
     { label: "Medical Records", icon: <MedicalRecordsIcon />, route: "/select-pet" },
     { label: "Schedules", icon: <SchedulesIcon />, route: "/schedules" },
     { label: "Chat", icon: <ChatIcon />, route: "/chat" },
