@@ -1,4 +1,3 @@
-// src/Components/HomePage/HeroSection.jsx
 import React from 'react';
 import { Box } from '@mui/material';
 import Section from '../ReusableComponents/Section';
@@ -21,23 +20,21 @@ const HeroSection = () => {
           alignItems: 'center',
         }}
       >
-        {/* Image with controlled height and cropping */}
         <Box
           component="img"
           src="/HomePage/dogGraphic.png"
           alt="Hero Image"
           sx={{
             width: '100%',
-            height: { xs: 'auto', md: '600px' }, // Reduced height on larger screens
-            objectFit: 'cover', // Crop the image to fit the box
-            objectPosition: 'center', // Center the cropping
+            height: { xs: 'auto', md: '600px' }, 
+            objectFit: 'cover',
+            objectPosition: 'center',
             borderRadius: '16px',
             boxShadow: '0px 4px 24px rgba(0, 0, 0, 0.1)',
-            filter: 'brightness(0.8)', // Darken the image
+            filter: 'brightness(0.8)', 
           }}
         />
 
-        {/* Overlay content positioned to the empty space on the left */}
         <Box
           sx={{
             position: { xs: 'relative', md: 'absolute' },
@@ -72,17 +69,17 @@ const HeroSection = () => {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: 'rgba(121, 85, 72, 0.8)', // Matching color from the image
+              backgroundColor: 'rgba(121, 85, 72, 0.8)',
               color: { xs: '#000', md: '#fff' },
               padding: '10px 24px',
-              borderRadius: '8px', // Rounded corners for a minimal look
-              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)', // Soft shadow for elevation effect
+              borderRadius: '8px', 
+              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)', 
               fontWeight: 'bold',
-              transition: 'transform 0.2s, box-shadow 0.2s', // Smooth transition for hover effects
+              transition: 'transform 0.2s, box-shadow 0.2s', 
               '&:hover': {
-                backgroundColor: 'rgba(121, 85, 72, 1)', // Slightly darker on hover
-                transform: 'translateY(-2px)', // Lift effect on hover
-                boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.3)', // More pronounced shadow on hover
+                backgroundColor: 'rgba(121, 85, 72, 1)', 
+                transform: 'translateY(-2px)', 
+                boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.3)', 
               },
             }}
           >

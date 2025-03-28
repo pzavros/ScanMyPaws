@@ -23,8 +23,48 @@ const mockProducts = [
       '/media/products/bytetag1.jpeg',
       '/media/products/bytetag1.jpeg',
     ],
-    warranty: "Free Lifetime Warranty: ByteTag puts your pet's safety first, always. We offer free replacements for lost or broken tags.",
-    reviews: { rating: 4.8, count: 17893 },
+    warranty: "Free Lifetime Warranty: Scan My Paws puts your pet's safety first, always. We offer free replacements for lost or broken tags.",
+    reviews: { rating: 4.8, count: 123456 },
+  },
+  {
+    id: 2,
+    name: 'Explorer Silicone',
+    price: '€9.95',
+    description: 'Engraved tag for your pet. Durable and stylish.',
+    highlights: [
+      'Durable silicone material',
+      'Waterproof and lightweight',
+      'Available in multiple colors',
+      'Compatible with all types of collars',
+    ],
+    imageGallery: [
+      '/media/products/bytetag1.jpeg',
+      '/media/products/bytetag1.jpeg',
+      '/media/products/bytetag1.jpeg',
+      '/media/products/bytetag1.jpeg',
+    ],
+    warranty: "Free Lifetime Warranty: Scan My Paws puts your pet's safety first, always. We offer free replacements for lost or broken tags.",
+    reviews: { rating: 4.8, count: 123456 },
+  },
+  {
+    id: 3,
+    name: 'Explorer Silicone',
+    price: '€9.95',
+    description: 'Engraved tag for your pet. Durable and stylish.',
+    highlights: [
+      'Durable silicone material',
+      'Waterproof and lightweight',
+      'Available in multiple colors',
+      'Compatible with all types of collars',
+    ],
+    imageGallery: [
+      '/media/products/bytetag1.jpeg',
+      '/media/products/bytetag1.jpeg',
+      '/media/products/bytetag1.jpeg',
+      '/media/products/bytetag1.jpeg',
+    ],
+    warranty: "Free Lifetime Warranty: Scan My Paws puts your pet's safety first, always. We offer free replacements for lost or broken tags.",
+    reviews: { rating: 4.8, count: 123456 },
   },
 ];
 
@@ -65,7 +105,6 @@ const SingleProduct = () => {
   return (
     <Section>
       <Grid container spacing={4} alignItems="stretch">
-        {/* Thumbnails on larger screens */}
         <Grid item xs={12} sm={2} md={1} sx={{ display: { xs: 'none', sm: 'block' } }}>
           <Box display="flex" flexDirection="column" gap={1}>
             {product.imageGallery.map((img, index) => (
@@ -181,7 +220,7 @@ const SingleProduct = () => {
             sx={{ mt: 2, backgroundColor: '#6a1b9a', color: '#fff', borderRadius: 4, padding: 2 }}
             onClick={() => handleBuyNow(product)}
           >
-            Buy with Shop Pay
+            Buy
           </Button>
         </Grid>
       </Grid>

@@ -16,7 +16,8 @@ const QRCodeManager = () => {
     setError('');
     try {
       const qrCode = await generateQRCode();
-      setQrCodeImage(`data:image/png;base64,${qrCode.QRCodeImage}`); // Fix: Add prefix
+      alert('QR Code ID: ' + qrCode.qrCodeID);
+      setQrCodeImage(`data:image/png;base64,${qrCode.qrCodeImage}`);
     } catch (err) {
       setError('Error generating QR Code. Please try again.');
       console.error(err);

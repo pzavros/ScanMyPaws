@@ -1,4 +1,3 @@
-// src/Components/HomePage/WhyScanMyPawsSection.jsx
 import React from 'react';
 import { Box, useMediaQuery } from '@mui/material';
 import Section from '../ReusableComponents/Section';
@@ -14,7 +13,6 @@ const WhyScanMyPawsSection = () => {
 
   return (
     <Box>
-      {/* Title and Description */}
       <Box mb={6}>
         <Text variant="h4" sx={{ textAlign: "left", fontWeight: 'bold', color: 'var(--text-color)' }}>
           {t('b.whyScanMyPawsTitle')}
@@ -24,14 +22,13 @@ const WhyScanMyPawsSection = () => {
         </Text>
       </Box>
 
-      {/* Feature Cards */}
       <Row
         sx={{
           display: 'flex',
           flexWrap: isMobile ? 'wrap' : 'nowrap',
           width: '100%',
-          maxWidth: '1200px',    // Optional max-width for larger screens
-          margin: '0 auto',      // Centers Row for even spacing
+          maxWidth: '1200px',    
+          margin: '0 auto',      
           gap: 3,
           justifyContent: isMobile ? 'center' : 'space-between',
           mx: isMobile ? 0 : 'auto', 
