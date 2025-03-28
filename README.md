@@ -1,8 +1,8 @@
-# Project title
+# Scan My Paws
 
-Your Name
+Panayiotis Zavros
 
-<a href="">email@example.com</a>
+<a href="">pzavros@uclan.ac.uk</a>
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -32,21 +32,18 @@ Your Name
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Write one paragraph to describe your project.
-What kind of software is it? (mobile app, web app, software tool, etc.)
-What features does it provide? Who are the intended users?
+Scan my Paws is a full stack web application that can be also built as a mobile app, and it is created to help pet owners to find their pets if lost. In such cases the founder can scan a unique qr code that will be printed in the pet's tag and direct them into a unique page design for the specific pet to show the details of the pet along with 2 functionalities, send location to the owner and start a chat with the owner. The app can also take as input, schedules of the pet (grooming etc.) and medical records (vaccination etc.). The app also provides notifcations.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Development tools
 
-This section should list any major frameworks/libraries used to create your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
-* Java 11 SDK
-* Apache Tomcat
-* MySQL 3.11
-* Redis
-* GSON
+* React JS (Frontend)
+* ASP.NET Core API (Backend)
+* SQL Server (Database)
+* SignarR (Real-time communication)
+* MUI (Material UI) for UI Components
+* Docker (In case of deployment on a server)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -57,36 +54,65 @@ This is an example of how you may give instructions on setting up your project l
 To get a local copy up and running follow these simple example steps. 
 Include instructions on how to install software needed to run your project and commands to be executed.
 
-### Prerequisites
+1. Download the zip file from this url : https://github.com/pzavros/ScanMyPaws
+notes : The repository is private and require access from me.
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
+Or use in a windows terminal the following command :
+```sh
+  git clone https://github.com/pzavros/ScanMyPaws.git
   ```
+2. Extract the zip folder and inside it contains the 3 different project files :
 
-### Installation
+- Eshop
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+- WebApplication
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-5. Change git remote url to avoid accidental pushes to base project
-   ```sh
-   git remote set-url origin github_username/repo_name
-   git remote -v # confirm the changes
-   ```
+- Backend
+
+- Other files
+
+## Backend
+3. Open the backend sln file in visual studio or jet brain's Rider
+4. Go to Tools > NuGet Package Manager > Package Manager Console
+```sh
+  Update-Package -reinstall
+  ```
+5. If dotnet is not installed run the following command:
+```sh
+  dotnet tool install --global dotnet-ef
+  ```
+```sh
+dotnet restore
+```
+6. After create the database by running the migration files. Use this command :
+```sh
+dotnet ef database update
+```
+7. Lastly run the following command to run the backend:
+```sh
+   dotnet run
+```
+8. If you run the backend with IIS the api will not work since it is developed to run only http requests for now.
+9. You can access the swagger page in here :
+http://localhost:5000/swagger/index.html
+
+## Frontend Web Application
+
+1. Make sure to have nodejs installed on your pc, otherwise download it from here : https://nodejs.org/en
+2. Open this path in an IDE, preferable Visual Studio Code , or in a terminal window :
+ScanMyPaws\WebApplication\ScanMyPaws
+3. Run the following commands :
+```sh
+npm install
+```
+(If Errors appears run ```sh npm install --force ```)
+4. Run the following command to run the web app :
+```sh
+npm run dev
+```
+## Frontend Eshop
+1. It applies the same as the section Frontend Web Application but in this path: 
+ScanMyPaws\Eshop\Eshop
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -119,82 +145,3 @@ Use this space to list resources you found helpful or people that have helped yo
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-1. Download the zip file from this url : https://github.com/pzavros/ScanMyPaws
-
-notes : The repository is private and require access from me.
-
- 
-
-2. Extract the zip folder and inside it contains the 3 different project files :
-
-- Eshop
-
-- WebApplication
-
-- Backend
-
-- Other files
-
- 
-
-3. Open the backend sln file in visual studio
-
- 
-
-4. Go to Tools > NuGet Package Manager > Package Manager Console
-
- 
-
-5. Run : Update-Package -reinstall
-
- 
-
-6. Now open a terminal in the visual studio and run the following command to make
-
-sure dotnet is installed  :
-
-dotnet tool install --global dotnet-ef
-
- 
-
-7. After to create the database and run the migration files run :
-
-dotnet ef database update
-
- 
-
-8. Lastly run dotnet run , to run the backend
-
- 
-
-9. You can access the swagger page in here :
-
-http://localhost:5000/swagger/index.html
-
- 
-
-FRONT
-
-9. Make sure to have nodejs installed on your pc, otherwise download it from here :
-
-https://nodejs.org/en
-
- 
-
-10. open this path in an IDE, preferable Visual Studio Code , or in a terminal window :
-
-ScanMyPaws-main\ScanMyPaws-main\WebApplication\ScanMyPaws
-
- 
-
-11. Run the following commands :
-
-npm i or npm install
-
-(If Errors appears run npm i --force)
-
- 
-
-12. Run the following command to run the web app :
-
-npm run dev
