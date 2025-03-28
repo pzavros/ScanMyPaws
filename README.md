@@ -16,14 +16,9 @@ Panayiotis Zavros
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -34,8 +29,6 @@ Panayiotis Zavros
 
 Scan my Paws is a full stack web application that can be also built as a mobile app, and it is created to help pet owners to find their pets if lost. In such cases the founder can scan a unique qr code that will be printed in the pet's tag and direct them into a unique page design for the specific pet to show the details of the pet along with 2 functionalities, send location to the owner and start a chat with the owner. The app can also take as input, schedules of the pet (grooming etc.) and medical records (vaccination etc.). The app also provides notifcations.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Development tools
 
 * React JS (Frontend)
@@ -44,8 +37,6 @@ Scan my Paws is a full stack web application that can be also built as a mobile 
 * SignarR (Real-time communication)
 * MUI (Material UI) for UI Components
 * Docker (In case of deployment on a server)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -72,7 +63,7 @@ Or use in a windows terminal the following command :
 - Other files
 
 ## Backend
-3. Open the backend sln file in visual studio or jet brain's Rider
+3. Open the backend sln file in visual studio or jet brain's Rider or just simply open this path into the IDE: ScanMyPaws\Backend\Backend
 4. Go to Tools > NuGet Package Manager > Package Manager Console
 ```sh
   Update-Package -reinstall
@@ -114,34 +105,23 @@ npm run dev
 1. It applies the same as the section Frontend Web Application but in this path: 
 ScanMyPaws\Eshop\Eshop
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 <!-- USAGE EXAMPLES -->
 ## Usage
+Make sure the API is running using the terminal and run dotnet run as it is mentioned above.
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+Firstly navigate to the Eshop's HomePage, and then into the Shop, You can view the product or just click on buy then proceed with the forms and once you click confirm order you can see in an Alert the QR Code ID. Save that QR Code ID because it will be useful later. If you navigate back to the Home Page and scroll at the bottom of the screen you can see a button generate new QR Code and you can generate a qr code there instead of buying a product. Now, in the text field "Enter QR Code ID" you can enter the qr code id received from the alert and fetch the qr code image. If you scan that qr code you will get a unique url that you will run in your browser after all the workflows are done. Also you can take it a picture with your mobile phone to scan it later with your laptop's or PC's camera.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+# Note that this app is better to run in a mobile view (Click f12 in your browser to open dev tools and open it in dimensions of a mobile phone).
+Now lets run the web application with the same steps as we runed the Eshop, and register an account. After login into the account. You will see in the home page to add your pet, click that button and again in the top right click again add new pet. Then you can simply scan the qr code as you have it in a picture on your phone, or click simulate qr code scan to enter the qr code id manually. You will be able to see the unique url there, and you should save it in a notepad. Then click submit and enter the pet's details. After click on View Details and there you can edit your pet see the location history or create / view card. Click on create card and fill the details and then create the card. Now from there you can edit details or set what it will be visible for the founder. Now if you enter the unique url in the browser that the project is running you will be able to view what the founder will see and can start a chat or send a location there. From the owner's side you will recieve a notification and you can see it from the top right corner. If the founder sends the location you can see it from the location history in the pet's details page. If the founder start a chat you can navigate form the hamburger menu > chat and see it there. Moreover, you can view your profile and edit, add medical records for each pet, add schedules and add some settings in the settings page. You can find those functionalities from the hamburger menu. Lastly in the homepage if you have more than 1 pet you can simply press the blue dot below the view profile button to navigate to the other pets and the details below will dynamicaly change. 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+### Note
+Please if something is not clear contact me and i will reply the soonest.
 
 <!-- CONTACT -->
 ## Contact
 
-Your Name - email@example.com - [GitHub Account](https://github.com/your_username)
+Panayiotis Zavros - pzavros@uclan.ac.uk or panazavros8@gmail.com - [GitHub Account]([https://github.com/pzavros])
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/your_username/repo_name](https://github.com/pzavros/ScanMyPaws)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-Use this space to list resources you found helpful or people that have helped you and that you would like to give credit to.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
