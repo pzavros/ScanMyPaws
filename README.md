@@ -120,6 +120,6 @@ Please if something is not clear contact me and i will reply the soonest.
 
 Panayiotis Zavros - pzavros@uclan.ac.uk or panazavros8@gmail.com - [GitHub Account]([https://github.com/pzavros])
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/pzavros/ScanMyPaws)
+Project Link: [https://github.com/pzavros/ScanMyPaws]
 
 
