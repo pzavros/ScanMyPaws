@@ -1,0 +1,1 @@
+import{b as o}from"./index-BkwN6ugi.js";const e="http://localhost:5001",r=async s=>(await o.post(`${e}/api/User/register`,s)).data,p=async(s,t)=>{const a=await o.post(`${e}/api/User/login`,{email:s,passwordHash:t});return localStorage.setItem("token",a.data.token),a.data};export{p as a,r as s};

@@ -1,0 +1,1 @@
+import{j as t,c as e}from"./index-BkwN6ugi.js";const s=({children:o})=>t.jsx(e,{variant:"h5",sx:{fontFamily:'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',fontWeight:"bold",fontSize:"1.5rem",marginBottom:"16px",color:"var(--text-color)"},children:o});export{s as S};

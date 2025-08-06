@@ -110,6 +110,13 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Serve static files and enable SPA fallback for React
+app.UseDefaultFiles();     // Serves index.html by default
+app.UseStaticFiles();      // Serves JS, CSS, assets
+
+// Important for React Router (fallback all unknown paths to index.html)
+app.MapFallbackToFile("index.html");
+
 // Map Routes & Hubs
 app.MapControllers();
 
