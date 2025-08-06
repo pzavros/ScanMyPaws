@@ -12,8 +12,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Kestrel to listen on port 5000 (HTTP)
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
+// Configure Kestrel to listen on port 5001 (HTTP)
+builder.WebHost.UseUrls("http://0.0.0.0:5001");
 
 // Build the connection string from environment variables
 var server = builder.Configuration["server"] ?? "sqlserver";
@@ -22,11 +22,9 @@ var port = builder.Configuration["port"] ?? "1433";
 var user = builder.Configuration["dbuser"] ?? "sa";
 var password = builder.Configuration["password"] ?? "ScanMyPaws2806";
 
-//docker
-//var connectionString = $"Server={server},{port};Initial Catalog={database};User ID={user};Password={password};TrustServerCertificate=True;";
-
-//local
-var connectionString = "Server=(localdb)\\mssqllocaldb;Database=ScanMyPaws;Trusted_Connection=True;";
+// Use the connection string from appsettings.json or environment variables
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? 
+    $"Server={server},{port};Initial Catalog={database};User ID={user};Password={password};TrustServerCertificate=True;";
 // Register Services & Dependencies
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -90,7 +88,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(5000);
+    options.ListenAnyIP(5001);
 });
 
 // Build the app
